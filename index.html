@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Weather</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container container_logo">
+            <div class="logo">
+                Simple Weather
+            </div>
+            <ul class="header_list">
+                <li class="header_list-item">°C</li>
+                <li class="header_list-item">°F</li>
+                <li class="header_list-item"><svg></svg></li>
+            </ul>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="wrapper d-flex">
+            <div class="left_info d-flex-column">
+                <div class="input_container d-flex justify-center align-center">
+                    <svg class="input_search--icon"></svg>
+                    <input type="text" class="input_search ff-med" placeholder="Укажите город">
+                </div>
+                <div class="left_info_weather">
+                    <svg class="left_info_weather-icon"></svg>
+                    <p class="left_info_weather--degrees">12°C</p>
+                </div>
+                <div class="left_info_place">
+                    <h1 class="left_info_place--text">London</h1>
+                    <div class="left_info_place-date">
+                        <h1 class="left_info_place-date--day">Monday,</h1>
+                        <p class="left_info_place-date--month">May 3</p>
+                    </div>
+                </div>
+                <div class="left_info_weather-now">
+                    <svg class="left_info_weather-now-icon"></svg>
+                    <p class="left_info_weather-now-text"></p>
+                </div>
+                <div class="left_info_time">
+                    <svg class="left_info_time-icon"></svg>
+                    <p class="left_info_time-text">00:00</p>
+                </div>
+            </div>
+            <div class="right-info">
+                <h1 class="main-text">hello</h1>
+                <p>world</p>
+                <span>hey hey</span>
+            </div>
+        </div>
+    </main>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>
