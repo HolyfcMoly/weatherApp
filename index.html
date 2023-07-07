@@ -10,26 +10,34 @@
 
 <body>
     <header class="header">
-        <div class="container container_logo">
-            <div class="logo">
-                Simple Weather
+        <div class="container px-5 py-5">
+            <div class="header_wrapper d-flex justify-between">
+                <h1 class="header_logo">
+                    Simple Weather
+                </h1>
+                <ul class="header_list d-flex">
+                    <li class="header_list_item">
+                        <button class="header_list_item-btn">°C</button>
+                    </li>
+                    <li class="header_list_item">
+                        <button class="header_list_item-btn">°F</button>
+                    </li>
+                    <li class="header_list_item">
+                        <button class="header_list_item-btn header_list_item-btn--theme">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
+                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-sun">
+                                <circle cx="12" cy="12" r="5" />
+                                <path d="M12 1v2m0 18v2M4 4l2 2m12 12 2 2M1 12h2m18 0h2M4 20l2-2M18 6l2-2" />
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
             </div>
-            <ul class="header_list">
-                <li class="header_list-item">°C</li>
-                <li class="header_list-item">°F</li>
-                <li class="header_list-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-sun">
-                        <circle cx="12" cy="12" r="5" />
-                        <path d="M12 1v2m0 18v2M4 4l2 2m12 12 2 2M1 12h2m18 0h2M4 20l2-2M18 6l2-2" />
-                    </svg>
-                </li>
-            </ul>
         </div>
     </header>
 
     <main class="container">
-        <svg xmlns="http://www.w3.org/2000/svg" width="0" height="0">
+        <svg class="main_svg" xmlns="http://www.w3.org/2000/svg" width="0" height="0">
             <defs>
                 <radialGradient id="gradYellow" cx="50%" cy="50%" r="80%" fx="90%" fy="80%">
                     <stop offset="0%" style="stop-color:yellow;stop-opacity:1"></stop>
@@ -108,7 +116,7 @@
             </symbol>
         </svg>
         <div class="wrapper d-flex">
-            <div class="left_info d-flex-column">
+            <div class="left_info d-flex-column width33 px-10 py-5">
                 <div class="input_container d-flex justify-center align-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 24" stroke-width="1.5"
                         stroke="currentColor" class="input_search--icon">
@@ -123,39 +131,181 @@
                             d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                     </svg>
                 </div>
-                <div class="left_info_weather">
-                    <figure>
-                        <svg class="left_info_weather-icon" viewBox="0 0 100 100">
-                            <use xlink:href="#rainDrizzle" x="25" y="65"></use>
-                            <use xlink:href="#rainDrizzle" x="40" y="65""></use>
-                                <use xlink:href=" #sun" x="-8" y="-15"></use>
-                            <use xlink:href="#whiteCloud" x="11"></use>
-                            <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                <div class="left-info-content px-5 py-5">
+                    <div class="left_info_weather">
+                        <figure>
+                            <svg class="left_info_weather-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="left_info_weather--text d-flex ff-thin">
+                            <h2>12</h2>
+                            <p class="left_info_weather--degrees">°C</p>
+                        </div>
+                    </div>
+                    <div class="left_info_place d-flex justify-between">
+                        <h1 class="left_info_place--text">London</h1>
+                        <div class="left_info_place-date d-flex">
+                            <h1 class="left_info_place-date--day">Monday,</h1>
+                            <div class="left_info_place-date--month d-flex">May <span>3</span></div>
+                        </div>
+                    </div>
+                    <div class="left_info_weather-now d-flex align-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
                         </svg>
-                    </figure>
-                    <svg class="left_info_weather-icon"></svg>
-                    <p class="left_info_weather--degrees">12°C</p>
-                </div>
-                <div class="left_info_place">
-                    <h1 class="left_info_place--text">London</h1>
-                    <div class="left_info_place-date">
-                        <h1 class="left_info_place-date--day">Monday,</h1>
-                        <p class="left_info_place-date--month">May 3</p>
+                        <p class="left_info_weather-now-text">Облачно</p>
+                    </div>
+                    <div class="left_info_time d-flex align-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="left_info_time-text">00:00</p>
                     </div>
                 </div>
-                <div class="left_info_weather-now">
-                    <svg class="left_info_weather-now-icon"></svg>
-                    <p class="left_info_weather-now-text"></p>
-                </div>
-                <div class="left_info_time">
-                    <svg class="left_info_time-icon"></svg>
-                    <p class="left_info_time-text">00:00</p>
-                </div>
             </div>
-            <div class="right-info">
-                <h1 class="main-text">hello</h1>
-                <p>world</p>
-                <span>hey hey</span>
+            <div class="right_info d-flex-column width66  px-5 py-5">
+                <ul class="right_info_list d-flex">
+                    <li class="right_info_list_item px-5 py-5">
+                        <h2 class="right_info_list_item-day">Понедельник</h2>
+                        <figure>
+                            <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="right_info_list_item-degrees d-flex justify-center">
+                            <p class="right_info_list_item-degrees-day">10°</p>
+                            <p class="right_info_list_item-degrees-night">10°</p>
+                        </div>
+                    </li>
+                    <li class="right_info_list_item px-5 py-5">
+                        <h2 class="right_info_list_item-day">Понедельник</h2>
+                        <figure>
+                            <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="right_info_list_item-degrees d-flex justify-center">
+                            <p class="right_info_list_item-degrees-day">10°</p>
+                            <p class="right_info_list_item-degrees-night">10°</p>
+                        </div>
+                    </li>
+                    <li class="right_info_list_item px-5 py-5">
+                        <h2 class="right_info_list_item-day">Понедельник</h2>
+                        <figure>
+                            <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="right_info_list_item-degrees d-flex justify-center">
+                            <p class="right_info_list_item-degrees-day">10°</p>
+                            <p class="right_info_list_item-degrees-night">10°</p>
+                        </div>
+                    </li>
+                    <li class="right_info_list_item px-5 py-5">
+                        <h2 class="right_info_list_item-day">Понедельник</h2>
+                        <figure>
+                            <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="right_info_list_item-degrees d-flex justify-center">
+                            <p class="right_info_list_item-degrees-day">10°</p>
+                            <p class="right_info_list_item-degrees-night">10°</p>
+                        </div>
+                    </li>
+                    <li class="right_info_list_item px-5 py-5">
+                        <h2 class="right_info_list_item-day">Понедельник</h2>
+                        <figure>
+                            <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                            </svg>
+                        </figure>
+                        <div class="right_info_list_item-degrees d-flex justify-center">
+                            <p class="right_info_list_item-degrees-day">10°</p>
+                            <p class="right_info_list_item-degrees-night">10°</p>
+                        </div>
+                    </li>
+                </ul>
+                <h2 class="right_info_header">На сегодня</h2>
+                <div class="right_info-grid">
+                    <ul class="weather-info">
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">УФ-индекс</h2>
+                            <svg></svg>
+                            <div class="weather-info__uv-index d-flex-column justify-center">
+                                <p class="uv-index">1</p>
+                                <p>low</p>
+                                <input type="range">
+                            </div>
+                        </li>
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">Ветер</h2>
+                            <div class="weather-info__wind d-flex align-center justify-center">
+                                <p>7.70</p>
+                                <p>км/ч</p>
+                            </div>
+                            <svg></svg>
+                        </li>
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">Восход & Закат</h2>
+                            <div class="weather-info__sunrise d-flex">
+                                <svg></svg>
+                                <p>06:30</p>
+                            </div>
+                            <div class="weather-info__sunset d-flex">
+                                <svg></svg>
+                                <p>16:30</p>
+                            </div>
+                        </li>
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">Влажность</h2>
+                            <div class="weather-info__hum d-flex">
+                                <p>12</p>
+                                <p>%</p>
+                            </div>
+                        </li>
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">Видимость</h2>
+                            <div class="weather-info__visability d-flex">
+                                <p>5.2</p>
+                                <p>км</p>
+                            </div>
+                        </li>
+                        <li class="weather-info-item px-5 py-5">
+                            <h2 class="weather-info-header">Качество Воздуха</h2>
+                            <p class="weather-info__air">105</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </main>
