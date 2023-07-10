@@ -10,24 +10,24 @@
 
 <body>
     <header class="header">
-        <div class="container px-5 py-5">
+        <div class="container dark-container text-white px-5 py-5">
             <div class="header_wrapper d-flex justify-between">
                 <h1 class="header_logo">
                     Simple Weather
                 </h1>
                 <ul class="header_list d-flex align-center">
                     <li class="header_list_item">
-                        <button class="header_list_item-btn active-btn">°C</button>
+                        <button class="header_list_item-btn dark-btn active-btn">°C</button>
                     </li>
                     <li class="header_list_item">
-                        <button class="header_list_item-btn">°F</button>
+                        <button class="header_list_item-btn dark-btn">°F</button>
                     </li>
                     <li class="header_list_item">
                         <button class="header_list_item-btn--theme">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor"
-                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-sun">
-                                <circle cx="12" cy="12" r="5" />
-                                <path d="M12 1v2m0 18v2M4 4l2 2m12 12 2 2M1 12h2m18 0h2M4 20l2-2M18 6l2-2" />
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                class="feather feather-moon">
+                                <path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z" />
                             </svg>
                         </button>
                     </li>
@@ -36,7 +36,7 @@
         </div>
     </header>
 
-    <main class="container">
+    <main class="container dark-container">
         <svg class="main_svg" xmlns="http://www.w3.org/2000/svg" width="0" height="0">
             <defs>
                 <radialGradient id="gradYellow" cx="50%" cy="50%" r="80%" fx="90%" fy="80%">
@@ -115,9 +115,9 @@
                 <path d="M60,42 L85,42"></path>
             </symbol>
         </svg>
-        <div class="wrapper d-flex">
-            <div class="left_info d-flex-column width33 px-10 py-5">
-                <div class="input_container d-flex justify-center align-center">
+        <div class="wrapper text-white d-flex">
+            <div class="left_info dark-cards d-flex-column width33 px-10 py-5">
+                <div class="input_container dark-text d-flex justify-center align-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 24" stroke-width="1.5"
                         stroke="currentColor" class="input_search--icon">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -139,7 +139,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                     <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="left_info_weather--text d-flex ff-thin">
@@ -151,7 +152,9 @@
                         <h1 class="left_info_place--text">London</h1>
                         <div class="left_info_place-date d-flex">
                             <h1 class="left_info_place-date--day">Monday,</h1>
-                            <div class="left_info_place-date--month d-flex">May <span>3</span></div>
+                            <div class="left_info_place-date--month d-flex">
+                                <p>May<span>3</span></p>
+                            </div>
                         </div>
                     </div>
                     <div class="left_info_weather-now d-flex align-center">
@@ -174,7 +177,7 @@
             </div>
             <div class="right_info d-flex-column width66  px-5 py-5">
                 <ul class="right_info_list d-flex">
-                    <li class="right_info_list_item px-5 py-5">
+                    <li class="right_info_list_item dark-cards px-5 py-5">
                         <h2 class="right_info_list_item-day">Понедельник</h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -182,7 +185,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                     <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="right_info_list_item-degrees d-flex justify-center">
@@ -190,7 +194,7 @@
                             <p class="right_info_list_item-degrees-night">10°</p>
                         </div>
                     </li>
-                    <li class="right_info_list_item px-5 py-5">
+                    <li class="right_info_list_item dark-cards px-5 py-5">
                         <h2 class="right_info_list_item-day">Понедельник</h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -198,7 +202,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                     <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="right_info_list_item-degrees d-flex justify-center">
@@ -206,7 +211,7 @@
                             <p class="right_info_list_item-degrees-night">10°</p>
                         </div>
                     </li>
-                    <li class="right_info_list_item px-5 py-5">
+                    <li class="right_info_list_item dark-cards px-5 py-5">
                         <h2 class="right_info_list_item-day">Понедельник</h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -214,7 +219,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                     <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="right_info_list_item-degrees d-flex justify-center">
@@ -222,7 +228,7 @@
                             <p class="right_info_list_item-degrees-night">10°</p>
                         </div>
                     </li>
-                    <li class="right_info_list_item px-5 py-5">
+                    <li class="right_info_list_item dark-cards px-5 py-5">
                         <h2 class="right_info_list_item-day">Понедельник</h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -230,7 +236,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                     <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="right_info_list_item-degrees d-flex justify-center">
@@ -238,7 +245,7 @@
                             <p class="right_info_list_item-degrees-night">10°</p>
                         </div>
                     </li>
-                    <li class="right_info_list_item px-5 py-5">
+                    <li class="right_info_list_item dark-cards px-5 py-5">
                         <h2 class="right_info_list_item-day">Понедельник</h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -246,7 +253,8 @@
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                                 <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
                             </svg>
                         </figure>
                         <div class="right_info_list_item-degrees d-flex justify-center">
@@ -258,18 +266,28 @@
                 <h2 class="right_info_header">На сегодня</h2>
                 <div class="right_info-grid">
                     <ul class="weather-info">
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">УФ-индекс</h2>
                             <figure>
-                                <svg xmlns="http://www.w3.org/2000/svg" class="weather-info-icon" viewBox="0 0 500 500" width="500" height="500" fill-rule="evenodd" clip-rule="evenodd" image-rendering="optimizeQuality" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
-                                    <path fill="#ffa964" d="M251 0h10l4 5v50c-4 4-8 6-14 4l-5-4V5l5-5ZM128 33c4-1 8 0 12 2l22 38c2 12-4 16-15 13-9-12-17-25-24-38-2-7 0-12 5-15Z"/>
-                                    <path fill="#ffaa64" d="M374 33c11-2 16 3 14 15l-21 36c-3 3-8 4-12 3-6-3-8-8-6-14 7-14 16-28 25-40ZM237 86c60-5 110 15 150 61 41 53 49 111 26 175-26 56-69 90-130 102-69 8-124-15-166-68-35-52-41-108-19-166 28-60 74-94 139-104Z"/>
-                                    <path fill="#ffda84" d="M244 106a150 150 0 0 1 131 241c-39 46-88 65-148 56-59-14-97-50-116-106a151 151 0 0 1 133-191Z"/>
-                                    <path fill="#ffaa63" d="M38 123h10l36 21c4 4 5 9 2 15-4 3-8 4-13 3l-35-20c-8-6-8-13 0-19Z"/>
-                                    <path fill="#ffaa64" d="M464 123c8-2 14 1 16 10l-3 7-38 22c-13 2-17-4-14-15 13-9 25-17 39-24Zm-299 75c5-1 9 1 12 6l2 76c9 14 21 18 37 9l7-7 2-77c6-9 12-10 19-1 1 27 1 54-1 81-6 14-16 24-31 27-20 4-36-2-48-17l-5-13v-78c1-3 3-5 6-6Zm107 0c5-1 9 1 12 6l26 72 25-74c6-6 12-5 17 2v8l-33 98c-7 5-14 5-20-2l-34-97c-1-6 1-11 7-13Z"/>
-                                    <path fill="#ffa964" d="M0 261v-10l5-5h50c4 4 6 8 4 15l-4 4H5l-5-4Zm512-10v10l-5 4h-50c-5-4-7-8-5-14l5-5h50l5 5Z"/>
-                                    <path fill="#ffaa64" d="M73 349c12-2 16 4 13 16l-38 23c-9 2-15-1-16-10 0-2 1-5 3-6l38-23Zm357 0h9l37 22c5 6 4 12-2 17h-10l-36-21c-6-7-6-13 2-18Zm-281 75c10-1 15 4 13 15l-21 37c-7 5-13 4-18-2v-10a805 805 0 0 0 26-40Zm206 0c4-1 9 0 12 4l20 34c4 9 1 15-8 18l-8-4-22-37c-2-7 0-12 6-15Z"/>
-                                    <path fill="#ffa964" d="M261 512h-10l-5-5v-50c4-5 8-7 15-5l4 5v50l-4 5Z"/>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="weather-info-icon" viewBox="0 0 500 500"
+                                    width="500" height="500" fill-rule="evenodd" clip-rule="evenodd"
+                                    image-rendering="optimizeQuality" shape-rendering="geometricPrecision"
+                                    text-rendering="geometricPrecision">
+                                    <path fill="#ffa964"
+                                        d="M251 0h10l4 5v50c-4 4-8 6-14 4l-5-4V5l5-5ZM128 33c4-1 8 0 12 2l22 38c2 12-4 16-15 13-9-12-17-25-24-38-2-7 0-12 5-15Z" />
+                                    <path fill="#ffaa64"
+                                        d="M374 33c11-2 16 3 14 15l-21 36c-3 3-8 4-12 3-6-3-8-8-6-14 7-14 16-28 25-40ZM237 86c60-5 110 15 150 61 41 53 49 111 26 175-26 56-69 90-130 102-69 8-124-15-166-68-35-52-41-108-19-166 28-60 74-94 139-104Z" />
+                                    <path fill="#ffda84"
+                                        d="M244 106a150 150 0 0 1 131 241c-39 46-88 65-148 56-59-14-97-50-116-106a151 151 0 0 1 133-191Z" />
+                                    <path fill="#ffaa63"
+                                        d="M38 123h10l36 21c4 4 5 9 2 15-4 3-8 4-13 3l-35-20c-8-6-8-13 0-19Z" />
+                                    <path fill="#ffaa64"
+                                        d="M464 123c8-2 14 1 16 10l-3 7-38 22c-13 2-17-4-14-15 13-9 25-17 39-24Zm-299 75c5-1 9 1 12 6l2 76c9 14 21 18 37 9l7-7 2-77c6-9 12-10 19-1 1 27 1 54-1 81-6 14-16 24-31 27-20 4-36-2-48-17l-5-13v-78c1-3 3-5 6-6Zm107 0c5-1 9 1 12 6l26 72 25-74c6-6 12-5 17 2v8l-33 98c-7 5-14 5-20-2l-34-97c-1-6 1-11 7-13Z" />
+                                    <path fill="#ffa964"
+                                        d="M0 261v-10l5-5h50c4 4 6 8 4 15l-4 4H5l-5-4Zm512-10v10l-5 4h-50c-5-4-7-8-5-14l5-5h50l5 5Z" />
+                                    <path fill="#ffaa64"
+                                        d="M73 349c12-2 16 4 13 16l-38 23c-9 2-15-1-16-10 0-2 1-5 3-6l38-23Zm357 0h9l37 22c5 6 4 12-2 17h-10l-36-21c-6-7-6-13 2-18Zm-281 75c10-1 15 4 13 15l-21 37c-7 5-13 4-18-2v-10a805 805 0 0 0 26-40Zm206 0c4-1 9 0 12 4l20 34c4 9 1 15-8 18l-8-4-22-37c-2-7 0-12 6-15Z" />
+                                    <path fill="#ffa964" d="M261 512h-10l-5-5v-50c4-5 8-7 15-5l4 5v50l-4 5Z" />
                                 </svg>
                             </figure>
                             <div class="weather-info__uv-index d-flex-column justify-center">
@@ -278,15 +296,21 @@
                                 <input type="range">
                             </div>
                         </li>
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">Ветер</h2>
                             <div class="weather-info__wind d-flex">
                                 <p>7.70</p>
                                 <p>км/ч</p>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="weather-info_wind-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-wind"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="weather-info_wind-icon" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-wind">
+                                <path
+                                    d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2">
+                                </path>
+                            </svg>
                         </li>
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">Восход & Закат</h2>
                             <div class="weather-info__sunrise d-flex">
                                 <figure>
@@ -308,21 +332,21 @@
                                 <p>16:30</p>
                             </div>
                         </li>
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">Влажность</h2>
                             <div class="weather-info__hum d-flex">
                                 <p class="ff-thin">12</p>
                                 <p>%</p>
                             </div>
                         </li>
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">Видимость</h2>
                             <div class="weather-info__visability d-flex">
                                 <p class="ff-thin">5.2</p>
                                 <p>км</p>
                             </div>
                         </li>
-                        <li class="weather-info-item px-5 py-5">
+                        <li class="weather-info-item dark-cards px-5 py-5">
                             <h2 class="weather-info-header">Качество Воздуха</h2>
                             <p class="weather-info__air ff-thin">105</p>
                         </li>

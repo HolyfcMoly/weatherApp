@@ -1,31 +1,27 @@
 @font-face {
     font-family: "Raleway Thin";
-    src: local(''),
-        url("../fonts/raleway-thin.woff") format("woff"),
+    src: local(""), url("../fonts/raleway-thin.woff") format("woff"),
         url("../fonts/raleway-thin.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: "Raleway Medium";
-    src: local(''),
-        url("../fonts/raleway-medium.woff") format("woff"),
+    src: local(""), url("../fonts/raleway-medium.woff") format("woff"),
         url("../fonts/raleway-medium.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: "Raleway Regular";
-    src: local(''),
-        url("../fonts/raleway-regular.woff") format("woff"),
+    src: local(""), url("../fonts/raleway-regular.woff") format("woff"),
         url("../fonts/raleway-regular.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
 }
 @font-face {
     font-family: "Raleway Semibold";
-    src: local(''),
-        url("../fonts/raleway-semibold.woff") format("woff"),
+    src: local(""), url("../fonts/raleway-semibold.woff") format("woff"),
         url("../fonts/raleway-semibold.woff2") format("woff2");
     font-weight: normal;
     font-style: normal;
@@ -44,14 +40,17 @@ body {
 }
 
 a {
-    text-decoration: none
+    text-decoration: none;
 }
 
 ul {
     list-style: none;
 }
 
-h1,h2,h3,h4 {
+h1,
+h2,
+h3,
+h4 {
     font-size: inherit;
     font-weight: inherit;
 }
@@ -114,13 +113,16 @@ h1,h2,h3,h4 {
 .width66 {
     width: 66.666667%;
 }
+
 :root {
     --light-text: #fffafa;
     --main-text: #2b2a2a;
-    --thin-text: #9699A5;
+    --thin-text: #9699a5;
     --btn-bg: #232020;
     --bg-light: #e7e7e7;
     --bg-regular: #f9f8f8;
+    --bg-dark: #232323;
+    --bg-cards: #444444;
 }
 
 ::-webkit-scrollbar {
@@ -173,7 +175,7 @@ h1,h2,h3,h4 {
     border: none;
     border-radius: 50%;
     box-shadow: 0 0 4px #464545;
-    transition: all .3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 }
 
 .active-btn {
@@ -181,9 +183,10 @@ h1,h2,h3,h4 {
     background-color: var(--btn-bg);
 }
 
-.header_list_item-btn:hover, .header_list_item-btn:active {
+.header_list_item-btn:hover,
+.header_list_item-btn:active {
     transform: scale(1.1);
-    opacity: .9;
+    opacity: 0.9;
 }
 .header_list_item-btn:active {
     transform: scale(0.9);
@@ -193,14 +196,14 @@ h1,h2,h3,h4 {
     cursor: pointer;
     border: none;
     background-color: transparent;
-    transition: transform .3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
 }
 .header_list_item-btn--theme:active {
     transform: scale(0.9);
 }
 
 .feather-sun {
-    color: var(--btn-bg);
+    color: var(--bg-light);
 }
 
 /* left weather */
@@ -259,11 +262,14 @@ h1,h2,h3,h4 {
     transform: translateY(-2px);
 }
 
-.left_info_weather-now, .left_info_time, .left_info_place {
+.left_info_weather-now,
+.left_info_time,
+.left_info_place {
     margin-top: 15px;
 }
 
-.left_info_weather-now-text, .left_info_time-text {
+.left_info_weather-now-text,
+.left_info_time-text {
     margin-left: 10px;
 }
 
@@ -272,10 +278,6 @@ h1,h2,h3,h4 {
 }
 
 /* right info */
-
-.right_info {
-
-}
 
 .right_info_list {
     overflow-x: scroll;
@@ -289,7 +291,7 @@ h1,h2,h3,h4 {
     margin: 10px;
     text-align: center;
     background-color: var(--bg-regular);
-    transition: transform .3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
 }
 
 .right_info_list_item:hover {
@@ -321,7 +323,8 @@ h1,h2,h3,h4 {
     margin-bottom: 20px;
 }
 
-.right_info_list_item, .weather-info-item {
+.right_info_list_item,
+.weather-info-item {
     border-radius: 20px;
     box-shadow: 0px 0px 5px #a7a4a4;
 }
@@ -397,7 +400,8 @@ h1,h2,h3,h4 {
     font-size: 1rem;
 }
 
-.weather-info__visability, .weather-info__air {
+.weather-info__visability,
+.weather-info__air {
     font-size: 4rem;
 }
 
@@ -405,40 +409,73 @@ h1,h2,h3,h4 {
     font-size: 1rem;
 }
 
-
-
-
 #rainDrizzle {
     stroke: rgb(137, 206, 238);
     stroke-width: 1;
     stroke-dasharray: 4;
-    animation: rain 5s linear infinite; 
+    animation: rain 5s linear infinite;
 }
 #star {
     animation: star 4s linear infinite;
 }
-
 
 .longRay {
     stroke: rgb(251, 215, 72);
     stroke-width: 3;
     stroke-dasharray: 10;
     stroke-dashoffset: 10;
-    animation: longRay 5s linear infinite; 
+    animation: longRay 5s linear infinite;
 }
 .shortRay {
     stroke: rgb(251, 215, 72);
     stroke-width: 2;
     stroke-dasharray: 4;
     stroke-dashoffset: 10;
-    animation: shortRay 5s linear infinite; 
+    animation: shortRay 5s linear infinite;
 }
 
 .gray-cloud {
     animation: cloud 5s linear infinite;
 }
 
-@media (max-width:1023px) {
+.fadeInDown {
+    animation-duration: 1s;
+    -webkit-animation-name: fadeInDown;
+    animation-name: fadeInDown;
+}
+
+.fadeInUp {
+    animation-duration: 1s;
+    -webkit-animation-name: fadeInUp;
+    animation-name: fadeInUp;
+}
+
+/* dark theme */
+
+body.dark .dark-btn {
+    color: var(--light-text);
+    background-color: var(--btn-bg);
+}
+
+body.dark .active-btn {
+    color: var(--main-text);
+    background-color: var(--bg-light);
+}
+
+body.dark .dark-container, body.dark{
+    background-color: var(--bg-dark);
+}
+body.dark .dark-cards{
+    background-color: var(--bg-cards);
+}
+body.dark .text-white {
+    color: var(--light-text);
+}
+body.dark .dark-text {
+    color: var(--main-text);
+}
+
+@media (max-width: 1023px) {
     .input_search {
         margin-left: 5px;
         margin-right: 5px;
@@ -449,19 +486,20 @@ h1,h2,h3,h4 {
     .weather-info__wind {
         justify-content: center;
     }
-    .weather-info__sunrise, .weather-info__sunset {
+    .weather-info__sunrise,
+    .weather-info__sunset {
         justify-content: center;
-    } 
+    }
 }
 
-@media (max-width:767px) {
-    .header_wrapper  {
+@media (max-width: 767px) {
+    .header_wrapper {
         flex-direction: column;
     }
     .header_logo {
         font-size: 1.75rem;
     }
-    .header_list  {
+    .header_list {
         margin-top: 20px;
         justify-content: flex-end;
     }
@@ -473,7 +511,8 @@ h1,h2,h3,h4 {
         border-top-left-radius: 20px;
         border-bottom-right-radius: 0;
     }
-    .left_info, .right_info {
+    .left_info,
+    .right_info {
         width: 100%;
     }
     .left_info_weather {
@@ -490,7 +529,7 @@ h1,h2,h3,h4 {
     .left_info_weather--degrees {
         font-size: 3rem;
     }
-    .left_info_place  {
+    .left_info_place {
         flex-direction: column;
     }
     .left-info-content {
@@ -498,9 +537,37 @@ h1,h2,h3,h4 {
     }
 }
 
-@media (max-width:598px) {
+@media (max-width: 598px) {
     .weather-info {
         grid-template-columns: 1fr;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        -webkit-transform: translate3d(0, -100%, 0);
+        transform: translate3d(0, -100%, 0);
+    }
+
+    to {
+        opacity: 1;
+        -webkit-transform: translate3d(0, 0, 0);
+        transform: translate3d(0, 0, 0);
     }
 }
 
@@ -529,7 +596,7 @@ h1,h2,h3,h4 {
         stroke-dashoffset: 5;
         opacity: 1;
     }
-    50%{
+    50% {
         transform: translateX(80px);
         opacity: 0.5;
     }
@@ -559,7 +626,7 @@ h1,h2,h3,h4 {
 }
 @keyframes cloud {
     0% {
-        opacity: .75;
+        opacity: 0.75;
         transform: translateY(-6px);
     }
     25% {
@@ -567,7 +634,7 @@ h1,h2,h3,h4 {
         transform: translate(-10px);
     }
     50% {
-        opacity: .75;
+        opacity: 0.75;
         transform: translate(4px);
     }
     75% {
@@ -575,7 +642,7 @@ h1,h2,h3,h4 {
         transform: translate(-4px);
     }
     100% {
-        opacity: .75;
+        opacity: 0.75;
         transform: translateY(-6px);
     }
 }
