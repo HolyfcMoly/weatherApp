@@ -1,4 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
+    const apiKey = '0f14f6df785ce6eb97b04d873ae40fd8';
+    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=paris&appid=${apiKey}&units=metric&lang=ru`
     const leftInfo = document.querySelector(".left_info");
     const mediaQuery = window.matchMedia("(max-width: 1023px)");
     const btns = document.querySelectorAll(".header_list_item-btn");
@@ -8,24 +10,91 @@ window.addEventListener("DOMContentLoaded", () => {
     const rightDigit = wrapper.querySelector('.right_info_list_item-degrees-day');
     const degrees = wrapper.querySelector('.left_info_weather--degrees');
     let isCelsius = true;
-    let temperature = 12; 
-    // console.log(typeof +leftDigit.innerHTML)
 
-    function convertTemperature(trigger) {
+    async function checkWeather() {
+        const response = await fetch(apiUrl);
+        const data = await response.json()
+        console.log(data, 'data')
+
+        document.querySelector('.left_info_place--text').innerHTML = data.city.name;
+        leftDigit.innerHTML = Math.round(data.list[0].main.temp);
+
+        let sunrise = new Date(data.city.sunrise * 1000);
+        const sunriseHour = sunrise.getHours();
+        const sunriseMinutes = sunrise.getMinutes();
+
+        let sunset = new Date(data.city.sunset * 1000);
+        const sunsetHour = sunset.getHours();
+        const sunsetMinutes = sunset.getMinutes();
+        
+        document.querySelector('.weather-info__sunrise p').innerHTML = `
+        ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
+        :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
+
+        document.querySelector('.weather-info__sunset p').innerHTML = `
+        ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
+        :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
+
+        document.querySelector('.weather-info__wind p').innerHTML = data.list[0].wind.speed;
+        document.querySelector('.weather-info__hum p').innerHTML = data.list[0].main.humidity;
+        document.querySelector('.weather-info__visability p').innerHTML = data.list[0].visibility / 1000;
+        document.querySelector('.weather-info__pressure p').innerHTML = data.list[0].main.pressure;
+
+        const deg = data.list[0].wind.deg
+
+        document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
+        const direction = document.querySelector('.weather-info__deg p');
+        windDirection(direction, deg);
+    }
+    checkWeather()
+
+    function windDirection(trigger, deg) {
+        const directions = {
+            "0-15" : "С",
+            "15-75" : "С-В",
+            "75-105" : "В",
+            "105-165" : "Ю-В",
+            "165-195" : "Ю",
+            "195-255" : "Ю-З",
+            "255-285" : "З",
+            "285-345" : "С-З",
+            "345-360" : "C",
+        }
+
+        let number = deg;
+        Object.entries(directions).forEach(([range, dir]) => {
+            const [start, end] = range.split('-');
+            if(number >= start && number <= end) {
+                trigger.innerHTML = dir
+            }
+        })
+    }
+
+    function date() {
+        const now = new Date();
+        const hour = now.getHours();
+        const minutes = now.getMinutes();
+        document.querySelector('.left_info_time-text').innerHTML = `
+        ${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}
+        `
+    }
+
+    function convertTemperature(trigger, degrees = '°') {
+        let temperature = +trigger.innerHTML;
         if (isCelsius) {
-            temperature = +leftDigit.innerHTML
             let fahrenheit = (temperature * 9/5) + 32;
-            leftDigit.innerHTML = Math.round(fahrenheit);
+            trigger.innerHTML = Math.round(fahrenheit);
             degrees.innerHTML = "°F"
         } else {
-            leftDigit.innerHTML = temperature;
+            let celsius = (temperature - 32) * 5/9;
+            trigger.innerHTML = Math.round(celsius);
             degrees.innerHTML = "°C"
         }
     }
 
     function toggleTemperature() {
         isCelsius = !isCelsius;
-        convertTemperature();
+        convertTemperature(leftDigit);
     }
 
     function handleScreenChange(mediaQuery) {
@@ -78,7 +147,7 @@ window.addEventListener("DOMContentLoaded", () => {
             themeBtn.classList.remove('fadeInUp');
         }
     }
-
+    date();
     toggleTemperature();
     handleScreenChange(mediaQuery);
     mediaQuery.addEventListener("change", handleScreenChange);

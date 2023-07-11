@@ -355,15 +355,13 @@ h4 {
     height: 102px;
 }
 
-.weather-info__uv-index {
+.weather-info__pressure {
     margin-top: 20px;
+    align-items: flex-end;
+    font-size: 3rem;
 }
-.uv-index {
-    margin-top: 10px;
-    margin-bottom: 5px;
-}
-.uv-index + p {
-    margin-bottom: 10px;
+.weather-info__pressure p:last-child {
+    font-size: 1rem;
 }
 
 .weather-info__wind {
@@ -374,9 +372,12 @@ h4 {
 .weather-info__wind p:nth-child(2) {
     font-size: 1rem;
 }
+.weather-info__deg p {
+    margin-left: 20px;
+}
 .weather-info_wind-icon {
-    width: 64px;
-    height: 64px;
+    width: 32px;
+    height: 32px;
     stroke-width: 1;
     animation: wind 5s linear infinite;
 }
@@ -591,17 +592,17 @@ body.dark .dark-text {
 
 @keyframes wind {
     0% {
-        transform: translateX(50px);
+        transform: translateX(15px);
         stroke-dasharray: 40;
         stroke-dashoffset: 5;
         opacity: 1;
     }
     50% {
-        transform: translateX(80px);
+        transform: translateX(40px);
         opacity: 0.5;
     }
     100% {
-        transform: translateX(50px);
+        transform: translateX(15px);
         stroke-dasharray: 0;
         stroke-dashoffset: 0;
         opacity: 1;
