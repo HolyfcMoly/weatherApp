@@ -237,6 +237,12 @@ h4 {
     border: none;
 }
 
+.input_container_search-btn {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+}
+
 .left_info_weather--text {
     font-size: 6rem;
     font-weight: 600;

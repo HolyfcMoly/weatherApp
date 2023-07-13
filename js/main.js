@@ -1,6 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
     const apiKey = '0f14f6df785ce6eb97b04d873ae40fd8';
-    const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=paris&appid=${apiKey}&units=metric&lang=ru`
     const leftInfo = document.querySelector(".left_info");
     const mediaQuery = window.matchMedia("(max-width: 1023px)");
     const btns = document.querySelectorAll(".header_list_item-btn");
@@ -9,9 +8,28 @@ window.addEventListener("DOMContentLoaded", () => {
     const leftDigit = wrapper.querySelector('.left_info_weather--text h2');
     const rightDigit = wrapper.querySelector('.right_info_list_item-degrees-day');
     const degrees = wrapper.querySelector('.left_info_weather--degrees');
+    const searchBtn = document.querySelector('.input_container_search-btn');
+    const input = document.querySelector('.input_search');
     let isCelsius = true;
+    
+    
+        fetch('city.list.json')
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(obj => {
+                    const cityObj = {
+                        id: obj.id,
+                        city: obj.name,
+                        country: obj.country
+                    }
+                    return cityObj
+                })
+            })
 
-    async function checkWeather() {
+
+        async function checkWeather(city = 'Moscow') {
+
+        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=ru`
         const response = await fetch(apiUrl);
         const data = await response.json()
         console.log(data, 'data')
@@ -46,7 +64,6 @@ window.addEventListener("DOMContentLoaded", () => {
         const direction = document.querySelector('.weather-info__deg p');
         windDirection(direction, deg);
     }
-    checkWeather()
 
     function windDirection(trigger, deg) {
         const directions = {
@@ -147,10 +164,22 @@ window.addEventListener("DOMContentLoaded", () => {
             themeBtn.classList.remove('fadeInUp');
         }
     }
+
+    checkWeather()
     date();
     toggleTemperature();
     handleScreenChange(mediaQuery);
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
+    searchBtn.addEventListener('click', () => {
+        checkWeather(input.value);
+        input.value = '';
+    });
+    input.addEventListener('keydown', (e) => {
+        if(e.keyCode === 13) {
+            checkWeather(input.value);
+            input.value = '';
+        }
+    })
 });
