@@ -1,69 +1,188 @@
 window.addEventListener("DOMContentLoaded", () => {
     const apiKey = '0f14f6df785ce6eb97b04d873ae40fd8';
-    const leftInfo = document.querySelector(".left_info");
     const mediaQuery = window.matchMedia("(max-width: 1023px)");
+    const wrapper = document.querySelector('.wrapper');
+    const leftInfo = wrapper.querySelector(".left_info");
+    const todayWeather = document.querySelector('.right_info-grid');
+    const forecastSection = document.querySelector('.right_info_list');
     const btns = document.querySelectorAll(".header_list_item-btn");
     const themeBtn = document.querySelector(".header_list_item-btn--theme");
-    const wrapper = document.querySelector('.wrapper');
     const leftDigit = wrapper.querySelector('.left_info_weather--text h2');
     const rightDigit = wrapper.querySelector('.right_info_list_item-degrees-day');
     const degrees = wrapper.querySelector('.left_info_weather--degrees');
     const searchBtn = document.querySelector('.input_container_search-btn');
-    const input = document.querySelector('.input_search');
+    const input = document.querySelector('[data-search-field]');
+    const searchList = document.querySelector('.left_info-search-result');
+    const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
+    const currentLocationBtn = document.querySelector('[data-current-location-btn]');
+    const container = document.querySelector('.left_info ');
+    
     let isCelsius = true;
+    let searchTimeout = null;
+    const searchTimeoutDuration = 500;
     
-    
-        fetch('city.list.json')
-            .then(res => res.json())
-            .then(data => {
-                data.forEach(obj => {
-                    const cityObj = {
-                        id: obj.id,
-                        city: obj.name,
-                        country: obj.country
-                    }
-                    return cityObj
-                })
+        const fetchData = (url, callback) => {
+            fetch(`${url}&appid=${apiKey}`)
+                .then(res => res.json())
+                .then(data => callback(data))
+        }
+
+        const url = {
+            currentWeather(lat, lon) {
+                return `https://api.openweathermap.org/data/2.5/weather?${lat}&${lon}&units=metric&lang=ru`
+            },
+            forecast(lat, lon) {
+                return `https://api.openweathermap.org/data/2.5/forecast?${lat}&${lon}`
+            },
+            reverseGeo(lat, lon) {
+                return `http://api.openweathermap.org/geo/1.0/reverse?${lat}&${lon}&limit=5`
+            },
+            /*
+            * @param {string} query поиск например 'London', 'New York'
+            */
+            geo(query) {
+                return `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5`
+            },
+        }
+
+        const weekDayNames = [
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
+        ]
+
+        const monthNames = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+        ]
+
+        const getDate = function(dateUnix, timezone) {
+            const date = new Date((dateUnix + timezone) * 1000);
+            const weekDayName = weekDayNames[date.getUTCDay()];
+            const monthName = monthNames[date.getUTCMonth()];
+
+            return `${weekDayName}, ${monthName} ${date.getUTCDate()}`
+        }
+
+        function getTime(timeUnix, timezone) {
+            const now = new Date((timeUnix + timezone) * 1000);
+            const hour = now.getUTCHours();
+            const minutes = now.getUTCMinutes();
+
+            return `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`
+        }
+
+        const currentLocation = () => {
+            window.navigator.geolocation.getCurrentPosition(res => {
+                const {latitude, longitude} = res.coords;
+
+                checkWeather(`lat=${latitude}, lon=${longitude}`);
+            }, err => {
+                window.location.hash = defaultLocation;
             })
+        }
 
+        const searchedLocation = query => checkWeather(...query.split('&'))
 
-        async function checkWeather(city = 'Moscow') {
+        const routes = new Map([
+            ['/current-weather', currentLocation],
+            ['/weather', searchedLocation]
+        ]);
 
-        const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=ru`
-        const response = await fetch(apiUrl);
-        const data = await response.json()
-        console.log(data, 'data')
-
-        document.querySelector('.left_info_place--text').innerHTML = data.city.name;
-        leftDigit.innerHTML = Math.round(data.list[0].main.temp);
-
-        let sunrise = new Date(data.city.sunrise * 1000);
-        const sunriseHour = sunrise.getHours();
-        const sunriseMinutes = sunrise.getMinutes();
-
-        let sunset = new Date(data.city.sunset * 1000);
-        const sunsetHour = sunset.getHours();
-        const sunsetMinutes = sunset.getMinutes();
+        const checkHash = () => {
+            const requestURL = window.location.hash.slice(1)
         
-        document.querySelector('.weather-info__sunrise p').innerHTML = `
-        ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
-        :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
+            const [route, query] = requestURL.includes ? requestURL.split('?') : [requestURL];
 
-        document.querySelector('.weather-info__sunset p').innerHTML = `
-        ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
-        :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
+            routes.get(route) ? routes.get(route)(query) : 'error404()';
+        }
 
-        document.querySelector('.weather-info__wind p').innerHTML = data.list[0].wind.speed;
-        document.querySelector('.weather-info__hum p').innerHTML = data.list[0].main.humidity;
-        document.querySelector('.weather-info__visability p').innerHTML = data.list[0].visibility / 1000;
-        document.querySelector('.weather-info__pressure p').innerHTML = data.list[0].main.pressure;
+        window.addEventListener('hashchange', checkHash);
+        window.addEventListener('load', () => {
+            if(!window.location.hash) {
+                window.location.hash = '#/current-location'
+            } else {
+                checkHash();
+            }
+        })
 
-        const deg = data.list[0].wind.deg
 
-        document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
-        const direction = document.querySelector('.weather-info__deg p');
-        windDirection(direction, deg);
-    }
+
+        function checkWeather(lat, lon) {
+            leftInfo.innerHTML = '';
+            todayWeather.innerHTML = '';
+            forecastSection.innerHTML = '';
+
+            if(window.location.hash === '#/current-location') {
+                currentLocationBtn.setAttribute('disabled', '')
+            } else {
+                currentLocationBtn.removeAttribute('disabled');
+            }
+
+            fetchData(url.currentWeather(lat, lon), (currentWeather) => {
+                const {
+                    weather,
+                    dt: dateUnix,
+                    sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC},
+                    main:{temp, humidity, pressure},
+                    wind: {speed, deg},
+                    visibility,
+                    timezone
+                } = currentWeather;
+                const [{description, icon}] = weather;
+                
+            })
+        }
+    //     function checkWeather(lat, lon) {
+
+    //     const response = fetch(apiUrl);
+    //     const data = response.json()
+    //     console.log(data, 'data')
+
+    //     document.querySelector('.left_info_place--text').innerHTML = data.city.name;
+    //     leftDigit.innerHTML = Math.round(data.list[0].main.temp);
+
+    //     let sunrise = new Date(data.city.sunrise * 1000);
+    //     const sunriseHour = sunrise.getHours();
+    //     const sunriseMinutes = sunrise.getMinutes();
+
+    //     let sunset = new Date(data.city.sunset * 1000);
+    //     const sunsetHour = sunset.getHours();
+    //     const sunsetMinutes = sunset.getMinutes();
+        
+    //     document.querySelector('.weather-info__sunrise p').innerHTML = `
+    //     ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
+    //     :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
+
+    //     document.querySelector('.weather-info__sunset p').innerHTML = `
+    //     ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
+    //     :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
+
+    //     document.querySelector('.weather-info__wind p').innerHTML = data.list[0].wind.speed;
+    //     document.querySelector('.weather-info__hum p').innerHTML = data.list[0].main.humidity;
+    //     document.querySelector('.weather-info__visability p').innerHTML = data.list[0].visibility / 1000;
+    //     document.querySelector('.weather-info__pressure p').innerHTML = data.list[0].main.pressure;
+
+    //     const deg = data.list[0].wind.deg
+
+    //     document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
+    //     const direction = document.querySelector('.weather-info__deg p');
+    //     windDirection(direction, deg);
+    // }
 
     function windDirection(trigger, deg) {
         const directions = {
@@ -85,15 +204,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 trigger.innerHTML = dir
             }
         })
-    }
-
-    function date() {
-        const now = new Date();
-        const hour = now.getHours();
-        const minutes = now.getMinutes();
-        document.querySelector('.left_info_time-text').innerHTML = `
-        ${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}
-        `
     }
 
     function convertTemperature(trigger, degrees = '°') {
@@ -166,16 +276,66 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     checkWeather()
-    date();
+    getTime();
     toggleTemperature();
     handleScreenChange(mediaQuery);
+
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
+
+
     searchBtn.addEventListener('click', () => {
+        searchList.classList.toggle('active');
+        if(searchList.classList.contains('active')) {
+            const searchItems = document.querySelectorAll('[data-search-toggler]')
+            searchItems.forEach(item => item.addEventListener('click', () => searchList.classList.remove('active')))
+        }
         checkWeather(input.value);
         input.value = '';
     });
+
+    input.addEventListener('input', () => {
+        if(searchTimeout) {
+            clearInterval(searchTimeout);
+        }
+
+        if(!input.value) {
+            searchList.classList.remove('active')
+            searchList.innerHTML = ''
+            input.classList.remove('searching')
+        } else {
+            input.classList.add('searching')
+        }
+
+        if(input.value) {
+            searchTimeout = setTimeout(() => {
+                fetchData(url.geo(input.value), function(locations) {
+                    input.classList.remove('searching');
+                    searchList.classList.add('active');
+                    searchList.innerHTML = `
+                        <ul class="view-list dropdown" data-search-list></ul>
+                    `;
+                    const items = [];
+                    for (const {name, lat, lon, country, state} of locations) {
+                        const searchItem = document.createElement('li');
+                        searchItem.classList.add('view-item');
+
+                        searchItem.innerHTML = `
+                            <div>
+                                <p class="view-item-title">${name}</p>
+                                <p class="view-item-subtitle">${state || ''}, ${country}</p>
+                            </div>
+                            <a href="#/weather?lat=${lat}&lon=${lon}" aria-label='${name} weather' data-search-toggler></a>
+                        `;
+                        searchList.querySelector('[data-search-list]').appendChild(searchItem);
+                        items.push(searchItem.querySelector('[data-search-toggler]'))
+                    }
+                })
+            }, searchTimeoutDuration)
+        }
+    })
+
     input.addEventListener('keydown', (e) => {
         if(e.keyCode === 13) {
             checkWeather(input.value);

@@ -192,6 +192,15 @@ h4 {
     transform: scale(0.9);
 }
 
+.header_list_item-btn-location .location {
+    display: block;
+    width: 55px;
+    height: 36px;
+    background: url('../img/location.svg') center/cover no-repeat transparent;
+    border: none;
+
+}
+
 .header_list_item-btn--theme {
     cursor: pointer;
     border: none;
@@ -215,6 +224,7 @@ h4 {
 }
 
 .input_container {
+    position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -237,11 +247,45 @@ h4 {
     border: none;
 }
 
+.input_search::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
 .input_container_search-btn {
     cursor: pointer;
     border: none;
     background-color: transparent;
 }
+
+.left_info-search-result {
+    position: relative;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.left_info-search-result.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.view-list {
+    width: 100%;
+    background-color: #d9d9d9;
+}
+
+.dropdown {
+    position: absolute;
+}
+
+.view-item {
+    padding: 0 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.view-item div {
+    display: flex;
+}
+
 
 .left_info_weather--text {
     font-size: 6rem;

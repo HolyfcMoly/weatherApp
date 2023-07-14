@@ -17,6 +17,11 @@
                 </h1>
                 <ul class="header_list d-flex align-center">
                     <li class="header_list_item">
+                        <a href="#/current-location" class="header_list_item-btn-location dark-btn" data-current-location-btn>
+                            <span class="location"></span>
+                        </a>
+                    </li>
+                    <li class="header_list_item">
                         <button class="header_list_item-btn dark-btn active-btn">°C</button>
                     </li>
                     <li class="header_list_item">
@@ -123,7 +128,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                     </svg>
-                    <input type="text" class="input_search ff-med" placeholder="Укажите город">
+                    <input type="search" name="search" class="input_search ff-med" data-search-field autocomplete="off" placeholder="Укажите город">
                     <button class="input_container_search-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="input_search--icon">
@@ -133,6 +138,7 @@
                         </svg>
                     </button>
                 </div>
+                <div class="left_info-search-result"></div>
                 <div class="left-info-content px-5 py-5">
                     <div class="left_info_weather">
                         <figure>
@@ -337,7 +343,6 @@
             </div>
         </div>
     </main>
-
     <script src="js/main.js"></script>
 </body>
 
