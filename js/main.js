@@ -1,5 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
-    const apiKey = '0f14f6df785ce6eb97b04d873ae40fd8';
+    const apiKey = 'd37689ff161e969e2d476005a81a5492';
     const mediaQuery = window.matchMedia("(max-width: 1023px)");
     const wrapper = document.querySelector('.wrapper');
     const leftInfo = wrapper.querySelector(".left_info");
@@ -78,10 +78,21 @@ window.addEventListener("DOMContentLoaded", () => {
             return `${weekDayName}, ${monthName} ${date.getUTCDate()}`
         }
 
-        function getTime(timeUnix, timezone) {
-            const now = new Date((timeUnix + timezone) * 1000);
-            const hour = now.getUTCHours();
-            const minutes = now.getUTCMinutes();
+        function convertTimeZone(utcDate, timezoneOffset) {
+            const timeWithOffset = new Date(utcDate.getTime() + timezoneOffset);
+            const localTime = {
+                hours: timeWithOffset.getHours(),
+                minutes: timeWithOffset.getMinutes()
+            }
+            return localTime
+        }
+
+        function getTime(timezone) {
+            const utcDate = new Date(Date.UTC(0,0,0,0,0));
+            console.log(utcDate)
+            const timeForTimeZone = convertTimeZone(utcDate, timezone)
+            const hour = timeForTimeZone.hours;
+            const minutes = timeForTimeZone.minutes;
 
             return `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`
         }
@@ -123,9 +134,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
         function checkWeather(lat, lon) {
-            leftInfo.innerHTML = '';
-            todayWeather.innerHTML = '';
-            forecastSection.innerHTML = '';
+            // leftInfo.innerHTML = '';
+            // todayWeather.innerHTML = '';
+            // forecastSection.innerHTML = '';
 
             if(window.location.hash === '#/current-location') {
                 currentLocationBtn.setAttribute('disabled', '')
@@ -144,45 +155,43 @@ window.addEventListener("DOMContentLoaded", () => {
                     timezone
                 } = currentWeather;
                 const [{description, icon}] = weather;
+                console.log(currentWeather)
+                leftDigit.innerHTML = parseInt(temp);
+                document.querySelector('.left_info_place-date--day').innerHTML = `${getDate(dateUnix,timezone)}`
+                document.querySelector('.left_info_time-text').innerHTML = `${getTime(timezone)}`;
+
+                let sunrise = new Date(sunriseUnixUTC * 1000);
+                const sunriseHour = sunrise.getHours();
+                const sunriseMinutes = sunrise.getMinutes();
+
+                let sunset = new Date(sunsetUnixUTC * 1000);
+                const sunsetHour = sunset.getHours();
+                const sunsetMinutes = sunset.getMinutes();
                 
+                document.querySelector('.weather-info__sunrise p').innerHTML = `
+                ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
+                :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
+
+                document.querySelector('.weather-info__sunset p').innerHTML = `
+                ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
+                :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
+                
+                document.querySelector('.weather-info__wind p').innerHTML = speed;
+                document.querySelector('.weather-info__hum p').innerHTML = humidity;
+                document.querySelector('.weather-info__visability p').innerHTML = visibility / 1000;
+                document.querySelector('.weather-info__pressure p').innerHTML = pressure;
+
+                const degrees = deg
+
+                document.querySelector('.weather-info__deg svg').style.transform = `rotate(${degrees}deg)`
+                const direction = document.querySelector('.weather-info__deg p');
+                windDirection(direction, degrees);
+
+                fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
+                    document.querySelector('.left_info_place--text').innerHTML = `${name}, ${country}`
+                })
             })
         }
-    //     function checkWeather(lat, lon) {
-
-    //     const response = fetch(apiUrl);
-    //     const data = response.json()
-    //     console.log(data, 'data')
-
-    //     document.querySelector('.left_info_place--text').innerHTML = data.city.name;
-    //     leftDigit.innerHTML = Math.round(data.list[0].main.temp);
-
-    //     let sunrise = new Date(data.city.sunrise * 1000);
-    //     const sunriseHour = sunrise.getHours();
-    //     const sunriseMinutes = sunrise.getMinutes();
-
-    //     let sunset = new Date(data.city.sunset * 1000);
-    //     const sunsetHour = sunset.getHours();
-    //     const sunsetMinutes = sunset.getMinutes();
-        
-    //     document.querySelector('.weather-info__sunrise p').innerHTML = `
-    //     ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
-    //     :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
-
-    //     document.querySelector('.weather-info__sunset p').innerHTML = `
-    //     ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
-    //     :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
-
-    //     document.querySelector('.weather-info__wind p').innerHTML = data.list[0].wind.speed;
-    //     document.querySelector('.weather-info__hum p').innerHTML = data.list[0].main.humidity;
-    //     document.querySelector('.weather-info__visability p').innerHTML = data.list[0].visibility / 1000;
-    //     document.querySelector('.weather-info__pressure p').innerHTML = data.list[0].main.pressure;
-
-    //     const deg = data.list[0].wind.deg
-
-    //     document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
-    //     const direction = document.querySelector('.weather-info__deg p');
-    //     windDirection(direction, deg);
-    // }
 
     function windDirection(trigger, deg) {
         const directions = {
@@ -275,7 +284,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    checkWeather()
     getTime();
     toggleTemperature();
     handleScreenChange(mediaQuery);
@@ -330,16 +338,24 @@ window.addEventListener("DOMContentLoaded", () => {
                         `;
                         searchList.querySelector('[data-search-list]').appendChild(searchItem);
                         items.push(searchItem.querySelector('[data-search-toggler]'))
+                        searchItem.addEventListener('click', (e) => {
+                            const link = e.currentTarget.querySelector('[data-search-toggler]')
+                                if(link) {
+                                    link.click();
+                                    input.value = '';
+                                    searchList.classList.remove('active');
+                                }
+                        })
                     }
                 })
             }, searchTimeoutDuration)
         }
     })
 
-    input.addEventListener('keydown', (e) => {
-        if(e.keyCode === 13) {
-            checkWeather(input.value);
-            input.value = '';
-        }
-    })
+    // input.addEventListener('keydown', (e) => {
+    //     if(e.keyCode === 13) {
+    //         checkWeather(input.value);
+    //         input.value = '';
+    //     }
+    // })
 });
