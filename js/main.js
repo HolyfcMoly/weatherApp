@@ -46,28 +46,28 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         const weekDayNames = [
-            'Sunday',
-            'Monday',
-            'Tuesday',
-            'Wednesday',
-            'Thursday',
-            'Friday',
-            'Saturday'
+            'Воскресенье',
+            'Понедельник',
+            'Вторник',
+            'Среда',
+            'Четверг',
+            'Пятница',
+            'Суббота'
         ]
 
         const monthNames = [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
+            'Янв',
+            'Фев',
+            'Мар',
+            'Апр',
+            'Май',
+            'Июн',
+            'Июл',
+            'Авг',
+            'Сен',
+            'Окт',
+            'Ноя',
+            'Дек',
         ]
 
         const getDate = function(dateUnix, timezone) {
@@ -78,21 +78,13 @@ window.addEventListener("DOMContentLoaded", () => {
             return `${weekDayName}, ${monthName} ${date.getUTCDate()}`
         }
 
-        function convertTimeZone(utcDate, timezoneOffset) {
-            const timeWithOffset = new Date(utcDate.getTime() + timezoneOffset);
-            const localTime = {
-                hours: timeWithOffset.getHours(),
-                minutes: timeWithOffset.getMinutes()
-            }
-            return localTime
-        }
-
         function getTime(timezone) {
-            const utcDate = new Date(Date.UTC(0,0,0,0,0));
-            console.log(utcDate)
-            const timeForTimeZone = convertTimeZone(utcDate, timezone)
-            const hour = timeForTimeZone.hours;
-            const minutes = timeForTimeZone.minutes;
+            const offset = -new Date().getTimezoneOffset();
+            const timestamp = Date.now() - offset * 60 * 1000;
+            const now = new Date(timestamp);
+            const timeForTimeZone = new Date(now.getTime() + (timezone * 1000))
+            const hour = timeForTimeZone.getHours();
+            const minutes = timeForTimeZone.getMinutes();
 
             return `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`
         }
@@ -131,8 +123,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
 
-
-
         function checkWeather(lat, lon) {
             // leftInfo.innerHTML = '';
             // todayWeather.innerHTML = '';
@@ -154,19 +144,21 @@ window.addEventListener("DOMContentLoaded", () => {
                     visibility,
                     timezone
                 } = currentWeather;
-                const [{description, icon}] = weather;
                 console.log(currentWeather)
+                const [{description, icon}] = weather;
                 leftDigit.innerHTML = parseInt(temp);
                 document.querySelector('.left_info_place-date--day').innerHTML = `${getDate(dateUnix,timezone)}`
                 document.querySelector('.left_info_time-text').innerHTML = `${getTime(timezone)}`;
 
                 let sunrise = new Date(sunriseUnixUTC * 1000);
-                const sunriseHour = sunrise.getHours();
-                const sunriseMinutes = sunrise.getMinutes();
+                const localSunrise = new Date(sunrise.getTime() + timezone * 1000);
+                const sunriseHour = localSunrise.getUTCHours();
+                const sunriseMinutes = localSunrise.getUTCMinutes();
 
                 let sunset = new Date(sunsetUnixUTC * 1000);
-                const sunsetHour = sunset.getHours();
-                const sunsetMinutes = sunset.getMinutes();
+                const localSunset = new Date(sunset.getTime() + timezone * 1000);
+                const sunsetHour = localSunset.getUTCHours();
+                const sunsetMinutes = localSunset.getUTCMinutes();
                 
                 document.querySelector('.weather-info__sunrise p').innerHTML = `
                 ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
@@ -175,6 +167,9 @@ window.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.weather-info__sunset p').innerHTML = `
                 ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
                 :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
+
+
+                document.querySelector('.left_info_weather-now-text').innerHTML = description;
                 
                 document.querySelector('.weather-info__wind p').innerHTML = speed;
                 document.querySelector('.weather-info__hum p').innerHTML = humidity;
@@ -189,6 +184,13 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
                     document.querySelector('.left_info_place--text').innerHTML = `${name}, ${country}`
+                })
+
+                fetchData(url.forecast(lat, lon), (forecast) => {
+                    const {
+
+                    } = forecast;
+                    console.log(forecast    )
                 })
             })
         }
@@ -284,7 +286,6 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    getTime();
     toggleTemperature();
     handleScreenChange(mediaQuery);
 
