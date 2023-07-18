@@ -16,6 +16,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
     const currentLocationBtn = document.querySelector('[data-current-location-btn]');
     const container = document.querySelector('.left_info ');
+    const feelLike = document.querySelector('.weather-info__feelLike p');
+    const feelLikeDegrees = document.querySelector('.weather-info__feelLike p').nextElementSibling
     
     let isCelsius = true;
     let searchTimeout = null;
@@ -139,7 +141,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     weather,
                     dt: dateUnix,
                     sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC},
-                    main:{temp, humidity, pressure},
+                    main:{temp, humidity, pressure, feels_like},
                     wind: {speed, deg},
                     visibility,
                     timezone
@@ -171,10 +173,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 document.querySelector('.left_info_weather-now-text').innerHTML = description;
                 
+                document.querySelector('.weather-info__feelLike p').innerHTML = Math.floor(parseInt(feels_like))
+                document.querySelector('.weather-info__pressure p').innerHTML = pressure;
                 document.querySelector('.weather-info__wind p').innerHTML = speed;
                 document.querySelector('.weather-info__hum p').innerHTML = humidity;
                 document.querySelector('.weather-info__visability p').innerHTML = visibility / 1000;
-                document.querySelector('.weather-info__pressure p').innerHTML = pressure;
 
                 const degrees = deg
 
@@ -194,7 +197,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 })
             })
         }
-
+        
     function windDirection(trigger, deg) {
         const directions = {
             "0-15" : "С",
@@ -216,23 +219,33 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
+    const daysTemp = document.querySelectorAll('.day-temp');
+    const daysDegrees = document.querySelectorAll('.day-degrees');
 
-    function convertTemperature(trigger, degrees = '°') {
-        let temperature = +trigger.innerHTML;
+    function convertTemperature(temp, degrees = '°C') {
+        let temperature = parseInt(temp.innerText);
+        console.log(temperature)
+        let result;
+
         if (isCelsius) {
-            let fahrenheit = (temperature * 9/5) + 32;
-            trigger.innerHTML = Math.round(fahrenheit);
-            degrees.innerHTML = "°F"
+            result = Math.round((temperature * 9/5) + 32);
+            console.log(result)
         } else {
-            let celsius = (temperature - 32) * 5/9;
-            trigger.innerHTML = Math.round(celsius);
-            degrees.innerHTML = "°C"
+            result = Math.round((temperature - 32) * 5/9);
+            console.log(result)
         }
-    }
+        degrees.textContent = isCelsius ? '°F' : '°C';
 
+        temp.textContent = result
+    }
+    
     function toggleTemperature() {
         isCelsius = !isCelsius;
-        convertTemperature(leftDigit);
+        // convertTemperature(leftDigit, degrees);
+        // convertTemperature(feelLike,feelLikeDegrees);
+        daysTemp.forEach((temp, i) => {
+            convertTemperature(temp, daysDegrees[i])
+        });
     }
 
     function handleScreenChange(mediaQuery) {

@@ -355,17 +355,42 @@ h4 {
 .right_info_list_item:not(:last-child) {
     margin-right: 15px;
 }
-.right_info_list_item-degrees {
+
+.right_info_list_item-degrees-day {
+    margin-top: 10px;
+    font-size: 1.5rem;
+}
+
+.right_info_list_item-description {
     margin-top: 10px;
 }
 
-.right_info_list_item-degrees-day {
-    font-size: 1.25rem;
+.right_info_list_item--weather {
+    margin-top: 15px;
+    min-width: 200px;
+    flex-wrap: wrap;
 }
 
-.right_info_list_item-degrees-night {
-    color: var(--thin-text);
-    font-size: 1rem;
+.right_info_list_item--weather h2:not(:last-child) {
+    margin-bottom: 10px;
+}
+.weather-pressure, .weather-wind-title, .weather-hum {
+    font-size: 0.9rem;
+}
+.weather-pressure-info, .weather-wind-speed, .weather-hum-info {
+    font-size: 0.9rem;
+}
+
+.weather-info__feelLike {
+    font-size: 4rem;
+}
+
+.weather-info__feelLike p:last-child {
+    font-size: 1.5rem;
+}
+
+.weather-wind__deg {
+    margin-left: 5px;
 }
 
 .right_info_header {
