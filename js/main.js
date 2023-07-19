@@ -55,7 +55,7 @@ window.addEventListener("DOMContentLoaded", () => {
             'Четверг',
             'Пятница',
             'Суббота'
-        ]
+        ];
 
         const monthNames = [
             'Янв',
@@ -70,7 +70,19 @@ window.addEventListener("DOMContentLoaded", () => {
             'Окт',
             'Ноя',
             'Дек',
-        ]
+        ];
+
+        const weatherNow = [
+            'Дождь',
+            'Гроза',
+            'Ясно',
+            'Облачно',
+            'Небольшой дождь',
+            'Снег',
+            'Небольшая облачность',
+            'Переменная облачность',
+            'Туман',
+        ];
 
         const getDate = function(dateUnix, timezone) {
             const date = new Date((dateUnix + timezone) * 1000);
@@ -191,9 +203,88 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 fetchData(url.forecast(lat, lon), (forecast) => {
                     const {
-
+                        list: forecastList,
+                        city: {timezone}
                     } = forecast;
-                    console.log(forecast    )
+
+                        //24h forecast
+                    // for (const [index, data] of forecastList.entries()) {
+                    //     if(index > 7) break;
+
+                    //     const {
+                    //         dt: dateUnix,
+                    //         main:{temp, humidity, pressure},
+                    //         wind: {deg, speed},
+                    //         weather
+                    //     } = data;
+                    //     const [{description}] = weather;
+                    //     document.querySelectorAll
+                    // }
+                    forecast.innerHTML = `
+                        <ul class="right_info_list d-flex"></ul>
+                    `;
+
+                    for (let i = 7, len = forecastList.length; i < len; i+=8) {
+
+                        const {
+                            main:{temp_max, humidity, pressure},
+                            wind: {deg, speed},
+                            weather,
+                            dt_txt
+                        } = forecastList[i];
+                        const [{description}] = weather;
+                        const date = new Date(dt_txt);
+                        const li = document.createElement('li');
+                        li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5");
+
+                        li.innerHTML = `
+                            <h2 class="right_info_list_item-day">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
+                            <figure>
+                                <svg class="weather_anim-icon" viewBox="0 0 100 100">
+                                    <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                    <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                        <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                    <use xlink:href="#whiteCloud" x="11"></use>
+                                    <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                    </use>
+                                </svg>
+                            </figure>
+                            <div class="right_info_list_item-degrees-day d-flex justify-center">
+                                <p class="day-temp">${temp_max}</p>
+                                <p class="day-degrees">°C</p>
+                            </div>
+                            <p class="right_info_list_item-description d-flex justify-center">${description}</p>
+                            <div class="right_info_list_item--weather d-flex justify-between">
+                                <h2 class="weather-pressure">Давление:</h2>
+                                <div class="weather-pressure-info d-flex">
+                                    <p>${pressure}</p>
+                                    <p>гПа</p>
+                                </div>
+                                <h2 class="weather-wind-title">Ветер:</h2>
+                                <div class="weather-wind-speed d-flex">
+                                    <p>${speed}</p>
+                                    <p>м/с</p>
+                                    <div class="weather-wind__deg d-flex">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" transform="rotate(${deg})">
+                                            <path fill="none" d="M-1-1h582v402H-1z"/>
+                                            <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
+                                        </svg>
+                                        <p>С-З</p>
+                                    </div>
+                                </div>
+                                <h2 class="weather-hum">Влажность</h2>
+                                <div class="weather-hum-info d-flex">
+                                    <p>${humidity}</p>
+                                    <p>%</p>
+                                </div>
+                            </div>
+                        `;
+                        const rightInfo = document.querySelector('.right_info');
+                        
+                        rightInfo.querySelector('.right_info_list').appendChild(li)
+                    }
+
+                    console.log(forecast, 'forecast')
                 })
             })
         }
@@ -223,30 +314,27 @@ window.addEventListener("DOMContentLoaded", () => {
     const daysDegrees = document.querySelectorAll('.day-degrees');
 
     function convertTemperature(temp, degrees = '°C') {
-        let temperature = parseInt(temp.innerText);
-        console.log(temperature)
-        let result;
-
+        const temperature = parseInt(temp.textContent);
         if (isCelsius) {
-            result = Math.round((temperature * 9/5) + 32);
-            console.log(result)
+            const converted = Math.round((temperature * 9/5) + 32);
+            temp.innerHTML = converted;
         } else {
-            result = Math.round((temperature - 32) * 5/9);
-            console.log(result)
+            const converted = Math.round((temperature - 32) * 5/9);
+            temp.innerHTML = converted;
         }
         degrees.textContent = isCelsius ? '°F' : '°C';
-
-        temp.textContent = result
     }
     
     function toggleTemperature() {
         isCelsius = !isCelsius;
-        // convertTemperature(leftDigit, degrees);
-        // convertTemperature(feelLike,feelLikeDegrees);
+        convertTemperature(leftDigit, degrees);
+        convertTemperature(feelLike,feelLikeDegrees);
         daysTemp.forEach((temp, i) => {
+            console.log(temp.textContent); 
             convertTemperature(temp, daysDegrees[i])
         });
     }
+    
 
     function handleScreenChange(mediaQuery) {
         if (mediaQuery.matches) {
