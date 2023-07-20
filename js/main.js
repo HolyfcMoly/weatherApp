@@ -34,7 +34,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 return `https://api.openweathermap.org/data/2.5/weather?${lat}&${lon}&units=metric&lang=ru`
             },
             forecast(lat, lon) {
-                return `https://api.openweathermap.org/data/2.5/forecast?${lat}&${lon}`
+                return `https://api.openweathermap.org/data/2.5/forecast?${lat}&${lon}&units=metric&lang=ru`
             },
             reverseGeo(lat, lon) {
                 return `http://api.openweathermap.org/geo/1.0/reverse?${lat}&${lon}&limit=5`
@@ -136,11 +136,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 checkHash();
             }
         })
-
+        const days = [];
+        const daysDeg = [];
         function checkWeather(lat, lon) {
-            // leftInfo.innerHTML = '';
-            // todayWeather.innerHTML = '';
-            // forecastSection.innerHTML = '';
+            forecastSection.innerHTML = '';
 
             if(window.location.hash === '#/current-location') {
                 currentLocationBtn.setAttribute('disabled', '')
@@ -191,11 +190,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 document.querySelector('.weather-info__hum p').innerHTML = humidity;
                 document.querySelector('.weather-info__visability p').innerHTML = visibility / 1000;
 
-                const degrees = deg
 
-                document.querySelector('.weather-info__deg svg').style.transform = `rotate(${degrees}deg)`
+                document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
                 const direction = document.querySelector('.weather-info__deg p');
-                windDirection(direction, degrees);
+                windDirection(direction, deg);
 
                 fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
                     document.querySelector('.left_info_place--text').innerHTML = `${name}, ${country}`
@@ -228,7 +226,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                         const {
                             main:{temp_max, humidity, pressure},
-                            wind: {deg, speed},
+                            wind: {deg: windDir, speed},
                             weather,
                             dt_txt
                         } = forecastList[i];
@@ -236,7 +234,6 @@ window.addEventListener("DOMContentLoaded", () => {
                         const date = new Date(dt_txt);
                         const li = document.createElement('li');
                         li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5");
-
                         li.innerHTML = `
                             <h2 class="right_info_list_item-day">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
                             <figure>
@@ -250,7 +247,7 @@ window.addEventListener("DOMContentLoaded", () => {
                                 </svg>
                             </figure>
                             <div class="right_info_list_item-degrees-day d-flex justify-center">
-                                <p class="day-temp">${temp_max}</p>
+                                <p class="day-temp">${parseInt(temp_max)}</p>
                                 <p class="day-degrees">°C</p>
                             </div>
                             <p class="right_info_list_item-description d-flex justify-center">${description}</p>
@@ -265,7 +262,7 @@ window.addEventListener("DOMContentLoaded", () => {
                                     <p>${speed}</p>
                                     <p>м/с</p>
                                     <div class="weather-wind__deg d-flex">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" transform="rotate(${deg})">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" transform="rotate(${windDir})">
                                             <path fill="none" d="M-1-1h582v402H-1z"/>
                                             <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
                                         </svg>
@@ -280,8 +277,21 @@ window.addEventListener("DOMContentLoaded", () => {
                             </div>
                         `;
                         const rightInfo = document.querySelector('.right_info');
-                        
-                        rightInfo.querySelector('.right_info_list').appendChild(li)
+                        rightInfo.querySelector('.right_info_list').appendChild(li);
+                        const directions = document.querySelectorAll('.weather-wind__deg p');
+                        const svgs = document.querySelectorAll('.weather-wind__deg svg');
+                        svgs.forEach((svg, i) => {
+                            const transform = svg.getAttribute('transform');
+                            const degrees = +transform.match(/\d+/)[0]
+                            windDirection(directions[i],degrees)
+                        });
+                        const daysTemp = document.querySelectorAll('.day-temp');
+                        const daysDegrees = document.querySelectorAll('.day-degrees');
+                        daysTemp.forEach(day=>days.push(day.textContent));
+                        daysDegrees.forEach(deg=>daysDeg.push(deg))
+                        console.log(days)
+                        console.log(daysDeg)
+
                     }
 
                     console.log(forecast, 'forecast')
@@ -310,8 +320,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
-    const daysTemp = document.querySelectorAll('.day-temp');
-    const daysDegrees = document.querySelectorAll('.day-degrees');
 
     function convertTemperature(temp, degrees = '°C') {
         const temperature = parseInt(temp.textContent);
@@ -324,14 +332,14 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         degrees.textContent = isCelsius ? '°F' : '°C';
     }
-    
+
     function toggleTemperature() {
         isCelsius = !isCelsius;
         convertTemperature(leftDigit, degrees);
         convertTemperature(feelLike,feelLikeDegrees);
-        daysTemp.forEach((temp, i) => {
-            console.log(temp.textContent); 
-            convertTemperature(temp, daysDegrees[i])
+        days.forEach((temp, i) => {
+            console.log(temp); 
+            convertTemperature(temp, daysDeg[i])
         });
     }
     
