@@ -19,6 +19,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const feelLike = document.querySelector('.weather-info__feelLike p');
     const feelLikeDegrees = document.querySelector('.weather-info__feelLike p').nextElementSibling
     
+    let originalTemps = [];
     let isCelsius = true;
     let searchTimeout = null;
     const searchTimeoutDuration = 500;
@@ -136,10 +137,15 @@ window.addEventListener("DOMContentLoaded", () => {
                 checkHash();
             }
         })
+
         const days = [];
         const daysDeg = [];
+
         function checkWeather(lat, lon) {
             forecastSection.innerHTML = '';
+            // todayWeather.innerHTML = '';
+            // document.querySelector('.left-info-content').innerHTML = '';
+            
 
             if(window.location.hash === '#/current-location') {
                 currentLocationBtn.setAttribute('disabled', '')
@@ -195,6 +201,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 const direction = document.querySelector('.weather-info__deg p');
                 windDirection(direction, deg);
 
+                resetConversion();
                 fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
                     document.querySelector('.left_info_place--text').innerHTML = `${name}, ${country}`
                 })
@@ -287,18 +294,15 @@ window.addEventListener("DOMContentLoaded", () => {
                         });
                         const daysTemp = document.querySelectorAll('.day-temp');
                         const daysDegrees = document.querySelectorAll('.day-degrees');
-                        daysTemp.forEach(day=>days.push(day.textContent));
+                        daysTemp.forEach(day=>days.push(day));
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
-                        console.log(days)
-                        console.log(daysDeg)
-
                     }
 
                     console.log(forecast, 'forecast')
                 })
             })
         }
-        
+        let isConverted = false;
     function windDirection(trigger, deg) {
         const directions = {
             "0-15" : "С",
@@ -311,7 +315,7 @@ window.addEventListener("DOMContentLoaded", () => {
             "285-345" : "С-З",
             "345-360" : "C",
         }
-
+        
         let number = deg;
         Object.entries(directions).forEach(([range, dir]) => {
             const [start, end] = range.split('-');
@@ -320,29 +324,57 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
+    function resetConversion() {
+        if(isConverted) {
+            feelLikeDegrees.textContent = '°C';
+            degrees.textContent = '°C';
+            daysDeg.forEach((deg => deg.textContent = '°C'));
+            btns.forEach((btn) => {
+                btn.textContent === '°F' ? btn.classList.remove("active-btn") : btn.classList.add("active-btn");
+            });
+            isConverted = false;
+            isCelsius = false;
+        }
+    }
 
     function convertTemperature(temp, degrees = '°C') {
-        const temperature = parseInt(temp.textContent);
+        isConverted = true;
+        let temperature;
+        if(typeof temp === 'number') {
+            temperature = originalTemps[temp];
+        } else {
+            temperature = parseInt(temp.textContent)
+        }
+
+        let converted;
         if (isCelsius) {
-            const converted = Math.round((temperature * 9/5) + 32);
+            converted = Math.round((temperature * 9/5) + 32);
+            degrees.textContent = '°F';
+            daysDeg.forEach((deg => deg.textContent = '°F'));
             temp.innerHTML = converted;
         } else {
-            const converted = Math.round((temperature - 32) * 5/9);
+            converted = Math.round((temperature - 32) * 5/9);
+            degrees.textContent = '°C';
+            daysDeg.forEach((deg => deg.textContent = '°C'));
             temp.innerHTML = converted;
         }
-        degrees.textContent = isCelsius ? '°F' : '°C';
+        return converted
     }
 
     function toggleTemperature() {
-        isCelsius = !isCelsius;
+        isCelsius  = !isCelsius ;
         convertTemperature(leftDigit, degrees);
         convertTemperature(feelLike,feelLikeDegrees);
-        days.forEach((temp, i) => {
-            console.log(temp); 
-            convertTemperature(temp, daysDeg[i])
+        days.forEach((day,i) => {
+            originalTemps[i] = parseInt(day.textContent);
+        });
+        const convertedTemps = originalTemps.map((temp, i) => {
+            return convertTemperature(i)
+        }); 
+        convertedTemps.forEach((temp, i) => {
+            days[i].textContent = temp; 
         });
     }
-    
 
     function handleScreenChange(mediaQuery) {
         if (mediaQuery.matches) {
@@ -395,13 +427,11 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    toggleTemperature();
+    toggleTemperature()
     handleScreenChange(mediaQuery);
-
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
-
 
     searchBtn.addEventListener('click', () => {
         searchList.classList.toggle('active');
