@@ -20,6 +20,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const feelLikeDegrees = document.querySelector('.weather-info__feelLike p').nextElementSibling
     
     let originalTemps = [];
+    let isConverted = false;
     let isCelsius = true;
     let searchTimeout = null;
     const searchTimeoutDuration = 500;
@@ -44,7 +45,7 @@ window.addEventListener("DOMContentLoaded", () => {
             * @param {string} query поиск например 'London', 'New York'
             */
             geo(query) {
-                return `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5`
+                return `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&lang=ru`
             },
         }
 
@@ -201,7 +202,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 const direction = document.querySelector('.weather-info__deg p');
                 windDirection(direction, deg);
 
-                resetConversion();
                 fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
                     document.querySelector('.left_info_place--text').innerHTML = `${name}, ${country}`
                 })
@@ -297,12 +297,12 @@ window.addEventListener("DOMContentLoaded", () => {
                         daysTemp.forEach(day=>days.push(day));
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
                     }
-
                     console.log(forecast, 'forecast')
                 })
             })
+            resetConversion();
         }
-        let isConverted = false;
+        
     function windDirection(trigger, deg) {
         const directions = {
             "0-15" : "С",
