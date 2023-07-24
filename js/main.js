@@ -7,19 +7,27 @@ window.addEventListener("DOMContentLoaded", () => {
     const forecastSection = document.querySelector('.right_info_list');
     const btns = document.querySelectorAll(".header_list_item-btn");
     const themeBtn = document.querySelector(".header_list_item-btn--theme");
-    const leftDigit = wrapper.querySelector('.left_info_weather--text h2');
     const rightDigit = wrapper.querySelector('.right_info_list_item-degrees-day');
-    const degrees = wrapper.querySelector('.left_info_weather--degrees');
     const searchBtn = document.querySelector('.input_container_search-btn');
     const input = document.querySelector('[data-search-field]');
     const searchList = document.querySelector('.left_info-search-result');
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
     const currentLocationBtn = document.querySelector('[data-current-location-btn]');
     const container = document.querySelector('.left_info ');
-    const feelLike = document.querySelector('.weather-info__feelLike p');
-    const feelLikeDegrees = document.querySelector('.weather-info__feelLike p').nextElementSibling
     
+    
+    let days = [];
+    let daysDeg = [];
     let originalTemps = [];
+    
+    let currentWeatherDiv;
+    let leftDigitTemp;
+    let leftDigitTempDeg;
+
+    let currentWeatherUlGrid;
+    let currentDigitTemp;
+    let currentDigitTempDeg;
+
     let isConverted = false;
     let isCelsius = true;
     let searchTimeout = null;
@@ -139,13 +147,19 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
 
-        const days = [];
-        const daysDeg = [];
-
         function checkWeather(lat, lon) {
+            console.log('isCelsius before', isCelsius);
+            days = [];
+            daysDeg = [];
+            originalTemps = [];
+            leftDigitTemp = null;
+            currentDigitTemp = null;
             forecastSection.innerHTML = '';
-            // todayWeather.innerHTML = '';
-            // document.querySelector('.left-info-content').innerHTML = '';
+            console.log(originalTemps)
+            if(currentWeatherDiv && currentWeatherUlGrid) {
+                leftInfo.removeChild(currentWeatherDiv)
+                todayWeather.removeChild(currentWeatherUlGrid)
+            }
             
 
             if(window.location.hash === '#/current-location') {
@@ -157,8 +171,9 @@ window.addEventListener("DOMContentLoaded", () => {
             fetchData(url.currentWeather(lat, lon), (currentWeather) => {
                 const {
                     weather,
+                    name,
                     dt: dateUnix,
-                    sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC},
+                    sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC, country},
                     main:{temp, humidity, pressure, feels_like},
                     wind: {speed, deg},
                     visibility,
@@ -166,10 +181,55 @@ window.addEventListener("DOMContentLoaded", () => {
                 } = currentWeather;
                 console.log(currentWeather)
                 const [{description, icon}] = weather;
-                leftDigit.innerHTML = parseInt(temp);
-                document.querySelector('.left_info_place-date--day').innerHTML = `${getDate(dateUnix,timezone)}`
-                document.querySelector('.left_info_time-text').innerHTML = `${getTime(timezone)}`;
-
+                const div = document.createElement('div');
+                div.classList.add('left-info-content', 'px-5', 'py-5');
+                div.innerHTML = `
+                    <div class="left_info_weather">
+                        <figure>
+                            <svg class="left_info_weather-icon" viewBox="0 0 100 100">
+                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href="#whiteCloud" x="11"></use>
+                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                                </use>
+                            </svg>
+                        </figure>
+                        <div class="left_info_weather--text d-flex ff-thin">
+                            <h2>${parseInt(temp)}</h2>
+                            <p class="left_info_weather--degrees">°C</p>
+                        </div>
+                    </div>
+                    <div class="left_info_place d-flex justify-between">
+                        <h1 class="left_info_place--text">${name}, ${country}</h1>
+                        <div class="left_info_place-date d-flex">
+                            <h1 class="left_info_place-date--day">${getDate(dateUnix,timezone)}</h1>
+                        </div>
+                    </div>
+                    <div class="left_info_weather-now d-flex align-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
+                        </svg>
+                        <p class="left_info_weather-now-text">${description}</p>
+                    </div>
+                    <div class="left_info_time d-flex align-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <p class="left_info_time-text">${getTime(timezone)}</p>
+                    </div>
+                `;
+                currentWeatherDiv = leftInfo.appendChild(div);
+                leftDigitTemp = document.querySelector('.left_info_weather--text h2');
+                leftDigitTempDeg = document.querySelector('.left_info_weather--degrees');
+                // leftDigit.innerHTML = parseInt(temp);
+                // document.querySelector('.left_info_place-date--day').innerHTML = `${getDate(dateUnix,timezone)}`
+                // document.querySelector('.left_info_time-text').innerHTML = `${getTime(timezone)}`;
+                // document.querySelector('.left_info_weather-now-text').innerHTML = description;
                 let sunrise = new Date(sunriseUnixUTC * 1000);
                 const localSunrise = new Date(sunrise.getTime() + timezone * 1000);
                 const sunriseHour = localSunrise.getUTCHours();
@@ -179,24 +239,88 @@ window.addEventListener("DOMContentLoaded", () => {
                 const localSunset = new Date(sunset.getTime() + timezone * 1000);
                 const sunsetHour = localSunset.getUTCHours();
                 const sunsetMinutes = localSunset.getUTCMinutes();
+
+                const ul = document.createElement('ul');
+                ul.classList.add('weather-info');
+                ul.innerHTML = `
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">По ощущению</h2>
+                        <div class="weather-info__feelLike ff-thin d-flex">
+                            <p>${Math.floor(parseInt(feels_like))}</p>
+                            <p>°C</p>
+                        </div>
+                    </li>
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">Давление</h2>
+                        <div class="weather-info__pressure d-flex justify-center">
+                            <p>${pressure}</p>
+                            <p>гПа</p>
+                        </div>
+                    </li>
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">Ветер</h2>
+                        <div class="weather-info__wind d-flex">
+                            <p>${speed}</p>
+                            <p>м/с</p>
+                        </div>
+                        <div class="weather-info__deg d-flex">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">
+                                <path fill="none" d="M-1-1h582v402H-1z"/>
+                                <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
+                                </svg>
+                                <p>С-З</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="weather-info_wind-icon" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-wind">
+                                <path
+                                    d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2">
+                                </path>
+                            </svg>
+                        </div>
+                    </li>
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">Восход & Закат</h2>
+                        <div class="weather-info__sunrise d-flex">
+                            <figure>
+                                <svg class="weather-info_anim-icon" viewBox="0 0 100 100">
+                                    <use xlink:href="#sun" y="-15"></use>
+                                </svg>
+                            </figure>
+                            <p>${sunriseHour < 10 ? '0' : ''}${sunriseHour}
+                                :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}</p>
+                        </div>
+                        <div class="weather-info__sunset d-flex">
+                            <figure>
+                                <svg class="weather-info_anim-icon" viewBox="0 0 100 100">
+                                    <use xlink:href="#star" x="55" y="10"></use>
+                                    <use xlink:href="#star" x="65" y="20"></use>
+                                    <use xlink:href="#star" x="50" y="30"></use>
+                                    <use xlink:href="#moon" x="-8" y="-15"></use>
+                                </svg>
+                            </figure>
+                            <p>${sunsetHour < 10 ? '0' : ''}${sunsetHour}
+                                :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}</p>
+                        </div>
+                    </li>
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">Влажность</h2>
+                        <div class="weather-info__hum d-flex">
+                            <p class="ff-thin">${humidity}</p>
+                            <p>%</p>
+                        </div>
+                    </li>
+                    <li class="weather-info-item dark-cards px-5 py-5">
+                        <h2 class="weather-info-header">Видимость</h2>
+                        <div class="weather-info__visability d-flex">
+                            <p class="ff-thin">${visibility / 1000}</p>
+                            <p>км</p>
+                        </div>
+                    </li>
+                `;
+                currentWeatherUlGrid = todayWeather.appendChild(ul);
+                currentDigitTemp = document.querySelector('.weather-info__feelLike p');
+                currentDigitTempDeg = document.querySelector('.weather-info__feelLike p').nextElementSibling;
                 
-                document.querySelector('.weather-info__sunrise p').innerHTML = `
-                ${sunriseHour < 10 ? '0' : ''}${sunriseHour}
-                :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}`;
-
-                document.querySelector('.weather-info__sunset p').innerHTML = `
-                ${sunsetHour < 10 ? '0' : ''}${sunsetHour}
-                :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}`;
-
-
-                document.querySelector('.left_info_weather-now-text').innerHTML = description;
-                
-                document.querySelector('.weather-info__feelLike p').innerHTML = Math.floor(parseInt(feels_like))
-                document.querySelector('.weather-info__pressure p').innerHTML = pressure;
-                document.querySelector('.weather-info__wind p').innerHTML = speed;
-                document.querySelector('.weather-info__hum p').innerHTML = humidity;
-                document.querySelector('.weather-info__visability p').innerHTML = visibility / 1000;
-
 
                 document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
                 const direction = document.querySelector('.weather-info__deg p');
@@ -301,6 +425,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 })
             })
             resetConversion();
+            console.log('isCelsius after', isCelsius);
         }
         
     function windDirection(trigger, deg) {
@@ -326,23 +451,24 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     function resetConversion() {
         if(isConverted) {
-            feelLikeDegrees.textContent = '°C';
-            degrees.textContent = '°C';
+            isCelsius = true;
+            currentDigitTempDeg.textContent = '°C';
+            leftDigitTempDeg.textContent = '°C';
             daysDeg.forEach((deg => deg.textContent = '°C'));
             btns.forEach((btn) => {
                 btn.textContent === '°F' ? btn.classList.remove("active-btn") : btn.classList.add("active-btn");
             });
             isConverted = false;
-            isCelsius = false;
         }
     }
 
     function convertTemperature(temp, degrees = '°C') {
+        if(!temp || !degrees) return;
         isConverted = true;
         let temperature;
         if(typeof temp === 'number') {
             temperature = originalTemps[temp];
-        } else {
+        }  else {
             temperature = parseInt(temp.textContent)
         }
 
@@ -360,11 +486,15 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         return converted
     }
-
     function toggleTemperature() {
         isCelsius  = !isCelsius ;
-        convertTemperature(leftDigit, degrees);
-        convertTemperature(feelLike,feelLikeDegrees);
+        console.log('toggling isCelsius', isCelsius);
+        if(leftDigitTemp) {
+            convertTemperature(leftDigitTemp, leftDigitTempDeg);
+        };
+        if(currentDigitTemp) {
+            convertTemperature(currentDigitTemp,currentDigitTempDeg);
+        };
         days.forEach((day,i) => {
             originalTemps[i] = parseInt(day.textContent);
         });
@@ -427,7 +557,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    toggleTemperature()
+    toggleTemperature();
     handleScreenChange(mediaQuery);
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
