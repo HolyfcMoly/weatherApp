@@ -232,6 +232,10 @@ h4 {
     background-color: #d9d9d9;
     border-radius: 15px;
 }
+.input_container-active {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
 
 .input_search--icon {
     width: 1.7rem;
@@ -271,6 +275,8 @@ h4 {
 .view-list {
     width: 100%;
     background-color: #d9d9d9;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
 }
 
 .dropdown {
@@ -278,12 +284,19 @@ h4 {
 }
 
 .view-item {
-    padding: 0 10px;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    cursor: pointer;
+    padding: 15px 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
-.view-item div {
+.view-item > div {
     display: flex;
+
+}
+
+.view-item-subtitle {
+    margin-top: 5px;
+    font-size: 0.6rem;
 }
 
 

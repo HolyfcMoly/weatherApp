@@ -148,14 +148,13 @@ window.addEventListener("DOMContentLoaded", () => {
         })
 
         function checkWeather(lat, lon) {
-            console.log('isCelsius before', isCelsius);
             days = [];
             daysDeg = [];
             originalTemps = [];
             leftDigitTemp = null;
             currentDigitTemp = null;
             forecastSection.innerHTML = '';
-            console.log(originalTemps)
+
             if(currentWeatherDiv && currentWeatherUlGrid) {
                 leftInfo.removeChild(currentWeatherDiv)
                 todayWeather.removeChild(currentWeatherUlGrid)
@@ -224,12 +223,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `;
                 currentWeatherDiv = leftInfo.appendChild(div);
+
                 leftDigitTemp = document.querySelector('.left_info_weather--text h2');
                 leftDigitTempDeg = document.querySelector('.left_info_weather--degrees');
-                // leftDigit.innerHTML = parseInt(temp);
-                // document.querySelector('.left_info_place-date--day').innerHTML = `${getDate(dateUnix,timezone)}`
-                // document.querySelector('.left_info_time-text').innerHTML = `${getTime(timezone)}`;
-                // document.querySelector('.left_info_weather-now-text').innerHTML = description;
                 let sunrise = new Date(sunriseUnixUTC * 1000);
                 const localSunrise = new Date(sunrise.getTime() + timezone * 1000);
                 const sunriseHour = localSunrise.getUTCHours();
@@ -421,11 +417,9 @@ window.addEventListener("DOMContentLoaded", () => {
                         daysTemp.forEach(day=>days.push(day));
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
                     }
-                    console.log(forecast, 'forecast')
                 })
             })
             resetConversion();
-            console.log('isCelsius after', isCelsius);
         }
         
     function windDirection(trigger, deg) {
@@ -451,7 +445,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     function resetConversion() {
         if(isConverted) {
-            isCelsius = true;
+            isCelsius = false;
             currentDigitTempDeg.textContent = '°C';
             leftDigitTempDeg.textContent = '°C';
             daysDeg.forEach((deg => deg.textContent = '°C'));
@@ -488,7 +482,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     function toggleTemperature() {
         isCelsius  = !isCelsius ;
-        console.log('toggling isCelsius', isCelsius);
         if(leftDigitTemp) {
             convertTemperature(leftDigitTemp, leftDigitTempDeg);
         };
@@ -562,15 +555,15 @@ window.addEventListener("DOMContentLoaded", () => {
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
+    const inputContainer = document.querySelector('.input_container')
 
     searchBtn.addEventListener('click', () => {
         searchList.classList.toggle('active');
         if(searchList.classList.contains('active')) {
             const searchItems = document.querySelectorAll('[data-search-toggler]')
             searchItems.forEach(item => item.addEventListener('click', () => searchList.classList.remove('active')))
+            
         }
-        checkWeather(input.value);
-        input.value = '';
     });
 
     input.addEventListener('input', () => {
@@ -579,11 +572,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         if(!input.value) {
-            searchList.classList.remove('active')
-            searchList.innerHTML = ''
-            input.classList.remove('searching')
+            searchList.classList.remove('active');
+            inputContainer.classList.remove('input_container-active');
+            searchList.innerHTML = '';
+            input.classList.remove('searching');
         } else {
-            input.classList.add('searching')
+            input.classList.add('searching');
         }
 
         if(input.value) {
@@ -595,29 +589,45 @@ window.addEventListener("DOMContentLoaded", () => {
                         <ul class="view-list dropdown" data-search-list></ul>
                     `;
                     const items = [];
-                    for (const {name, lat, lon, country, state} of locations) {
+                    for (const {name, local_names, lat, lon, country, state} of locations) {
+                        const hasLocalNames = local_names && typeof local_names === 'object' &&
+                        local_names.hasOwnProperty('ru');
+                        let ruName;
+                        if(hasLocalNames) {
+                            ruName = local_names.ru;
+                        } else {
+                            ruName = name;
+                        }
                         const searchItem = document.createElement('li');
                         searchItem.classList.add('view-item');
 
                         searchItem.innerHTML = `
-                            <div>
-                                <p class="view-item-title">${name}</p>
-                                <p class="view-item-subtitle">${state || ''}, ${country}</p>
+                            <div class="justify-between">
+                                <div>
+                                    <p class="view-item-title">${ruName}</p>
+                                    <p class="view-item-subtitle">${state || ''}</p>
+                                </div>
+                                <p class="view-item-country">${country}</p>
                             </div>
                             <a href="#/weather?lat=${lat}&lon=${lon}" aria-label='${name} weather' data-search-toggler></a>
                         `;
                         searchList.querySelector('[data-search-list]').appendChild(searchItem);
-                        items.push(searchItem.querySelector('[data-search-toggler]'))
+                        items.push(searchItem.querySelector('[data-search-toggler]'));
+                        if(searchItem) {
+                            inputContainer.classList.add('input_container-active');
+                        } 
                         searchItem.addEventListener('click', (e) => {
                             const link = e.currentTarget.querySelector('[data-search-toggler]')
                                 if(link) {
                                     link.click();
                                     input.value = '';
+                                    inputContainer.classList.remove('input_container-active');
                                     searchList.classList.remove('active');
                                 }
                         })
                     }
                 })
+                inputContainer.classList.remove('input_container-active');
             }, searchTimeoutDuration)
         }
     })
