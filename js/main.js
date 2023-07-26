@@ -19,6 +19,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let days = [];
     let daysDeg = [];
     let originalTemps = [];
+    let icons = [];
     
     let currentWeatherDiv;
     let leftDigitTemp;
@@ -147,9 +148,93 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
 
+        const weatherIcons = {
+            '200_family': `
+                <use xlink:href="#thunderBolt" x="25" y="65"></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                </use>
+            `,
+            '300_family': `
+                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                </use>
+            `,
+            '500_family_1': `
+                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                <use xlink:href=" #sun" x="-8" y="-15"></use>
+                <use xlink:href="#whiteCloud" x="11"></use>
+                </use>
+            `,
+            '500_family_2': `
+                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                <use xlink:href="#whiteCloud" x="11"></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                </use>
+            `,
+            '600_family': `
+                <use xlink:href="#snowFlake" x="25" y="65"></use>
+            `,
+            '700_family': `
+                <use xlink:href="#mist"></use>
+            `,
+            800: `
+                <use xlink:href="#grayCloud" transform="scale(1.2)" opacity="0.5" fill="url(#gradGray)" x="10"></use>
+                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="20" y="78"></use>
+                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="30" y="110"></use>
+                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="80" y="100"></use>
+                <use xlink:href="#mist" x="0" y="50"></use>
+            `,
+            801: `
+                <use xlink:href=" #sun" x="-8" y="-15"></use>
+                <use xlink:href="#whiteCloud" x="11"></use>
+            `,
+            802: `
+                <use xlink:href="#whiteCloud" x="11"></use>
+            `,
+            '803_family': `
+                <use xlink:href="#whiteCloud" x="11"></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
+                </use>
+            `,
+        }
+
+        function iconId(weatherId) {
+            if(/^300/.test(weatherId)) {
+                return '300_family';
+            } 
+            if(/^50[0-4]/.test(weatherId)) {
+                return '500_family_1'
+            } 
+            if(/^[520-531]/.test(weatherId)) {
+                return '500_family_2'
+            } 
+            if(/^600/.test(weatherId)) {
+                return '600_family'
+            } 
+            if(/^700/.test(weatherId)) {
+                return '700_family'
+            } 
+            if(/^800/.test(weatherId)) {
+                return 800
+            } 
+            if(/^801/.test(weatherId)) {
+                return 801
+            } 
+            if(/^802/.test(weatherId)) {
+                return 802
+            } 
+            if(/^80[3-4]/.test(weatherId)) {
+                return '803_family'
+            }
+        }
+
         function checkWeather(lat, lon) {
             days = [];
             daysDeg = [];
+            icons = [];
             originalTemps = [];
             leftDigitTemp = null;
             currentDigitTemp = null;
@@ -169,7 +254,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             fetchData(url.currentWeather(lat, lon), (currentWeather) => {
                 const {
-                    weather,
+                    weather: [current],
                     name,
                     dt: dateUnix,
                     sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC, country},
@@ -179,7 +264,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     timezone
                 } = currentWeather;
                 console.log(currentWeather)
-                const [{description, icon}] = weather;
+                const description = current.description;
+                const weatherId = current.id;
+                const icon = weatherIcons[iconId(weatherId)]
                 const div = document.createElement('div');
                 div.classList.add('left-info-content', 'px-5', 'py-5');
                 div.innerHTML = `
@@ -188,7 +275,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             <svg class="left_info_weather-icon" viewBox="0 0 100 100">
                                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
-                                    <use xlink:href=" #sun" x="-8" y="-15"></use>
+                                <use xlink:href=" #sun" x="-8" y="-15"></use>
                                 <use xlink:href="#whiteCloud" x="11"></use>
                                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
                                 </use>
@@ -223,6 +310,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     </div>
                 `;
                 currentWeatherDiv = leftInfo.appendChild(div);
+                document.querySelector('.left_info_weather-icon').innerHTML = icon;
 
                 leftDigitTemp = document.querySelector('.left_info_weather--text h2');
                 leftDigitTempDeg = document.querySelector('.left_info_weather--degrees');
@@ -354,11 +442,14 @@ window.addEventListener("DOMContentLoaded", () => {
                         const {
                             main:{temp_max, humidity, pressure},
                             wind: {deg: windDir, speed},
-                            weather,
+                            weather: [forecast],
                             dt_txt
                         } = forecastList[i];
-                        const [{description}] = weather;
                         const date = new Date(dt_txt);
+                        const description = forecast.description;
+                        const weatherId = forecast.id;
+                        const icon = weatherIcons[iconId(weatherId)]
+                        icons.push(icon);
                         const li = document.createElement('li');
                         li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5");
                         li.innerHTML = `
@@ -405,6 +496,13 @@ window.addEventListener("DOMContentLoaded", () => {
                         `;
                         const rightInfo = document.querySelector('.right_info');
                         rightInfo.querySelector('.right_info_list').appendChild(li);
+                        
+                        const iconsEl = document.querySelectorAll('.weather_anim-icon');
+                        iconsEl.forEach((svg, i) => {
+                            svg.innerHTML = icons[i]
+                        })
+                        console.log(forecast)
+                        console.log(weatherId)
                         const directions = document.querySelectorAll('.weather-wind__deg p');
                         const svgs = document.querySelectorAll('.weather-wind__deg svg');
                         svgs.forEach((svg, i) => {

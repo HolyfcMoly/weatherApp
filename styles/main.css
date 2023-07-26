@@ -362,7 +362,7 @@ h4 {
 }
 
 .right_info_list_item .weather_anim-icon {
-    width: 4rem;
+    width: 100%;
     height: 4rem;
 }
 .right_info_list_item:not(:last-child) {
@@ -506,6 +506,12 @@ h4 {
 }
 #star {
     animation: star 4s linear infinite;
+}
+
+#mist {
+    transform: translateX(0);
+    opacity: 1;
+    animation: mist 5s linear infinite;
 }
 
 .longRay {
@@ -676,6 +682,22 @@ body.dark .dark-text {
     100% {
         filter: none;
     }
+}
+
+@keyframes mist {
+    0% {
+        opacity: 0.2;
+        transform: translateX(0);
+    } 
+    50% {
+        opacity: 1;
+        transform: translate(100px);
+    }
+    100% {
+        opacity: 0.2;
+        transform: translate(0);
+    }
+    
 }
 
 @keyframes wind {
