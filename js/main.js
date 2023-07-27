@@ -83,18 +83,6 @@ window.addEventListener("DOMContentLoaded", () => {
             'Дек',
         ];
 
-        const weatherNow = [
-            'Дождь',
-            'Гроза',
-            'Ясно',
-            'Облачно',
-            'Небольшой дождь',
-            'Снег',
-            'Небольшая облачность',
-            'Переменная облачность',
-            'Туман',
-        ];
-
         const getDate = function(dateUnix, timezone) {
             const date = new Date((dateUnix + timezone) * 1000);
             const weekDayName = weekDayNames[date.getUTCDay()];
@@ -150,42 +138,51 @@ window.addEventListener("DOMContentLoaded", () => {
 
         const weatherIcons = {
             '200_family': `
-                <use xlink:href="#thunderBolt" x="25" y="65"></use>
-                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
-                </use>
+                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                <use xlink:href="#grayCloud" fill="url(#gradGray)" x="-7" y="20"></use>
+                <use xlink:href="#whiteCloud" x="11"></use>
+                <use xlink:href="#thunderBolt" fill="url(#gradYellow)" x="25" y="55"></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
             '300_family': `
                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
-                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
-                </use>
+                <use xlink:href="#whiteCloud" x="11"></use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
             '500_family_1': `
-                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="20" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="30" y="65""></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href=" #sun" x="-8" y="-15"></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
-                </use>
             `,
             '500_family_2': `
-                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="20" y="65"></use>
+                <use xlink:href="#rainDrizzle" x="30" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
+                <use xlink:href="#grayCloud" fill="url(#gradGray)" x="-5" y="20"></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
-                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
-                </use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
             '600_family': `
-                <use xlink:href="#snowFlake" x="25" y="65"></use>
+                <use xlink:href="#snowFlake" id="snow-b" class="snow" x="25"></use>
+                <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="25" y="150"></use>
+                <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="85" y="190"></use>
+                <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="139" y="150"></use>
+                <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="238" y="150"></use>
+                <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="190" y="190"></use>
             `,
             '700_family': `
-                <use xlink:href="#mist"></use>
+                <use xlink:href="#grayCloud" class="mist_cloud" opacity="0.5" fill="url(#gradGray)" x="10"></use>
+                <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="20" y="78"></use>
+                <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="30" y="110"></use>
+                <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="80" y="95"></use>
+                <use xlink:href="#mist" class="mist" x="0" y="50"></use>
             `,
             800: `
-                <use xlink:href="#grayCloud" transform="scale(1.2)" opacity="0.5" fill="url(#gradGray)" x="10"></use>
-                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="20" y="78"></use>
-                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="30" y="110"></use>
-                <use xlink:href="#grayCloud" transform="scale(0.5)"  opacity="0.5" fill="url(#gradGray)"  x="80" y="100"></use>
-                <use xlink:href="#mist" x="0" y="50"></use>
+                <use xlink:href="#sun"></use>
             `,
             801: `
                 <use xlink:href=" #sun" x="-8" y="-15"></use>
@@ -193,11 +190,11 @@ window.addEventListener("DOMContentLoaded", () => {
             `,
             802: `
                 <use xlink:href="#whiteCloud" x="11"></use>
+                <use xlink:href="#whiteCloud" transform="scale(0.7)"></use>
             `,
             '803_family': `
                 <use xlink:href="#whiteCloud" x="11"></use>
-                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
-                </use>
+                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
         }
 
@@ -389,6 +386,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Влажность</h2>
                         <div class="weather-info__hum d-flex">
+                            <svg viewBox="0 0 100 100" width="60" height="60">
+                                <use xlink:href="#rainDrop" transform="scale(6.5)" x="-2" y="0"></use>
+                            </svg>
                             <p class="ff-thin">${humidity}</p>
                             <p>%</p>
                         </div>
@@ -451,8 +451,9 @@ window.addEventListener("DOMContentLoaded", () => {
                         const icon = weatherIcons[iconId(weatherId)]
                         icons.push(icon);
                         const li = document.createElement('li');
-                        li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5");
+                        li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5", 'd-flex-column', 'justify-between');
                         li.innerHTML = `
+                            <div>
                             <h2 class="right_info_list_item-day">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
                             <figure>
                                 <svg class="weather_anim-icon" viewBox="0 0 100 100">
@@ -469,28 +470,38 @@ window.addEventListener("DOMContentLoaded", () => {
                                 <p class="day-degrees">°C</p>
                             </div>
                             <p class="right_info_list_item-description d-flex justify-center">${description}</p>
-                            <div class="right_info_list_item--weather d-flex justify-between">
-                                <h2 class="weather-pressure">Давление:</h2>
-                                <div class="weather-pressure-info d-flex">
-                                    <p>${pressure}</p>
-                                    <p>гПа</p>
-                                </div>
-                                <h2 class="weather-wind-title">Ветер:</h2>
-                                <div class="weather-wind-speed d-flex">
-                                    <p>${speed}</p>
-                                    <p>м/с</p>
-                                    <div class="weather-wind__deg d-flex">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" transform="rotate(${windDir})">
-                                            <path fill="none" d="M-1-1h582v402H-1z"/>
-                                            <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
-                                        </svg>
-                                        <p>С-З</p>
+                            </div>
+                            <div class="right_info_list_item--weather d-flex">
+                                <div class="d-flex justify-between">
+                                    <h2 class="weather-pressure">Давление:</h2>
+                                    <div class="weather-pressure-info d-flex">
+                                        <p>${pressure}</p>
+                                        <p>гПа</p>
                                     </div>
                                 </div>
-                                <h2 class="weather-hum">Влажность</h2>
-                                <div class="weather-hum-info d-flex">
-                                    <p>${humidity}</p>
-                                    <p>%</p>
+                                <div class="d-flex justify-between">
+                                    <h2 class="weather-wind-title">Ветер:</h2>
+                                    <div class="weather-wind-speed d-flex">
+                                        <p>${speed}</p>
+                                        <p>м/с</p>
+                                        <div class="weather-wind__deg d-flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" transform="rotate(${windDir})">
+                                                <path fill="none" d="M-1-1h582v402H-1z"/>
+                                                <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
+                                            </svg>
+                                            <p>С-З</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-between">
+                                    <h2 class="weather-hum">Влажность</h2>
+                                    <div class="weather-hum-info d-flex">
+                                        <svg viewBox="0 0 100 100" width="20" height="20">
+                                            <use xlink:href="#rainDrop" transform="scale(5.5)" x="-2" y="2"></use>
+                                        </svg>
+                                        <p>${humidity}</p>
+                                        <p>%</p>
+                                    </div>
                                 </div>
                             </div>
                         `;

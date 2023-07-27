@@ -376,12 +376,13 @@ h4 {
 
 .right_info_list_item-description {
     margin-top: 10px;
+    font-size: 0.9rem;
 }
 
 .right_info_list_item--weather {
     margin-top: 15px;
     min-width: 200px;
-    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .right_info_list_item--weather h2:not(:last-child) {
@@ -485,7 +486,7 @@ h4 {
     font-size: 4rem;
 }
 
-.weather-info__hum p:nth-child(2) {
+.weather-info__hum p:nth-child(3) {
     font-size: 1rem;
 }
 
@@ -508,10 +509,55 @@ h4 {
     animation: star 4s linear infinite;
 }
 
-#mist {
+.mist {
     transform: translateX(0);
     opacity: 1;
     animation: mist 5s linear infinite;
+}
+
+.mist_cloud {
+    animation: mist-cloud 9s linear infinite;
+}
+.mist_cloud-s {
+    transform: scale(0.5);
+    animation: mist-cloud-s 7s linear infinite;
+}
+
+.mist_cloud-s:nth-child(3) {
+    transform: scale(0.5);
+    animation: mist-cloud-s3 7s linear infinite;
+}
+.mist_cloud-s:nth-child(4) {
+    transform: scale(0.5);
+    animation: mist-cloud-s4 7s linear infinite;
+}
+
+.snow {
+    animation: snow-xl 5s linear infinite;
+}
+.snow-s {
+    transform: scale(0.3);
+    animation: snow-s 5s linear infinite;
+}
+.snow-s:nth-child(3) {
+    animation: snow-s 5.5s linear infinite;
+}
+.snow-s:nth-child(4) {
+    animation: snow-s 6s linear infinite;
+}
+.snow-s:nth-child(5) {
+    animation: snow-s 6.5s linear infinite;
+}
+.snow-s:nth-child(6) {
+    animation: snow-s 7s linear infinite;
+}
+#snow-b, #snow-s {
+    stroke: #323253;
+    fill: #eeeef3;
+}
+.dark #snow-b, .dark #snow-s  {
+    stroke:#e7e7e7;
+    fill: #444444;
 }
 
 .longRay {
@@ -690,12 +736,92 @@ body.dark .dark-text {
         transform: translateX(0);
     } 
     50% {
-        opacity: 1;
-        transform: translate(100px);
+        opacity: 0.7;
+        transform: translate(-10px);
     }
     100% {
         opacity: 0.2;
         transform: translate(0);
+    }
+    
+}
+
+@keyframes mist-cloud {
+    0% {
+        opacity: 0.2;
+        transform: translateX(0);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateX(20px);
+    }
+    100% {
+        opacity: 0.2;
+        transform: translateX(0);
+    }
+}
+@keyframes mist-cloud-s {
+    0% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.5) translateX(35px);
+    }
+    100% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+}
+@keyframes mist-cloud-s3 {
+    0% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.5) translateX(40px);
+    }
+    100% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+}
+@keyframes mist-cloud-s4 {
+    0% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(0.5) translateX(45px);
+    }
+    100% {
+        opacity: 0.2;
+        transform: scale(0.5) translateX(0);
+    }
+}
+
+@keyframes snow-xl {
+    0% {
+        opacity: 0.6;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0.6;
+    }
+}
+@keyframes snow-s {
+    0%{
+        transform: scale(0.3) translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.3) translateY(80px);
+        opacity: 0;
     }
     
 }
