@@ -26,6 +26,20 @@
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: "Roboto Thin";
+    src: local(""), url("../fonts/roboto-300.woff") format("woff"),
+        url("../fonts/roboto-300.woff") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: "Roboto Light";
+    src: local(""), url("../fonts/roboto-100.woff") format("woff"),
+        url("../fonts/roboto-100.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+}
 
 * {
     box-sizing: border-box;
@@ -84,6 +98,12 @@ h4 {
 .ff-bold {
     font-family: "Raleway Semibold", Arial, sans-serif;
 }
+.ff-rob-thin {
+    font-family: "Roboto Thin", Arial, Georgia, Verdana, sans-serif;
+}
+.ff-rob-light {
+    font-family: "Roboto Light", Arial, Georgia, Verdana, sans-serif;
+}
 
 .d-flex {
     display: flex;
@@ -115,7 +135,7 @@ h4 {
 }
 
 :root {
-    --light-text: #fffafa;
+    --light-text: #f1f1f1;
     --main-text: #2b2a2a;
     --thin-text: #9699a5;
     --btn-bg: #232020;
@@ -123,6 +143,7 @@ h4 {
     --bg-regular: #f9f8f8;
     --bg-dark: #232323;
     --bg-cards: #444444;
+    --input-list: #676767;
 }
 
 ::-webkit-scrollbar {
@@ -142,7 +163,7 @@ h4 {
 }
 
 .container {
-    max-width: 1536px;
+    max-width: 1660px;
     margin: 0 auto;
     background-color: var(--bg-light);
 }
@@ -229,7 +250,7 @@ h4 {
     justify-content: flex-start;
     align-items: center;
     padding: 10px 15px;
-    background-color: #d9d9d9;
+    background-color: var(--bg-light);
     border-radius: 15px;
 }
 .input_container-active {
@@ -274,7 +295,7 @@ h4 {
 
 .view-list {
     width: 100%;
-    background-color: #d9d9d9;
+    background-color: var(--bg-light);
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
@@ -302,7 +323,7 @@ h4 {
 
 .left_info_weather--text {
     font-size: 6rem;
-    font-weight: 600;
+    font-weight: 300;
 }
 
 .left_info_weather--degrees {
@@ -361,7 +382,7 @@ h4 {
     transform: translateY(7px);
 }
 
-.right_info_list_item .weather_anim-icon {
+.right_info_list_item .weather_anim-icon, .today_weather-icon {
     width: 100%;
     height: 4rem;
 }
@@ -413,9 +434,32 @@ h4 {
 }
 
 .right_info_list_item,
-.weather-info-item {
+.weather-info-item, .right_info-today-list--item {
     border-radius: 20px;
     box-shadow: 0px 0px 5px #a7a4a4;
+}
+
+.right_info-today {
+    margin-bottom: 30px;
+}
+
+.right_info-today-list--item {
+    margin: 10px;
+    min-width: 175px;
+    text-align: center;
+    background-color: var(--bg-regular);
+}
+
+.today-time {
+    margin-bottom: 10px;
+}
+
+.today_weather__wind-speed {
+    margin-top: 10px;
+}
+
+.today_weather__wind-deg p {
+    margin-bottom: 10px;
 }
 
 /* weather info */
@@ -607,6 +651,13 @@ body.dark .dark-container, body.dark{
     background-color: var(--bg-dark);
 }
 body.dark .dark-cards{
+    background-color: var(--bg-cards);
+}
+body.dark .dark-list {
+    background-color: var(--input-list);
+}
+
+body.dark .right_info-today-list--item{
     background-color: var(--bg-cards);
 }
 body.dark .text-white {

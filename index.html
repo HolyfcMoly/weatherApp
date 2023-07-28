@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Weather</title>
     <link rel="stylesheet" href="styles/main.css">
@@ -119,14 +121,14 @@
         </svg>
         <div class="wrapper text-white d-flex">
             <div class="left_info dark-cards d-flex-column width33 px-10 py-5">
-                <div class="input_container dark-text d-flex justify-center align-center">
+                <div class="input_container text-white dark-list d-flex justify-center align-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 30 24" stroke-width="1.5"
                         stroke="currentColor" class="input_search--icon">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
                     </svg>
-                    <input type="search" name="search" class="input_search ff-med" data-search-field autocomplete="off" placeholder="Укажите город">
-                    <button class="input_container_search-btn">
+                    <input type="search" name="search" class="input_search ff-med text-white" data-search-field autocomplete="off" placeholder="Укажите город">
+                    <button class="input_container_search-btn text-white">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="input_search--icon">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -139,7 +141,7 @@
             </div>
             <div class="right_info d-flex-column width66  px-5 py-5">
                 <ul class="right_info_list d-flex"></ul>
-                <h2 class="right_info_header">На сегодня</h2>
+                <div class="right_info-today"></div>
                 <div class="right_info-grid"></div>
             </div>
         </div>

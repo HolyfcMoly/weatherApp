@@ -14,12 +14,13 @@ window.addEventListener("DOMContentLoaded", () => {
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
     const currentLocationBtn = document.querySelector('[data-current-location-btn]');
     const container = document.querySelector('.left_info ');
-    
+    const hourlySection = document.querySelector('.right_info-today');
     
     let days = [];
     let daysDeg = [];
     let originalTemps = [];
     let icons = [];
+    let hourlyIcons = [];
     
     let currentWeatherDiv;
     let leftDigitTemp;
@@ -232,10 +233,12 @@ window.addEventListener("DOMContentLoaded", () => {
             days = [];
             daysDeg = [];
             icons = [];
+            hourlyIcons = [];
             originalTemps = [];
             leftDigitTemp = null;
             currentDigitTemp = null;
             forecastSection.innerHTML = '';
+            hourlySection.innerHTML = '';
 
             if(currentWeatherDiv && currentWeatherUlGrid) {
                 leftInfo.removeChild(currentWeatherDiv)
@@ -278,14 +281,14 @@ window.addEventListener("DOMContentLoaded", () => {
                                 </use>
                             </svg>
                         </figure>
-                        <div class="left_info_weather--text d-flex ff-thin">
+                        <div class="left_info_weather--text d-flex ff-rob-thin">
                             <h2>${parseInt(temp)}</h2>
                             <p class="left_info_weather--degrees">°C</p>
                         </div>
                     </div>
                     <div class="left_info_place d-flex justify-between">
                         <h1 class="left_info_place--text">${name}, ${country}</h1>
-                        <div class="left_info_place-date d-flex">
+                        <div class="left_info_place-date d-flex ff-rob-thin">
                             <h1 class="left_info_place-date--day">${getDate(dateUnix,timezone)}</h1>
                         </div>
                     </div>
@@ -303,7 +306,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        <p class="left_info_time-text">${getTime(timezone)}</p>
+                        <p class="left_info_time-text ff-rob-thin">${getTime(timezone)}</p>
                     </div>
                 `;
                 currentWeatherDiv = leftInfo.appendChild(div);
@@ -326,21 +329,21 @@ window.addEventListener("DOMContentLoaded", () => {
                 ul.innerHTML = `
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">По ощущению</h2>
-                        <div class="weather-info__feelLike ff-thin d-flex">
+                        <div class="weather-info__feelLike ff-rob-light d-flex">
                             <p>${Math.floor(parseInt(feels_like))}</p>
                             <p>°C</p>
                         </div>
                     </li>
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Давление</h2>
-                        <div class="weather-info__pressure d-flex justify-center">
+                        <div class="weather-info__pressure d-flex justify-center ff-rob-thin">
                             <p>${pressure}</p>
                             <p>гПа</p>
                         </div>
                     </li>
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Ветер</h2>
-                        <div class="weather-info__wind d-flex">
+                        <div class="weather-info__wind ff-rob-thin d-flex">
                             <p>${speed}</p>
                             <p>м/с</p>
                         </div>
@@ -361,7 +364,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     </li>
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Восход & Закат</h2>
-                        <div class="weather-info__sunrise d-flex">
+                        <div class="weather-info__sunrise d-flex ff-rob-thin">
                             <figure>
                                 <svg class="weather-info_anim-icon" viewBox="0 0 100 100">
                                     <use xlink:href="#sun" y="-15"></use>
@@ -370,7 +373,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             <p>${sunriseHour < 10 ? '0' : ''}${sunriseHour}
                                 :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}</p>
                         </div>
-                        <div class="weather-info__sunset d-flex">
+                        <div class="weather-info__sunset d-flex ff-rob-thin">
                             <figure>
                                 <svg class="weather-info_anim-icon" viewBox="0 0 100 100">
                                     <use xlink:href="#star" x="55" y="10"></use>
@@ -389,14 +392,14 @@ window.addEventListener("DOMContentLoaded", () => {
                             <svg viewBox="0 0 100 100" width="60" height="60">
                                 <use xlink:href="#rainDrop" transform="scale(6.5)" x="-2" y="0"></use>
                             </svg>
-                            <p class="ff-thin">${humidity}</p>
+                            <p class="ff-rob-light">${humidity}</p>
                             <p>%</p>
                         </div>
                     </li>
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Видимость</h2>
                         <div class="weather-info__visability d-flex">
-                            <p class="ff-thin">${visibility / 1000}</p>
+                            <p class="ff-rob-light">${visibility / 1000}</p>
                             <p>км</p>
                         </div>
                     </li>
@@ -420,23 +423,81 @@ window.addEventListener("DOMContentLoaded", () => {
                         city: {timezone}
                     } = forecast;
 
-                        //24h forecast
-                    // for (const [index, data] of forecastList.entries()) {
-                    //     if(index > 7) break;
+                    const h2 = document.createElement('h2');
+                    h2.classList.add('right_info_header');
+                    h2.textContent = `На сегодня`;
 
-                    //     const {
-                    //         dt: dateUnix,
-                    //         main:{temp, humidity, pressure},
-                    //         wind: {deg, speed},
-                    //         weather
-                    //     } = data;
-                    //     const [{description}] = weather;
-                    //     document.querySelectorAll
-                    // }
-                    forecast.innerHTML = `
-                        <ul class="right_info_list d-flex"></ul>
-                    `;
+                    const list = document.createElement('ul');
+                    list.classList.add('right_info-today-list', 'd-flex');
+                    list.style.overflowX = 'scroll'
 
+                    hourlySection.appendChild(h2)
+                    hourlySection.appendChild(list)
+                        // 24h forecast
+                    for (const [index, data] of forecastList.entries()) {
+                        if(index > 7) break;
+
+                        const {
+                            dt_txt,
+                            main:{temp},
+                            wind: {deg: windDir, speed},
+                            weather: [forecast]
+                        } = data;
+
+                        const newDate = new Date(dt_txt)
+                        const weatherId = forecast.id;
+                        const icon = weatherIcons[iconId(weatherId)]
+                        hourlyIcons.push(icon)
+
+                        const hours = newDate.getUTCHours();
+                        const minutes = newDate.getUTCMinutes();
+
+                        const item = document.createElement('li');
+                        item.classList.add("right_info-today-list--item", "px-5", "py-5");
+                        item.innerHTML = `
+                            <div class="card-today">
+                                <p class="today-date ff-rob-thin">${weekDayNames[newDate.getUTCDay()]}, ${newDate.getDate()}</p>
+                                <p class="today-time ff-rob-thin">${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}</p>
+                                <svg class="today_weather-icon" viewBox="0 0 100 100">
+                                    <use xlink:href="#sun"></use>
+                                </svg>
+                                <div class="d-flex justify-center ff-rob-thin">
+                                    <p class="today-temp">${parseInt(temp)}</p>
+                                    <p class="today-degrees">°C</p>
+                                </div>
+                                <div class="today_weather__wind-speed">
+                                    <div class="today_weather__wind-deg">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256" transform="rotate(${windDir})">
+                                            <path fill="none" d="M-1-1h582v402H-1z"/>
+                                            <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
+                                        </svg>
+                                        <p>С-З</p>
+                                    </div>
+                                    <div class="d-flex justify-center ff-rob-thin">
+                                        <p>${speed}</p>
+                                        <p>м/с</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        list.appendChild(item);
+                        const todayIcons = document.querySelectorAll('.today_weather-icon');
+                        todayIcons.forEach((svg, i) => {
+                            svg.innerHTML = hourlyIcons[i]
+                        })
+                        const directions = document.querySelectorAll('.today_weather__wind-deg p');
+                        const svgs = document.querySelectorAll('.today_weather__wind-deg svg');
+                        svgs.forEach((svg, i) => {
+                            const transform = svg.getAttribute('transform');
+                            const degrees = +transform.match(/\d+/)[0]
+                            windDirection(directions[i],degrees)
+                        });
+                        const daysTemp = document.querySelectorAll('.today-temp');
+                        const daysDegrees = document.querySelectorAll('.today-degrees');
+                        daysTemp.forEach(day=>days.push(day));
+                        daysDegrees.forEach(deg=>daysDeg.push(deg))
+                    }
+                    // 5 days forecast
                     for (let i = 7, len = forecastList.length; i < len; i+=8) {
 
                         const {
@@ -454,7 +515,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5", 'd-flex-column', 'justify-between');
                         li.innerHTML = `
                             <div>
-                            <h2 class="right_info_list_item-day">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
+                            <h2 class="right_info_list_item-day ff-rob-thin">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
                             <figure>
                                 <svg class="weather_anim-icon" viewBox="0 0 100 100">
                                     <use xlink:href="#rainDrizzle" x="25" y="65"></use>
@@ -465,23 +526,24 @@ window.addEventListener("DOMContentLoaded", () => {
                                     </use>
                                 </svg>
                             </figure>
-                            <div class="right_info_list_item-degrees-day d-flex justify-center">
+                            <div class="right_info_list_item-degrees-day d-flex justify-center ff-rob-thin">
                                 <p class="day-temp">${parseInt(temp_max)}</p>
                                 <p class="day-degrees">°C</p>
+                                
                             </div>
                             <p class="right_info_list_item-description d-flex justify-center">${description}</p>
                             </div>
                             <div class="right_info_list_item--weather d-flex">
                                 <div class="d-flex justify-between">
                                     <h2 class="weather-pressure">Давление:</h2>
-                                    <div class="weather-pressure-info d-flex">
+                                    <div class="weather-pressure-info d-flex ff-rob-thin">
                                         <p>${pressure}</p>
                                         <p>гПа</p>
                                     </div>
                                 </div>
                                 <div class="d-flex justify-between">
                                     <h2 class="weather-wind-title">Ветер:</h2>
-                                    <div class="weather-wind-speed d-flex">
+                                    <div class="weather-wind-speed d-flex ff-rob-thin">
                                         <p>${speed}</p>
                                         <p>м/с</p>
                                         <div class="weather-wind__deg d-flex">
@@ -495,7 +557,7 @@ window.addEventListener("DOMContentLoaded", () => {
                                 </div>
                                 <div class="d-flex justify-between">
                                     <h2 class="weather-hum">Влажность</h2>
-                                    <div class="weather-hum-info d-flex">
+                                    <div class="weather-hum-info d-flex ff-rob-thin">
                                         <svg viewBox="0 0 100 100" width="20" height="20">
                                             <use xlink:href="#rainDrop" transform="scale(5.5)" x="-2" y="2"></use>
                                         </svg>
@@ -512,8 +574,6 @@ window.addEventListener("DOMContentLoaded", () => {
                         iconsEl.forEach((svg, i) => {
                             svg.innerHTML = icons[i]
                         })
-                        console.log(forecast)
-                        console.log(weatherId)
                         const directions = document.querySelectorAll('.weather-wind__deg p');
                         const svgs = document.querySelectorAll('.weather-wind__deg svg');
                         svgs.forEach((svg, i) => {
@@ -525,12 +585,31 @@ window.addEventListener("DOMContentLoaded", () => {
                         const daysDegrees = document.querySelectorAll('.day-degrees');
                         daysTemp.forEach(day=>days.push(day));
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
+
                     }
+                    // for (let i = 5, len = forecastList.length; i < len; i+=8) {
+                    //     const {
+                    //         main:{temp_min},
+                    //     } = forecastList[i];
+                    //     const div = document.createElement('div');
+                    //     div.classList.add('night_temp')
+                    //     div.innerHTML = `
+                    //         <p class="night-temp">${parseInt(temp_min)}</p>
+                    //         <p class="night-degrees">C</p>
+                    //     `;
+                    //     document.querySelectorAll('.right_info_list_item-degrees-day').forEach((item, i) => {
+                    //         console.log(i)
+                    //     })
+
+                    //     // const temp = document.querySelectorAll('.night-temp');
+                    //     // const degrees = document.querySelectorAll('.night-degrees')
+                        
+                    // }
                 })
             })
             resetConversion();
         }
-        
+
     function windDirection(trigger, deg) {
         const directions = {
             "0-15" : "С",
@@ -695,7 +774,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     input.classList.remove('searching');
                     searchList.classList.add('active');
                     searchList.innerHTML = `
-                        <ul class="view-list dropdown" data-search-list></ul>
+                        <ul class="view-list dropdown dark-list" data-search-list></ul>
                     `;
                     const items = [];
                     for (const {name, local_names, lat, lon, country, state} of locations) {
@@ -740,11 +819,4 @@ window.addEventListener("DOMContentLoaded", () => {
             }, searchTimeoutDuration)
         }
     })
-
-    // input.addEventListener('keydown', (e) => {
-    //     if(e.keyCode === 13) {
-    //         checkWeather(input.value);
-    //         input.value = '';
-    //     }
-    // })
 });
