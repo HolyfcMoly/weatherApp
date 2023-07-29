@@ -7,13 +7,11 @@ window.addEventListener("DOMContentLoaded", () => {
     const forecastSection = document.querySelector('.right_info_list');
     const btns = document.querySelectorAll(".header_list_item-btn");
     const themeBtn = document.querySelector(".header_list_item-btn--theme");
-    const rightDigit = wrapper.querySelector('.right_info_list_item-degrees-day');
     const searchBtn = document.querySelector('.input_container_search-btn');
     const input = document.querySelector('[data-search-field]');
     const searchList = document.querySelector('.left_info-search-result');
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
     const currentLocationBtn = document.querySelector('[data-current-location-btn]');
-    const container = document.querySelector('.left_info ');
     const hourlySection = document.querySelector('.right_info-today');
     
     let days = [];
@@ -21,6 +19,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let originalTemps = [];
     let icons = [];
     let hourlyIcons = [];
+    let dayTempElements = [];
     
     let currentWeatherDiv;
     let leftDigitTemp;
@@ -34,6 +33,10 @@ window.addEventListener("DOMContentLoaded", () => {
     let isCelsius = true;
     let searchTimeout = null;
     const searchTimeoutDuration = 500;
+
+    const popupEl = document.querySelector('.popup-alert');
+    const closeEl = popupEl.querySelector('.close');
+
     
         const fetchData = (url, callback) => {
             fetch(`${url}&appid=${apiKey}`)
@@ -106,9 +109,9 @@ window.addEventListener("DOMContentLoaded", () => {
         const currentLocation = () => {
             window.navigator.geolocation.getCurrentPosition(res => {
                 const {latitude, longitude} = res.coords;
-
-                checkWeather(`lat=${latitude}, lon=${longitude}`);
+                checkWeather(`lat=${latitude}`, `lon=${longitude}`);
             }, err => {
+                popup(popupEl, closeEl)
                 window.location.hash = defaultLocation;
             })
         }
@@ -245,13 +248,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 todayWeather.removeChild(currentWeatherUlGrid)
             }
             
-
             if(window.location.hash === '#/current-location') {
                 currentLocationBtn.setAttribute('disabled', '')
             } else {
                 currentLocationBtn.removeAttribute('disabled');
             }
-
             fetchData(url.currentWeather(lat, lon), (currentWeather) => {
                 const {
                     weather: [current],
@@ -263,7 +264,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     visibility,
                     timezone
                 } = currentWeather;
-                console.log(currentWeather)
+
                 const description = current.description;
                 const weatherId = current.id;
                 const icon = weatherIcons[iconId(weatherId)]
@@ -449,8 +450,8 @@ window.addEventListener("DOMContentLoaded", () => {
                         const icon = weatherIcons[iconId(weatherId)]
                         hourlyIcons.push(icon)
 
-                        const hours = newDate.getUTCHours();
-                        const minutes = newDate.getUTCMinutes();
+                        const hours = newDate.getHours();
+                        const minutes = newDate.getMinutes();
 
                         const item = document.createElement('li');
                         item.classList.add("right_info-today-list--item", "px-5", "py-5");
@@ -585,26 +586,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         const daysDegrees = document.querySelectorAll('.day-degrees');
                         daysTemp.forEach(day=>days.push(day));
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
-
                     }
-                    // for (let i = 5, len = forecastList.length; i < len; i+=8) {
-                    //     const {
-                    //         main:{temp_min},
-                    //     } = forecastList[i];
-                    //     const div = document.createElement('div');
-                    //     div.classList.add('night_temp')
-                    //     div.innerHTML = `
-                    //         <p class="night-temp">${parseInt(temp_min)}</p>
-                    //         <p class="night-degrees">C</p>
-                    //     `;
-                    //     document.querySelectorAll('.right_info_list_item-degrees-day').forEach((item, i) => {
-                    //         console.log(i)
-                    //     })
-
-                    //     // const temp = document.querySelectorAll('.night-temp');
-                    //     // const degrees = document.querySelectorAll('.night-degrees')
-                        
-                    // }
                 })
             })
             resetConversion();
@@ -737,9 +719,41 @@ window.addEventListener("DOMContentLoaded", () => {
             themeBtn.classList.remove('fadeInUp');
         }
     }
+const btnMore = document.querySelector('.more-btn');
+    function popup(trigger, closeEl) {
+        trigger.classList.add('fadeDown');
+        trigger.classList.add('popup-active');
+        closeEl.addEventListener('click', (e) => {
+            const target = e.target;
+            if(target) {
+                trigger.classList.remove('fadeDown');
+                trigger.classList.remove('popup-active');
+            }
+            
+            if(trigger.classList.contains('popup-active')) {
+                btnMore.classList.remove('hidden');
+            const popupContent = document.querySelector('.popup-alert-hide')
+            popupContent.classList.add('hide');
+
+            }
+        })
+    }
+
+    
+    function more() {
+        const popupContent = document.querySelector('.popup-alert-hide')
+        popupContent.classList.remove('hide');
+        if(!popupContent.classList.contains('hide')) {
+            btnMore.classList.add('hidden');
+        } else {
+            btnMore.classList.remove('hidden');
+        }
+    }
+    btnMore.addEventListener('click', more)
 
     toggleTemperature();
     handleScreenChange(mediaQuery);
+    currentLocationBtn.addEventListener('click', currentLocation);
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
