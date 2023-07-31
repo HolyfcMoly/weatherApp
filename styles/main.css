@@ -141,7 +141,7 @@ h4 {
     --btn-bg: #232020;
     --bg-light: #e7e7e7;
     --bg-regular: #f9f8f8;
-    --bg-dark: #232323;
+    --bg-dark: #2d2d2d;
     --bg-cards: #444444;
     --input-list: #676767;
 }
@@ -234,6 +234,58 @@ h4 {
     top: 20px;
 }
 
+.loading {
+    position: absolute;
+    top: 0;
+    display: none;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-light);
+    opacity: 0.7;
+    z-index: 1;
+}
+.loading::before {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--bg-cards);
+    border-block-start-color: transparent;
+    border-radius: 50%;
+    animation: loading 700ms linear infinite;
+}
+.searching {
+    display: flex;
+    right: 5px;
+    width: auto;
+    background-color: transparent;
+    opacity: 1;
+}
+.searching.loading::before {
+    width: 20px;
+    height: 20px;
+}
+
+
+body.dark .loading::before {
+    border-color: var(--bg-light);
+    border-block-start-color: transparent;
+}
+body.dark [data-loading]::before {
+    border-color: var(--bg-dark);
+    border-block-start-color: transparent;
+}
+
+@keyframes loading {
+    0% {    
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .fadeDown {
     animation-duration: 1s;
     -webkit-animation-name: fadeDown;
@@ -283,10 +335,9 @@ h4 {
 .header_list_item-btn-location .location {
     display: block;
     width: 55px;
-    height: 36px;
-    background: url('../img/location.svg') center/cover no-repeat transparent;
+    height: 100%;
     border: none;
-
+    color: var(--btn-bg);
 }
 
 .header_list_item-btn--theme {
@@ -333,10 +384,13 @@ h4 {
 
 .input_search {
     margin-left: 15px;
-    margin-right: 15px;
+    margin-right: 20px;
     width: 100%;
     background-color: transparent;
     border: none;
+}
+.input_search::placeholder {
+    color: var(--thin-text);
 }
 
 .input_search::-webkit-search-cancel-button {
@@ -709,6 +763,7 @@ body.dark .dark-btn {
     background-color: var(--btn-bg);
 }
 
+
 body.dark .active-btn {
     color: var(--main-text);
     background-color: var(--bg-light);
@@ -729,6 +784,10 @@ body.dark .right_info-today-list--item{
 }
 body.dark .text-white {
     color: var(--light-text);
+}
+body.dark .input_search::placeholder {
+    color: var(--light-text);
+    opacity: 0.8;
 }
 body.dark .dark-text {
     color: var(--main-text);

@@ -13,13 +13,16 @@ window.addEventListener("DOMContentLoaded", () => {
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
     const currentLocationBtn = document.querySelector('[data-current-location-btn]');
     const hourlySection = document.querySelector('.right_info-today');
+    const btnMore = document.querySelector('.more-btn');
+    const inputContainer = document.querySelector('.input_container')
+
+
     
     let days = [];
     let daysDeg = [];
     let originalTemps = [];
     let icons = [];
     let hourlyIcons = [];
-    let dayTempElements = [];
     
     let currentWeatherDiv;
     let leftDigitTemp;
@@ -242,6 +245,9 @@ window.addEventListener("DOMContentLoaded", () => {
             currentDigitTemp = null;
             forecastSection.innerHTML = '';
             hourlySection.innerHTML = '';
+
+            const loading = document.querySelector('[data-loading]');
+            loading.style.display = 'grid';
 
             if(currentWeatherDiv && currentWeatherUlGrid) {
                 leftInfo.removeChild(currentWeatherDiv)
@@ -588,6 +594,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         daysDegrees.forEach(deg=>daysDeg.push(deg))
                     }
                 })
+                loading.style.display = 'none';
             })
             resetConversion();
         }
@@ -650,6 +657,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         return converted
     }
+
     function toggleTemperature() {
         isCelsius  = !isCelsius ;
         if(leftDigitTemp) {
@@ -719,7 +727,7 @@ window.addEventListener("DOMContentLoaded", () => {
             themeBtn.classList.remove('fadeInUp');
         }
     }
-const btnMore = document.querySelector('.more-btn');
+
     function popup(trigger, closeEl) {
         trigger.classList.add('fadeDown');
         trigger.classList.add('popup-active');
@@ -729,14 +737,11 @@ const btnMore = document.querySelector('.more-btn');
                 trigger.classList.remove('fadeDown');
                 trigger.classList.remove('popup-active');
             }
-            
-            if(trigger.classList.contains('popup-active')) {
-                btnMore.classList.remove('hidden');
-            const popupContent = document.querySelector('.popup-alert-hide')
-            popupContent.classList.add('hide');
-
-            }
         })
+        setTimeout(() => {
+            trigger.classList.remove('fadeDown');
+            trigger.classList.remove('popup-active');
+        }, 10000)
     }
 
     
@@ -757,18 +762,12 @@ const btnMore = document.querySelector('.more-btn');
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
-    const inputContainer = document.querySelector('.input_container')
+    
 
-    searchBtn.addEventListener('click', () => {
-        searchList.classList.toggle('active');
-        if(searchList.classList.contains('active')) {
-            const searchItems = document.querySelectorAll('[data-search-toggler]')
-            searchItems.forEach(item => item.addEventListener('click', () => searchList.classList.remove('active')))
-            
-        }
-    });
+    
 
     input.addEventListener('input', () => {
+        const loading = document.querySelector('.loading')
         if(searchTimeout) {
             clearInterval(searchTimeout);
         }
@@ -777,15 +776,15 @@ const btnMore = document.querySelector('.more-btn');
             searchList.classList.remove('active');
             inputContainer.classList.remove('input_container-active');
             searchList.innerHTML = '';
-            input.classList.remove('searching');
+            loading.classList.remove('searching');
         } else {
-            input.classList.add('searching');
+            loading.classList.add('searching');
         }
 
         if(input.value) {
             searchTimeout = setTimeout(() => {
                 fetchData(url.geo(input.value), function(locations) {
-                    input.classList.remove('searching');
+                    loading.classList.remove('searching');
                     searchList.classList.add('active');
                     searchList.innerHTML = `
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
