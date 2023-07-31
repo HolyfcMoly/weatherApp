@@ -15,6 +15,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const hourlySection = document.querySelector('.right_info-today');
     const btnMore = document.querySelector('.more-btn');
     const inputContainer = document.querySelector('.input_container')
+    const errorContent = document.querySelector('[data-error]');
 
 
     
@@ -131,7 +132,7 @@ window.addEventListener("DOMContentLoaded", () => {
         
             const [route, query] = requestURL.includes ? requestURL.split('?') : [requestURL];
 
-            routes.get(route) ? routes.get(route)(query) : 'error404()';
+            routes.get(route) ? routes.get(route)(query) : error404();
         }
 
         window.addEventListener('hashchange', checkHash);
@@ -142,6 +143,20 @@ window.addEventListener("DOMContentLoaded", () => {
                 checkHash();
             }
         })
+
+        const error404 = () => {
+            errorContent.innerHTML = `
+                <p>Ooops, 404</p>
+                <h1>Страница не найдена</h1>
+                <a href="#/weather?lat=55.7522&lon=37.6156" class="error-btn active-btn">
+                <span>Назад</span>
+                </a>
+            `;
+            errorContent.style.display = 'flex';
+            forecastSection.innerHTML = '';
+            hourlySection.innerHTML = '';
+            currentWeatherDiv.innerHTML = '';
+        }
 
         const weatherIcons = {
             '200_family': `
@@ -245,6 +260,7 @@ window.addEventListener("DOMContentLoaded", () => {
             currentDigitTemp = null;
             forecastSection.innerHTML = '';
             hourlySection.innerHTML = '';
+            errorContent.style.display = 'none'
 
             const loading = document.querySelector('[data-loading]');
             loading.style.display = 'grid';
@@ -741,7 +757,7 @@ window.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
             trigger.classList.remove('fadeDown');
             trigger.classList.remove('popup-active');
-        }, 10000)
+        }, 60000)
     }
 
     
@@ -768,17 +784,26 @@ window.addEventListener("DOMContentLoaded", () => {
 
     input.addEventListener('input', () => {
         const loading = document.querySelector('.loading')
+        const error = document.querySelector('.error');
         if(searchTimeout) {
             clearInterval(searchTimeout);
         }
-
+        
         if(!input.value) {
             searchList.classList.remove('active');
             inputContainer.classList.remove('input_container-active');
             searchList.innerHTML = '';
             loading.classList.remove('searching');
+            error.innerHTML = '';
         } else {
             loading.classList.add('searching');
+            error.innerHTML = `
+            <div class="error-content d-flex">
+                <span></span>
+                <p>Нет совпадений</p>
+            </div>
+            `;
+            inputContainer.classList.add('input_container-active');
         }
 
         if(input.value) {
@@ -816,6 +841,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         items.push(searchItem.querySelector('[data-search-toggler]'));
                         if(searchItem) {
                             inputContainer.classList.add('input_container-active');
+                                error.innerHTML = ''
                         } 
                         searchItem.addEventListener('click', (e) => {
                             const link = e.currentTarget.querySelector('[data-search-toggler]')
@@ -823,12 +849,12 @@ window.addEventListener("DOMContentLoaded", () => {
                                     link.click();
                                     input.value = '';
                                     inputContainer.classList.remove('input_container-active');
+                                    error.innerHTML = '';
                                     searchList.classList.remove('active');
                                 }
                         })
                     }
                 })
-                inputContainer.classList.remove('input_container-active');
             }, searchTimeoutDuration)
         }
     })
