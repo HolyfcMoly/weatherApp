@@ -7,7 +7,6 @@ window.addEventListener("DOMContentLoaded", () => {
     const forecastSection = document.querySelector('.right_info_list');
     const btns = document.querySelectorAll(".header_list_item-btn");
     const themeBtn = document.querySelector(".header_list_item-btn--theme");
-    const searchBtn = document.querySelector('.input_container_search-btn');
     const input = document.querySelector('[data-search-field]');
     const searchList = document.querySelector('.left_info-search-result');
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156' // Moscow;
@@ -115,15 +114,15 @@ window.addEventListener("DOMContentLoaded", () => {
                 const {latitude, longitude} = res.coords;
                 checkWeather(`lat=${latitude}`, `lon=${longitude}`);
             }, err => {
-                popup(popupEl, closeEl)
                 window.location.hash = defaultLocation;
+                popup(popupEl, closeEl)
             })
         }
 
         const searchedLocation = query => checkWeather(...query.split('&'))
 
         const routes = new Map([
-            ['/current-weather', currentLocation],
+            ['/current-location', currentLocation],
             ['/weather', searchedLocation]
         ]);
 
@@ -155,7 +154,9 @@ window.addEventListener("DOMContentLoaded", () => {
             errorContent.style.display = 'flex';
             forecastSection.innerHTML = '';
             hourlySection.innerHTML = '';
-            currentWeatherDiv.innerHTML = '';
+            try {
+                currentWeatherDiv.style.display = 'none';
+            } catch (error) {}
         }
 
         const weatherIcons = {
@@ -636,6 +637,7 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
+    
     function resetConversion() {
         if(isConverted) {
             isCelsius = false;
@@ -748,8 +750,7 @@ window.addEventListener("DOMContentLoaded", () => {
         trigger.classList.add('fadeDown');
         trigger.classList.add('popup-active');
         closeEl.addEventListener('click', (e) => {
-            const target = e.target;
-            if(target) {
+            if(e.target) {
                 trigger.classList.remove('fadeDown');
                 trigger.classList.remove('popup-active');
             }
@@ -770,16 +771,14 @@ window.addEventListener("DOMContentLoaded", () => {
             btnMore.classList.remove('hidden');
         }
     }
-    btnMore.addEventListener('click', more)
-
+    
     toggleTemperature();
     handleScreenChange(mediaQuery);
+    btnMore.addEventListener('click', more)
     currentLocationBtn.addEventListener('click', currentLocation);
     mediaQuery.addEventListener("change", handleScreenChange);
     themeBtn.addEventListener("click", switchTheme);
     btns.forEach((btn) => btn.addEventListener("click", toggleBtnClass));
-    
-
     
 
     input.addEventListener('input', () => {
@@ -798,7 +797,7 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
             loading.classList.add('searching');
             error.innerHTML = `
-            <div class="error-content d-flex">
+            <div class="error-content dark-list d-flex">
                 <span></span>
                 <p>Нет совпадений</p>
             </div>
