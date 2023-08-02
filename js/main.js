@@ -296,14 +296,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 div.innerHTML = `
                     <div class="left_info_weather">
                         <figure>
-                            <svg class="left_info_weather-icon" viewBox="0 0 100 100">
-                                <use xlink:href="#rainDrizzle" x="25" y="65"></use>
-                                <use xlink:href="#rainDrizzle" x="40" y="65""></use>
-                                <use xlink:href=" #sun" x="-8" y="-15"></use>
-                                <use xlink:href="#whiteCloud" x="11"></use>
-                                <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8">
-                                </use>
-                            </svg>
+                            <svg class="left_info_weather-icon" viewBox="0 0 100 100"></svg>
                         </figure>
                         <div class="left_info_weather--text d-flex ff-rob-thin">
                             <h2>${parseInt(temp)}</h2>
@@ -360,7 +353,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     </li>
                     <li class="weather-info-item dark-cards px-5 py-5">
                         <h2 class="weather-info-header">Давление</h2>
-                        <div class="weather-info__pressure d-flex justify-center ff-rob-thin">
+                        <div class="weather-info__pressure d-flex ff-rob-thin">
                             <p>${pressure}</p>
                             <p>гПа</p>
                         </div>
@@ -371,7 +364,7 @@ window.addEventListener("DOMContentLoaded", () => {
                             <p>${speed}</p>
                             <p>м/с</p>
                         </div>
-                        <div class="weather-info__deg d-flex">
+                        <div class="weather-info__deg d-flex ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">
                                 <path fill="none" d="M-1-1h582v402H-1z"/>
                                 <path fill="currentColor" transform="rotate(180,128,128)" d="M216 217a16 16 0 0 1-19 3l-70-38-71 37a16 16 0 0 1-19-3 16 16 0 0 1-3-19l80-169a1 1 0 0 1 0-1 16 16 0 0 1 29 1l76 171a16 16 0 0 1-3 18z"/>
@@ -485,7 +478,7 @@ window.addEventListener("DOMContentLoaded", () => {
                                 <svg class="today_weather-icon" viewBox="0 0 100 100">
                                     <use xlink:href="#sun"></use>
                                 </svg>
-                                <div class="d-flex justify-center ff-rob-thin">
+                                <div class="today-temp_content d-flex justify-center ff-rob-thin">
                                     <p class="today-temp">${parseInt(temp)}</p>
                                     <p class="today-degrees">°C</p>
                                 </div>

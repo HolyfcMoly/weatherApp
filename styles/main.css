@@ -78,8 +78,8 @@ h4 {
     padding-right: 2.5rem;
 }
 .py-5 {
-    padding-top: 1.25rem;
-    padding-bottom: 1.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .w-6 {
@@ -318,13 +318,23 @@ h4 {
     font-size: 0.6rem;
 }
 
+.left_info_weather figure {
+    text-align: center;
+}
+
+.left_info_weather-icon {
+    min-width: 160px;
+    width: 75%;
+    max-height: 100%;
+}
+
 .left_info_weather--text {
-    font-size: 6rem;
+    font-size: 5rem;
     font-weight: 300;
 }
 
 .left_info_weather--degrees {
-    font-size: 4rem;
+    font-size: 3rem;
     font-weight: 300;
 }
 
@@ -393,7 +403,7 @@ h4 {
 
 .right_info_list_item-degrees-day {
     margin-top: 10px;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .right_info_list_item-description {
@@ -458,6 +468,13 @@ h4 {
     margin-bottom: 10px;
 }
 
+.today-temp_content {
+    font-size: 1.2rem;
+}
+
+.day-degrees, .today-degrees {
+    font-size: 0.8rem;
+}   
 /* right info TODAY FORECAST */
 
 .weather-info {
@@ -905,14 +922,16 @@ body.dark [data-loading]::before {
         margin-right: 5px;
     }
 
-    .weather-info {
-        grid-template-columns: repeat(8, 1fr);
+    .left_info_weather--text {
+        font-size: 4rem;
+    }
+    
+    .left_info_weather--degrees {
+        font-size: 2rem;
     }
 
-    .weather-info__sunrise,
-    .weather-info__sunset,
-    .weather-info__wind {
-        justify-content: center;
+    .weather-info {
+        grid-template-columns: repeat(8, 1fr);
     }
 }
 
@@ -948,19 +967,12 @@ body.dark [data-loading]::before {
     .left_info_weather {
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
 
     .left_info_weather-icon {
         width: 130px;
-        height: 100%;
-    }
-
-    .left_info_weather--text {
-        font-size: 5rem;
-    }
-
-    .left_info_weather--degrees {
-        font-size: 3rem;
+        max-height: 100%;
     }
 
     .left_info_place {
