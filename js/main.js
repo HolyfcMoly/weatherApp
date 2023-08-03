@@ -15,8 +15,8 @@ window.addEventListener("DOMContentLoaded", () => {
     const btnMore = document.querySelector('.more-btn');
     const inputContainer = document.querySelector('.input_container')
     const errorContent = document.querySelector('[data-error]');
-
-
+    const popupEl = document.querySelector('.popup-alert');
+    const closeEl = popupEl.querySelector('.close');
     
     let days = [];
     let daysDeg = [];
@@ -36,9 +36,6 @@ window.addEventListener("DOMContentLoaded", () => {
     let isCelsius = true;
     let searchTimeout = null;
     const searchTimeoutDuration = 500;
-
-    const popupEl = document.querySelector('.popup-alert');
-    const closeEl = popupEl.querySelector('.close');
 
     
         const fetchData = (url, callback) => {
