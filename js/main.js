@@ -44,6 +44,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 .then(data => callback(data))
         }
 
+        // async function fetchData(url) {
+        //     const fullUrl = `${url}&appid=${apiKey}`;
+        //     const response = await fetch(fullUrl);
+        //     return response.json();
+        // }
+
         const url = {
             currentWeather(lat, lon) {
                 return `https://api.openweathermap.org/data/2.5/weather?${lat}&${lon}&units=metric&lang=ru`
