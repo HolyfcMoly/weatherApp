@@ -15,28 +15,3 @@ export const url = {
         return `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&lang=ru`
     },
 }
-
-export const weekDayNames = [
-    'Воскресенье',
-    'Понедельник',
-    'Вторник',
-    'Среда',
-    'Четверг',
-    'Пятница',
-    'Суббота'
-];
-
-export const monthNames = [
-    'Янв',
-    'Фев',
-    'Мар',
-    'Апр',
-    'Май',
-    'Июн',
-    'Июл',
-    'Авг',
-    'Сен',
-    'Окт',
-    'Ноя',
-    'Дек',
-];
