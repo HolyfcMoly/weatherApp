@@ -1,4 +1,28 @@
-import { weekDayNames, monthNames } from "./urls.js";
+
+export const weekDayNames = [
+    'Воскресенье',
+    'Понедельник',
+    'Вторник',
+    'Среда',
+    'Четверг',
+    'Пятница',
+    'Суббота'
+];
+
+export const monthNames = [
+    'Янв',
+    'Фев',
+    'Мар',
+    'Апр',
+    'Май',
+    'Июн',
+    'Июл',
+    'Авг',
+    'Сен',
+    'Окт',
+    'Ноя',
+    'Дек',
+];
 
 export const getDate = function(dateUnix, timezone) {
     const date = new Date((dateUnix + timezone) * 1000);

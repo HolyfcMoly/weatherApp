@@ -9,12 +9,35 @@ export default class Input {
         this.searchList = document.querySelector(searchList);
         this.searchTimeout = null;
         this.searchTimeoutDuration = 500;
+        this.error = document.querySelector('.error');
+    }
+
+    clearInput() {
+        this.input.value = '';
+        this.searchList.innerHTML = '';
+        this.inputContainer.classList.remove('input_container-active');
+        this.error.innerHTML = '';
+        this.searchList.classList.remove('active');
     }
 
     init() {
+        window.addEventListener('click', (e) => {
+            const parent = this.input.parentNode;
+            if(e.target === parent || e.target === this.input) {
+                if(this.input.value) {
+                    this.inputContainer.classList.add('input_container-active')
+                }
+                this.searchList.classList.add('active');
+                this.error.style.display = 'flex';
+            } else {
+                this.inputContainer.classList.remove('input_container-active')
+                this.searchList.classList.remove('active');
+                this.error.style.display = 'none';
+            }
+        })
+
         this.input.addEventListener('input', () => {
             const loading = document.querySelector('.loading')
-            const error = document.querySelector('.error');
             if(this.searchTimeout) {
                 clearInterval(this.searchTimeout);
             }
@@ -24,10 +47,10 @@ export default class Input {
                 this.inputContainer.classList.remove('input_container-active');
                 this.searchList.innerHTML = '';
                 loading.classList.remove('searching');
-                error.innerHTML = '';
+                this.error.innerHTML = '';
             } else {
                 loading.classList.add('searching');
-                error.innerHTML = `
+                this.error.innerHTML = `
                 <div class="error-content dark-list d-flex">
                     <span></span>
                     <p>Нет совпадений</p>
@@ -90,19 +113,17 @@ export default class Input {
                             
                             if(searchItem) {
                                 this.inputContainer.classList.add('input_container-active');
-                                    error.innerHTML = ''
+                                    this.error.innerHTML = ''
                             } 
                             searchItem.addEventListener('click', (e) => {
                                 const link = e.currentTarget.querySelector('[data-search-toggler]')
                                     if(link) {
                                         link.click();
-                                        this.input.value = '';
-                                        this.inputContainer.classList.remove('input_container-active');
-                                        error.innerHTML = '';
-                                        this.searchList.classList.remove('active');
+                                        this.clearInput();
                                     }
                             })
                         }
+
                     } catch (error) { 
                         loading.classList.remove('searching');}
                     // })

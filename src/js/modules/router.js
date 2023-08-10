@@ -1,5 +1,6 @@
 import UpdateWeather from './updateWeather.js';
 import Popup from './popup.js';
+import Input from './input.js';
 
 let weather;
 
@@ -12,6 +13,7 @@ function initialize() {
 
 export function currentLocation() {
     const defaultLocation = '#/weather?lat=55.7522&lon=37.6156'
+    new Input('[data-search-field]', '.input_container', '.left_info-search-result').clearInput()
     window.navigator.geolocation.getCurrentPosition(res => {
         const {latitude, longitude} = res.coords;
         initialize().checkWeather(`lat=${latitude}`, `lon=${longitude}`);
