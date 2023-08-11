@@ -1,7 +1,7 @@
-    const apiKey = 'd37689ff161e969e2d476005a81a5492';
+import { openWeatherKey } from "./keys";
 
-    export async function fetchData(url) {
-        const fullUrl = `${url}&appid=${apiKey}`;
-        const response = await fetch(fullUrl);
-        return response.json();
-    }
+export async function fetchData(url) {
+    const fullUrl = `${url}&appid=${openWeatherKey}`;
+    const response = await fetch(fullUrl);
+    return response.json();
+}

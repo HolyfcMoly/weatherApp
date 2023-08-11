@@ -1,7 +1,7 @@
 export default class SwitchPadding {
     constructor() {
         this.media = window.matchMedia("(max-width: 1023px)");
-        this.block = document.querySelector('.left_info');
+        this.block = document.querySelector(".left_info");
     }
     handleScreenChange(media) {
         if (media.matches) {
@@ -18,9 +18,11 @@ export default class SwitchPadding {
             this.block.classList.add("px-10");
         }
     }
-    
+
     init() {
         this.handleScreenChange(this.media);
-        this.media.addEventListener('change', () => this.handleScreenChange(this.media))
+        this.media.addEventListener("change", () =>
+            this.handleScreenChange(this.media)
+        );
     }
 }

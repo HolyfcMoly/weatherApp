@@ -1,18 +1,25 @@
-import {getTime, getDate, weekDayNames, monthNames} from './dateTime.js';
-import {url}  from './urls.js';
-import { fetchData } from './api.js';
-import { getCityName } from './geo.js';
-import * as module from './router.js';
+import { getTime, getDate, weekDayNames, monthNames } from "./dateTime.js";
+import { url } from "./urls.js";
+import { fetchData } from "./api.js";
+import { getCityName } from "./geo.js";
 
 export default class UpdateWeather {
-    constructor(leftInfo, todayWeather, hourlySection, forecastSection, errorContent, currentLocationBtn,  btns) {
+    constructor(
+        leftInfo,
+        todayWeather,
+        hourlySection,
+        forecastSection,
+        errorContent,
+        currentLocationBtn,
+        btns
+    ) {
         this.days = [];
-        this.daysDeg = []; 
+        this.daysDeg = [];
         this.originalTemps = [];
 
         this.icons = [];
         this.hourlyIcons = [];
-        
+
         this.currentWeatherDiv = null;
         this.leftDigitTemp = null;
         this.leftDigitTempDeg = null;
@@ -20,80 +27,80 @@ export default class UpdateWeather {
         this.currentWeatherUlGrid = null;
         this.currentDigitTemp = null;
         this.currentDigitTempDeg = null;
-        this.self = this;
-        
-        this.isConverted = false; 
+
+        this.isConverted = false;
         this.isCelsius = false;
         this.requestInProgress = false;
-        
+
         this.btns = document.querySelectorAll(btns);
         this.leftInfo = document.querySelector(leftInfo);
         this.todayWeather = document.querySelector(todayWeather);
         this.hourlySection = document.querySelector(hourlySection);
         this.forecastSection = document.querySelector(forecastSection);
         this.errorContent = document.querySelector(errorContent);
-        this.currentLocationBtn = document.querySelector(currentLocationBtn)
+        this.currentLocationBtn = document.querySelector(currentLocationBtn);
     }
-    
+
     convertTemperature(temp) {
-        if(!temp) return;
-        this.leftDigitTempDeg.innerHTML = '°C';
-        this.currentDigitTempDeg.innerHTML = '°C';
-        this.daysDeg.forEach((deg => deg.textContent = '°C'));
+        if (!temp) return;
+        this.leftDigitTempDeg.innerHTML = "°C";
+        this.currentDigitTempDeg.innerHTML = "°C";
+        this.daysDeg.forEach((deg) => (deg.textContent = "°C"));
         this.isConverted = true;
+
         let temperature;
-        if(typeof temp === 'number') {
+        if (typeof temp === "number") {
             temperature = this.originalTemps[temp];
-        }  else {
-            temperature = parseInt(temp.textContent)
+        } else {
+            temperature = parseInt(temp.textContent);
         }
+
         let converted;
         if (this.isCelsius) {
-            converted = Math.round((temperature * 9/5) + 32);
-            this.leftDigitTempDeg.innerHTML = '°F';
-            this.currentDigitTempDeg.innerHTML = '°F';
-            this.daysDeg.forEach((deg => deg.textContent = '°F'));
-            if(typeof temp === 'number') {
+            converted = Math.round((temperature * 9) / 5 + 32);
+            this.leftDigitTempDeg.innerHTML = "°F";
+            this.currentDigitTempDeg.innerHTML = "°F";
+            this.daysDeg.forEach((deg) => (deg.textContent = "°F"));
+            if (typeof temp === "number") {
                 this.originalTemps[temp] = converted;
-            }  else {
+            } else {
                 temp.innerHTML = converted;
             }
         } else {
-            converted = Math.round((temperature - 32) * 5/9);
-            this.leftDigitTempDeg.innerHTML = '°C';
-            this.currentDigitTempDeg.innerHTML = '°C';
-            this.daysDeg.forEach((deg => deg.textContent = '°C'));
-            if(typeof temp === 'number') {
+            converted = Math.round(((temperature - 32) * 5) / 9);
+            this.leftDigitTempDeg.innerHTML = "°C";
+            this.currentDigitTempDeg.innerHTML = "°C";
+            this.daysDeg.forEach((deg) => (deg.textContent = "°C"));
+            if (typeof temp === "number") {
                 this.originalTemps[temp] = converted;
-            }  else {
+            } else {
                 temp.innerHTML = converted;
             }
         }
-        return converted
+        return converted;
     }
 
     toggleTemperature() {
-        this.isCelsius  = !this.isCelsius ;
+        this.isCelsius = !this.isCelsius;
 
-        if(this.leftDigitTemp) {
+        if (this.leftDigitTemp) {
             this.convertTemperature(this.leftDigitTemp);
-        };
-        if(this.currentDigitTemp) {
+        }
+        if (this.currentDigitTemp) {
             this.convertTemperature(this.currentDigitTemp);
-        };
-        this.days.forEach((day,i) => {
+        }
+        this.days.forEach((day, i) => {
             this.originalTemps[i] = parseInt(day.textContent);
         });
         const convertedTemps = this.originalTemps.map((temp, i) => {
-            return this.convertTemperature(i)
-        }); 
+            return this.convertTemperature(i);
+        });
         convertedTemps.forEach((temp, i) => {
-            this.days[i].textContent = temp; 
+            this.days[i].textContent = temp;
         });
     }
-        
-    toggleBtnClass(btn) {
 
+    toggleBtnClass(btn) {
         if (!btn.classList.contains("active-btn")) {
             this.btns.forEach((btn) => btn.classList.remove("active-btn"));
             btn.classList.add("active-btn");
@@ -102,13 +109,15 @@ export default class UpdateWeather {
     }
 
     resetConversion() {
-        if(this.isConverted) {
+        if (this.isConverted) {
             this.isCelsius = false;
-            this.currentDigitTempDeg.textContent = '°C';
-            this.leftDigitTempDeg.textContent = '°C';
-            this.daysDeg.forEach((deg => deg.textContent = '°C'));
+            this.currentDigitTempDeg.textContent = "°C";
+            this.leftDigitTempDeg.textContent = "°C";
+            this.daysDeg.forEach((deg) => (deg.textContent = "°C"));
             this.btns.forEach((btn) => {
-                btn.textContent === '°F' ? btn.classList.remove("active-btn") : btn.classList.add("active-btn");
+                btn.textContent === "°F"
+                    ? btn.classList.remove("active-btn")
+                    : btn.classList.add("active-btn");
             });
             this.isConverted = false;
         }
@@ -116,7 +125,7 @@ export default class UpdateWeather {
 
     getWeatherIcons() {
         const weatherIcons = {
-            '200_family': `
+            "200_family": `
                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href="#grayCloud" fill="url(#gradGray)" x="-7" y="20"></use>
@@ -124,20 +133,20 @@ export default class UpdateWeather {
                 <use xlink:href="#thunderBolt" fill="url(#gradYellow)" x="25" y="55"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-            '300_family': `
+            "300_family": `
                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-            '500_family_1': `
+            "500_family_1": `
                 <use xlink:href="#rainDrizzle" x="20" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="30" y="65""></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href=" #sun" x="-8" y="-15"></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
             `,
-            '500_family_2': `
+            "500_family_2": `
                 <use xlink:href="#rainDrizzle" x="20" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="30" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
@@ -145,7 +154,7 @@ export default class UpdateWeather {
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-            '600_family': `
+            "600_family": `
                 <use xlink:href="#snowFlake" id="snow-b" class="snow" x="25"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="25" y="150"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="85" y="190"></use>
@@ -153,7 +162,7 @@ export default class UpdateWeather {
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="238" y="150"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="190" y="190"></use>
             `,
-            '700_family': `
+            "700_family": `
                 <use xlink:href="#grayCloud" class="mist_cloud" opacity="0.5" fill="url(#gradGray)" x="10"></use>
                 <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="20" y="78"></use>
                 <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="30" y="110"></use>
@@ -171,74 +180,74 @@ export default class UpdateWeather {
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#whiteCloud" transform="scale(0.7)"></use>
             `,
-            '803_family': `
+            "803_family": `
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-        }
-        return weatherIcons
+        };
+        return weatherIcons;
     }
 
     getWeatherIconId(weatherId) {
-        const icons = this.getWeatherIcons()
-        
+        const icons = this.getWeatherIcons();
+
         function iconId(weatherId) {
-            if(/^300/.test(weatherId)) {
-                return icons['300_family'];
-            } 
-            if(/^50[0-4]/.test(weatherId)) {
-                return icons['500_family_1']
-            } 
-            if(/^[520-531]/.test(weatherId)) {
-                return icons['500_family_2']
-            } 
-            if(/^600/.test(weatherId)) {
-                return icons['600_family']
-            } 
-            if(/^700/.test(weatherId)) {
-                return icons['700_family']
-            } 
-            if(/^800/.test(weatherId)) {
-                return icons[800]
-            } 
-            if(/^801/.test(weatherId)) {
-                return icons[801]
-            } 
-            if(/^802/.test(weatherId)) {
-                return icons[802]
-            } 
-            if(/^80[3-4]/.test(weatherId)) {
-                return icons['803_family']
+            if (/^300/.test(weatherId)) {
+                return icons["300_family"];
+            }
+            if (/^50[0-4]/.test(weatherId)) {
+                return icons["500_family_1"];
+            }
+            if (/^[520-531]/.test(weatherId)) {
+                return icons["500_family_2"];
+            }
+            if (/^600/.test(weatherId)) {
+                return icons["600_family"];
+            }
+            if (/^700/.test(weatherId)) {
+                return icons["700_family"];
+            }
+            if (/^800/.test(weatherId)) {
+                return icons[800];
+            }
+            if (/^801/.test(weatherId)) {
+                return icons[801];
+            }
+            if (/^802/.test(weatherId)) {
+                return icons[802];
+            }
+            if (/^80[3-4]/.test(weatherId)) {
+                return icons["803_family"];
             }
         }
-        return iconId(weatherId)
+        return iconId(weatherId);
     }
 
     windDirection(trigger, deg) {
         const directions = {
-            "0-15" : "С",
-            "15-75" : "С-В",
-            "75-105" : "В",
-            "105-165" : "Ю-В",
-            "165-195" : "Ю",
-            "195-255" : "Ю-З",
-            "255-285" : "З",
-            "285-345" : "С-З",
-            "345-360" : "C",
-        }
-        
+            "0-15": "С",
+            "15-75": "С-В",
+            "75-105": "В",
+            "105-165": "Ю-В",
+            "165-195": "Ю",
+            "195-255": "Ю-З",
+            "255-285": "З",
+            "285-345": "С-З",
+            "345-360": "C",
+        };
+
         let number = deg;
         Object.entries(directions).forEach(([range, dir]) => {
-            const [start, end] = range.split('-');
-            if(number >= start && number <= end) {
+            const [start, end] = range.split("-");
+            if (number >= start && number <= end) {
                 trigger.innerHTML = dir;
             }
-        })
+        });
     }
 
     error404 = () => {
-        const errorContent = document.querySelector('[data-error]')
-        const forecastSection = document.querySelector('.right_info_list')
+        const errorContent = document.querySelector("[data-error]");
+        const forecastSection = document.querySelector(".right_info_list");
         errorContent.innerHTML = `
             <p>Ooops, 404</p>
             <h1>Страница не найдена</h1>
@@ -246,24 +255,24 @@ export default class UpdateWeather {
             <span>Назад</span>
             </a>
         `;
-        errorContent.style.display = 'flex';
-        forecastSection.innerHTML = '';
-        this.hourlySection.innerHTML = '';
+        errorContent.style.display = "flex";
+        forecastSection.innerHTML = "";
+        this.hourlySection.innerHTML = "";
         try {
-            this.currentWeatherDiv.style.display = 'none';
+            this.currentWeatherDiv.style.display = "none";
         } catch (error) {}
-    }
+    };
 
     capitalize(str) {
-        if(typeof str !== 'string') {
+        if (typeof str !== "string") {
             return str;
         }
-        str = str.replace(/^./, c => c.toUpperCase());
-        return str
+        str = str.replace(/^./, (c) => c.toUpperCase());
+        return str;
     }
 
     async checkWeather(lat, lon) {
-        if(this.requestInProgress) return;
+        if (this.requestInProgress) return;
         this.requestInProgress = true;
         this.days = [];
         this.daysDeg = [];
@@ -272,44 +281,49 @@ export default class UpdateWeather {
         this.originalTemps = [];
         this.leftDigitTemp = null;
         this.currentDigitTemp = null;
-        this.forecastSection.innerHTML = '';
-        this.hourlySection.innerHTML = '';
-        this.errorContent.style.display = 'none'
+        this.forecastSection.innerHTML = "";
+        this.hourlySection.innerHTML = "";
+        this.errorContent.style.display = "none";
 
-        const loading = document.querySelector('[data-loading]');
-        loading.style.display = 'grid';
+        const loading = document.querySelector("[data-loading]");
+        loading.style.display = "grid";
 
-        if(this.currentWeatherDiv && this.leftInfo.contains(this.currentWeatherDiv)) {
-            this.leftInfo.removeChild(this.currentWeatherDiv)
+        if (this.currentWeatherDiv &&
+            this.leftInfo.contains(this.currentWeatherDiv)
+        ) {
+            this.leftInfo.removeChild(this.currentWeatherDiv);
         }
-        
-        if(this.currentWeatherUlGrid && this.todayWeather.contains(this.currentWeatherUlGrid)) {
-            this.todayWeather.removeChild(this.currentWeatherUlGrid)
+
+        if (this.currentWeatherUlGrid &&
+            this.todayWeather.contains(this.currentWeatherUlGrid)
+        ) {
+            this.todayWeather.removeChild(this.currentWeatherUlGrid);
         }
-        
-        if(window.location.hash === '#/current-location') {
-            this.currentLocationBtn.setAttribute('disabled', '')
+
+        if (window.location.hash === "#/current-location") {
+            this.currentLocationBtn.setAttribute("disabled", "");
         } else {
-            this.currentLocationBtn.removeAttribute('disabled');
+            this.currentLocationBtn.removeAttribute("disabled");
         }
-        
+
         const currentWeather = await fetchData(url.currentWeather(lat, lon));
         const {
             weather: [current],
             dt: dateUnix,
             name,
-            sys: {sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC, country},
-            main:{temp, humidity, pressure, feels_like},
-            wind: {speed, deg},
+            sys: { sunrise: sunriseUnixUTC, sunset: sunsetUnixUTC, country },
+            main: { temp, humidity, pressure, feels_like },
+            wind: { speed, deg },
             visibility,
-            timezone
+            timezone,
         } = currentWeather;
 
         const description = current.description;
         const weatherId = current.id;
-        const icon = this.getWeatherIconId([weatherId])
-        const div = document.createElement('div');
-        div.classList.add('left-info-content', 'px-5', 'py-5');
+        const icon = this.getWeatherIconId([weatherId]);
+
+        const div = document.createElement("div");
+        div.classList.add("left-info-content", "px-5", "py-5");
         div.innerHTML = `
             <div class="left_info_weather">
                 <figure>
@@ -345,9 +359,10 @@ export default class UpdateWeather {
             </div>
         `;
         this.currentWeatherDiv = this.leftInfo.appendChild(div);
-        document.querySelector('.left_info_weather-icon').innerHTML = icon;
-        this.leftDigitTemp = document.querySelector('.left_info_weather--text h2');
-        this.leftDigitTempDeg = document.querySelector('.left_info_weather--degrees');
+        document.querySelector(".left_info_weather-icon").innerHTML = icon;
+        this.leftDigitTemp = document.querySelector(".left_info_weather--text h2");
+        this.leftDigitTempDeg = document.querySelector(".left_info_weather--degrees");
+
         let sunrise = new Date(sunriseUnixUTC * 1000);
         const localSunrise = new Date(sunrise.getTime() + timezone * 1000);
         const sunriseHour = localSunrise.getUTCHours();
@@ -358,8 +373,8 @@ export default class UpdateWeather {
         const sunsetHour = localSunset.getUTCHours();
         const sunsetMinutes = localSunset.getUTCMinutes();
 
-        const ul = document.createElement('ul');
-        ul.classList.add('weather-info');
+        const ul = document.createElement("ul");
+        ul.classList.add("weather-info");
         ul.innerHTML = `
             <li class="weather-info-item dark-cards px-5 py-5">
                 <h2 class="weather-info-header">По ощущению</h2>
@@ -404,8 +419,8 @@ export default class UpdateWeather {
                             <use xlink:href="#sun" y="-15"></use>
                         </svg>
                     </figure>
-                    <p>${sunriseHour < 10 ? '0' : ''}${sunriseHour}
-                        :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}</p>
+                    <p>${sunriseHour < 10 ? "0" : ""}${sunriseHour}
+                        :${sunriseMinutes < 10 ? "0" : ""}${sunriseMinutes}</p>
                 </div>
                 <div class="weather-info__sunset d-flex ff-rob-thin">
                     <figure>
@@ -416,8 +431,8 @@ export default class UpdateWeather {
                             <use xlink:href="#moon" x="-8" y="-15"></use>
                         </svg>
                     </figure>
-                    <p>${sunsetHour < 10 ? '0' : ''}${sunsetHour}
-                        :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}</p>
+                    <p>${sunsetHour < 10 ? "0" : ""}${sunsetHour}
+                        :${sunsetMinutes < 10 ? "0" : ""}${sunsetMinutes}</p>
                 </div>
             </li>
             <li class="weather-info-item dark-cards px-5 py-5">
@@ -439,74 +454,83 @@ export default class UpdateWeather {
             </li>
         `;
         this.currentWeatherUlGrid = this.todayWeather.appendChild(ul);
-        this.currentDigitTemp = document.querySelector('.weather-info__feelLike p');
-        this.currentDigitTempDeg = document.querySelector('.weather-info__feelLike p').nextElementSibling;
-        
+        this.currentDigitTemp = document.querySelector(".weather-info__feelLike p");
+        this.currentDigitTempDeg = document.querySelector(".weather-info__feelLike p").nextElementSibling;
 
-        document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`
-        const direction = document.querySelector('.weather-info__deg p');
+        document.querySelector(".weather-info__deg svg").style.transform = `rotate(${deg}deg)`;
+        const direction = document.querySelector(".weather-info__deg p");
         this.windDirection(direction, deg);
 
-            // fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
-                async function reverseGeo() {
-                    const reverseGeo = await fetchData(url.reverseGeo(lat, lon));
-                    const [reverse] = reverseGeo;
-                    const cityName = await getCityName(reverse.lat, reverse.lon);
-                    const hasLocalNames = reverse.local_names && typeof reverse.local_names === 'object' &&
-                        reverse.local_names.hasOwnProperty('ru');
-                        let ruName;
-                        if(hasLocalNames) {
-                            ruName = reverse.local_names.ru;
-                        } else {
-                            ruName = reverse.name;
-                        }
-                    document.querySelector('.left_info_place--text').innerHTML = `${cityName === true ? ruName : cityName.cityName}`;
-                    document.querySelector('.left_info_place--subtext').innerHTML = `${cityName === true ? country : cityName.countryName}`
-                }
-                reverseGeo()
-            // })
+        async function reverseGeo() {
+            const reverseGeo = await fetchData(url.reverseGeo(lat, lon));
+            const [reverse] = reverseGeo;
+            const cityName = await getCityName(reverse.lat, reverse.lon);
+            const hasLocalNames =
+                reverse.local_names &&
+                typeof reverse.local_names === "object" &&
+                reverse.local_names.hasOwnProperty("ru");
 
-            const forecast = await fetchData(url.forecast(lat, lon));
-            // fetchData(url.forecast(lat, lon), (forecast) => {
-                const {
-                    list: forecastList,
-                    city: {timezones}
-                } = forecast;
+            let ruName;
+            if (hasLocalNames) {
+                ruName = reverse.local_names.ru;
+            } else {
+                ruName = reverse.name;
+            }
+            document.querySelector(".left_info_place--text").innerHTML = `${
+                cityName === true ? ruName : cityName.cityName
+            }`;
+            document.querySelector(".left_info_place--subtext").innerHTML = `${
+                cityName === true ? country : cityName.countryName
+            }`;
+        }
+        reverseGeo();
 
-                const h2 = document.createElement('h2');
-                h2.classList.add('right_info_header');
-                h2.textContent = `На сегодня`;
+        const forecast = await fetchData(url.forecast(lat, lon));
+        const {
+            list: forecastList,
+            city: { timezones },
+        } = forecast;
 
-                const list = document.createElement('ul');
-                list.classList.add('right_info-today-list', 'd-flex');
-                list.style.overflowX = 'scroll'
+        const h2 = document.createElement("h2");
+        h2.classList.add("right_info_header");
+        h2.textContent = `На сегодня`;
 
-                this.hourlySection.appendChild(h2)
-                this.hourlySection.appendChild(list)
-                    // 24h forecast
-                for (const [index, data] of forecastList.entries()) {
-                    if(index > 7) break;
+        const list = document.createElement("ul");
+        list.classList.add("right_info-today-list", "d-flex");
+        list.style.overflowX = "scroll";
 
-                    const {
-                        dt_txt,
-                        main:{temp},
-                        wind: {deg: windDir, speed},
-                        weather: [forecast]
-                    } = data;
-                    const newDate = new Date(dt_txt)
-                    const weatherId = forecast.id;
-                    const icon = this.getWeatherIconId([weatherId]);
-                    this.hourlyIcons.push(icon)
+        this.hourlySection.appendChild(h2);
+        this.hourlySection.appendChild(list);
+        // 24h forecast
+        for (const [index, data] of forecastList.entries()) {
+            if (index > 7) break;
 
-                    const hours = newDate.getHours();
-                    const minutes = newDate.getMinutes();
+            const {
+                dt_txt,
+                main: { temp },
+                wind: { deg: windDir, speed },
+                weather: [forecast],
+            } = data;
+            const newDate = new Date(dt_txt);
+            const weatherId = forecast.id;
+            const icon = this.getWeatherIconId([weatherId]);
+            this.hourlyIcons.push(icon);
 
-                    const item = document.createElement('li');
-                    item.classList.add("right_info-today-list--item", "px-5", "py-5");
-                    item.innerHTML = `
+            const hours = newDate.getHours();
+            const minutes = newDate.getMinutes();
+
+            const item = document.createElement("li");
+            item.classList.add("right_info-today-list--item", "px-5", "py-5");
+            item.innerHTML = `
                         <div class="card-today">
-                            <p class="today-date ff-rob-thin">${weekDayNames[newDate.getUTCDay()]}, ${newDate.getDate()}</p>
-                            <p class="today-time ff-rob-thin">${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}</p>
+                            <p class="today-date ff-rob-thin">
+                            ${weekDayNames[newDate.getUTCDay()]},
+                            ${newDate.getDate()}
+                            </p>
+                            <p class="today-time ff-rob-thin">
+                            ${hours < 10 ? "0" : ""}${hours}:
+                            ${minutes < 10 ? "0" : ""}${minutes}
+                            </p>
                             <svg class="today_weather-icon" viewBox="0 0 100 100">
                                 <use xlink:href="#sun"></use>
                             </svg>
@@ -529,42 +553,51 @@ export default class UpdateWeather {
                             </div>
                         </div>
                     `;
-                    list.appendChild(item);
-                    const todayIcons = document.querySelectorAll('.today_weather-icon');
-                    todayIcons.forEach((svg, i) => {
-                        svg.innerHTML = this.hourlyIcons[i]
-                    })
-                    const directions = document.querySelectorAll('.today_weather__wind-deg p');
-                    const svgs = document.querySelectorAll('.today_weather__wind-deg svg');
-                    svgs.forEach((svg, i) => {
-                        const transform = svg.getAttribute('transform');
-                        const degrees = +transform.match(/\d+/)[0]
-                        this.windDirection(directions[i], degrees)
-                    });
-                    const daysTemp = document.querySelectorAll('.today-temp');
-                    const daysDegrees = document.querySelectorAll('.today-degrees');
-                    daysTemp.forEach(day=>this.days.push(day));
-                    daysDegrees.forEach(deg=>this.daysDeg.push(deg))
-                }
-                // 5 days forecast
-                for (let i = 7, len = forecastList.length; i < len; i+=8) {
-
-                    const {
-                        main:{temp_max, humidity, pressure},
-                        wind: {deg: windDir, speed},
-                        weather: [forecast],
-                        dt_txt
-                    } = forecastList[i];
-                    const date = new Date(dt_txt);
-                    const description = forecast.description;
-                    const weatherId = forecast.id;
-                    const icon = this.getWeatherIconId([weatherId])
-                    this.icons.push(icon);
-                    const li = document.createElement('li');
-                    li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5", 'd-flex-column', 'justify-between');
-                    li.innerHTML = `
+            list.appendChild(item);
+            const todayIcons = document.querySelectorAll(".today_weather-icon");
+            todayIcons.forEach((svg, i) => {
+                svg.innerHTML = this.hourlyIcons[i];
+            });
+            const directions = document.querySelectorAll(".today_weather__wind-deg p");
+            const svgs = document.querySelectorAll(".today_weather__wind-deg svg");
+            svgs.forEach((svg, i) => {
+                const transform = svg.getAttribute("transform");
+                const degrees = +transform.match(/\d+/)[0];
+                this.windDirection(directions[i], degrees);
+            });
+            const daysTemp = document.querySelectorAll(".today-temp");
+            const daysDegrees = document.querySelectorAll(".today-degrees");
+            daysTemp.forEach((day) => this.days.push(day));
+            daysDegrees.forEach((deg) => this.daysDeg.push(deg));
+        }
+        // 5 days forecast
+        for (let i = 7, len = forecastList.length; i < len; i += 8) {
+            const {
+                main: { temp_max, humidity, pressure },
+                wind: { deg: windDir, speed },
+                weather: [forecast],
+                dt_txt,
+            } = forecastList[i];
+            const date = new Date(dt_txt);
+            const description = forecast.description;
+            const weatherId = forecast.id;
+            const icon = this.getWeatherIconId([weatherId]);
+            this.icons.push(icon);
+            const li = document.createElement("li");
+            li.classList.add(
+                "right_info_list_item",
+                "dark-cards",
+                "px-5",
+                "py-5",
+                "d-flex-column",
+                "justify-between"
+            );
+            li.innerHTML = `
                         <div>
-                        <h2 class="right_info_list_item-day ff-rob-thin">${weekDayNames[date.getUTCDay()]}, ${monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
+                        <h2 class="right_info_list_item-day ff-rob-thin">
+                        ${weekDayNames[date.getUTCDay()]}, 
+                        ${monthNames[date.getUTCMonth()]} ${date.getDate()}
+                        </h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
                                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
@@ -616,32 +649,32 @@ export default class UpdateWeather {
                             </div>
                         </div>
                     `;
-                    const rightInfo = document.querySelector('.right_info');
-                    rightInfo.querySelector('.right_info_list').appendChild(li);
-                    
-                    const iconsEl = document.querySelectorAll('.weather_anim-icon');
-                    iconsEl.forEach((svg, i) => {
-                        svg.innerHTML = this.icons[i]
-                    })
-                    const directions = document.querySelectorAll('.weather-wind__deg p');
-                    const svgs = document.querySelectorAll('.weather-wind__deg svg');
-                    svgs.forEach((svg, i) => {
-                        const transform = svg.getAttribute('transform');
-                        const degrees = +transform.match(/\d+/)[0]
-                        this.windDirection(directions[i], degrees)
-                    });
-                    const daysTemp = document.querySelectorAll('.day-temp');
-                    const daysDegrees = document.querySelectorAll('.day-degrees');
-                    daysTemp.forEach(day=>this.days.push(day));
-                    daysDegrees.forEach(deg=>this.daysDeg.push(deg))
-                }
-                loading.style.display = 'none';
-                this.resetConversion();
-                this.requestInProgress = false;
-            this.btns.forEach((btn) => btn.addEventListener("click", () => {
-                this.toggleBtnClass(btn)
-            }));
-    }
+            const rightInfo = document.querySelector(".right_info");
+            rightInfo.querySelector(".right_info_list").appendChild(li);
 
-    
+            const iconsEl = document.querySelectorAll(".weather_anim-icon");
+            iconsEl.forEach((svg, i) => {
+                svg.innerHTML = this.icons[i];
+            });
+            const directions = document.querySelectorAll(".weather-wind__deg p");
+            const svgs = document.querySelectorAll(".weather-wind__deg svg");
+            svgs.forEach((svg, i) => {
+                const transform = svg.getAttribute("transform");
+                const degrees = +transform.match(/\d+/)[0];
+                this.windDirection(directions[i], degrees);
+            });
+            const daysTemp = document.querySelectorAll(".day-temp");
+            const daysDegrees = document.querySelectorAll(".day-degrees");
+            daysTemp.forEach((day) => this.days.push(day));
+            daysDegrees.forEach((deg) => this.daysDeg.push(deg));
+        }
+        loading.style.display = "none";
+        this.resetConversion();
+        this.requestInProgress = false;
+        this.btns.forEach((btn) =>
+            btn.addEventListener("click", () => {
+                this.toggleBtnClass(btn);
+            })
+        );
+    }
 }
