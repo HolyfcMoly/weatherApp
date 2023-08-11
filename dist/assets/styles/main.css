@@ -476,9 +476,10 @@ h4 {
     font-size: 1.2rem;
 }
 
-.day-degrees, .today-degrees {
+.day-degrees,
+.today-degrees {
     font-size: 0.8rem;
-}   
+}
 /* right info TODAY FORECAST */
 
 .weather-info {
@@ -929,7 +930,7 @@ body.dark [data-loading]::before {
     .left_info_weather--text {
         font-size: 4rem;
     }
-    
+
     .left_info_weather--degrees {
         font-size: 2rem;
     }

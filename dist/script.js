@@ -12,9 +12,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fetchData: () => (/* binding */ fetchData)
 /* harmony export */ });
-const apiKey = 'd37689ff161e969e2d476005a81a5492';
+/* harmony import */ var _keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys */ "./src/js/modules/keys.js");
+
 async function fetchData(url) {
-  const fullUrl = `${url}&appid=${apiKey}`;
+  const fullUrl = `${url}&appid=${_keys__WEBPACK_IMPORTED_MODULE_0__.openWeatherKey}`;
   const response = await fetch(fullUrl);
   return response.json();
 }
@@ -34,8 +35,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   monthNames: () => (/* binding */ monthNames),
 /* harmony export */   weekDayNames: () => (/* binding */ weekDayNames)
 /* harmony export */ });
-const weekDayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-const monthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+const weekDayNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+const monthNames = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
 const getDate = function (dateUnix, timezone) {
   const date = new Date((dateUnix + timezone) * 1000);
   const weekDayName = weekDayNames[date.getUTCDay()];
@@ -49,7 +50,7 @@ const getTime = timezone => {
   const timeForTimeZone = new Date(now.getTime() + timezone * 1000);
   const hour = timeForTimeZone.getHours();
   const minutes = timeForTimeZone.getMinutes();
-  return `${hour < 10 ? '0' : ''}${hour}:${minutes < 10 ? '0' : ''}${minutes}`;
+  return `${hour < 10 ? "0" : ""}${hour}:${minutes < 10 ? "0" : ""}${minutes}`;
 };
 
 /***/ }),
@@ -64,9 +65,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getCityName: () => (/* binding */ getCityName)
 /* harmony export */ });
+/* harmony import */ var _keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys */ "./src/js/modules/keys.js");
+
 async function getCityName(lat, lon) {
-  const apiKey = '84fd0e86-55e2-413c-ac46-0a754af6776a';
-  const response = await fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${apiKey}&geocode=${lat},${lon}&sco=latlong&kind=locality&results=5&format=json`);
+  const response = await fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${_keys__WEBPACK_IMPORTED_MODULE_0__.yandexKey}&geocode=${lat},${lon}&sco=latlong&kind=locality&results=5&format=json`);
   const data = await response.json();
   const result = {};
   if (data.response.GeoObjectCollection.featureMember.length === 0) {
@@ -93,8 +95,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _urls_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./urls.js */ "./src/js/modules/urls.js");
 /* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./api.js */ "./src/js/modules/api.js");
 /* harmony import */ var _geo_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./geo.js */ "./src/js/modules/geo.js");
-/* harmony import */ var _updateWeather_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./updateWeather.js */ "./src/js/modules/updateWeather.js");
-
 
 
 
@@ -103,60 +103,58 @@ class Input {
     this.input = document.querySelector(input);
     this.inputContainer = document.querySelector(inputContainer);
     this.searchList = document.querySelector(searchList);
+    this.error = document.querySelector(".error");
     this.searchTimeout = null;
     this.searchTimeoutDuration = 500;
-    this.error = document.querySelector('.error');
   }
   clearInput() {
-    this.input.value = '';
-    this.searchList.innerHTML = '';
-    this.inputContainer.classList.remove('input_container-active');
-    this.error.innerHTML = '';
-    this.searchList.classList.remove('active');
+    this.input.value = "";
+    this.searchList.innerHTML = "";
+    this.inputContainer.classList.remove("input_container-active");
+    this.error.innerHTML = "";
+    this.searchList.classList.remove("active");
   }
   init() {
-    window.addEventListener('click', e => {
+    window.addEventListener("click", e => {
       const parent = this.input.parentNode;
       if (e.target === parent || e.target === this.input) {
         if (this.input.value) {
-          this.inputContainer.classList.add('input_container-active');
+          this.inputContainer.classList.add("input_container-active");
         }
-        this.searchList.classList.add('active');
-        this.error.style.display = 'flex';
+        this.searchList.classList.add("active");
+        this.error.style.display = "flex";
       } else {
-        this.inputContainer.classList.remove('input_container-active');
-        this.searchList.classList.remove('active');
-        this.error.style.display = 'none';
+        this.inputContainer.classList.remove("input_container-active");
+        this.searchList.classList.remove("active");
+        this.error.style.display = "none";
       }
     });
-    this.input.addEventListener('input', () => {
-      const loading = document.querySelector('.loading');
+    this.input.addEventListener("input", () => {
+      const loading = document.querySelector(".loading");
       if (this.searchTimeout) {
         clearInterval(this.searchTimeout);
       }
       if (!this.input.value) {
-        this.searchList.classList.remove('active');
-        this.inputContainer.classList.remove('input_container-active');
-        this.searchList.innerHTML = '';
-        loading.classList.remove('searching');
-        this.error.innerHTML = '';
+        this.searchList.classList.remove("active");
+        this.inputContainer.classList.remove("input_container-active");
+        this.searchList.innerHTML = "";
+        loading.classList.remove("searching");
+        this.error.innerHTML = "";
       } else {
-        loading.classList.add('searching');
+        loading.classList.add("searching");
         this.error.innerHTML = `
                 <div class="error-content dark-list d-flex">
                     <span></span>
                     <p>Нет совпадений</p>
                 </div>
                 `;
-        this.inputContainer.classList.add('input_container-active');
+        this.inputContainer.classList.add("input_container-active");
       }
       if (this.input.value) {
         this.searchTimeout = setTimeout(async () => {
           try {
             const locations = await (0,_api_js__WEBPACK_IMPORTED_MODULE_1__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_0__.url.geo(this.input.value));
-            // fetchData(url.geo(this.input.value), (locations) => {
-
-            this.searchList.classList.add('active');
+            this.searchList.classList.add("active");
             this.searchList.innerHTML = `
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
                         `;
@@ -185,15 +183,15 @@ class Input {
               throw new Error();
             }
             for (const item of items) {
-              const hasLocalNames = item.local_names && typeof item.local_names === 'object' && item.local_names.hasOwnProperty('ru');
+              const hasLocalNames = item.local_names && typeof item.local_names === "object" && item.local_names.hasOwnProperty("ru");
               let ruName;
               if (hasLocalNames) {
                 ruName = item.local_names.ru;
               } else {
                 ruName = item.name;
               }
-              const searchItem = document.createElement('li');
-              searchItem.classList.add('view-item');
+              const searchItem = document.createElement("li");
+              searchItem.classList.add("view-item");
               items.push({
                 location
               });
@@ -201,20 +199,21 @@ class Input {
                                 <div class="justify-between">
                                     <div>
                                         <p class="view-item-title">${item.cityName === true ? ruName : item.cityName.cityName}</p>
-                                        <p class="view-item-subtitle">${item.cityName === true ? item.state || '' : item.cityName.countryName || ''}</p>
+                                        <p class="view-item-subtitle">${item.cityName === true ? item.state || "" : item.cityName.countryName || ""}</p>
                                     </div>
                                     <p class="view-item-country">${item.country}</p>
                                 </div>
-                                <a href="#/weather?lat=${item.lat}&lon=${item.lon}" aria-label='${item.name} weather' data-search-toggler></a>
+                                <a href="#/weather?lat=${item.lat}&lon=${item.lon}" 
+                                aria-label='${item.name} weather' data-search-toggler></a>
                             `;
-              this.searchList.querySelector('[data-search-list]').appendChild(searchItem);
-              loading.classList.remove('searching');
+              this.searchList.querySelector("[data-search-list]").appendChild(searchItem);
+              loading.classList.remove("searching");
               if (searchItem) {
-                this.inputContainer.classList.add('input_container-active');
-                this.error.innerHTML = '';
+                this.inputContainer.classList.add("input_container-active");
+                this.error.innerHTML = "";
               }
-              searchItem.addEventListener('click', e => {
-                const link = e.currentTarget.querySelector('[data-search-toggler]');
+              searchItem.addEventListener("click", e => {
+                const link = e.currentTarget.querySelector("[data-search-toggler]");
                 if (link) {
                   link.click();
                   this.clearInput();
@@ -222,14 +221,29 @@ class Input {
               });
             }
           } catch (error) {
-            loading.classList.remove('searching');
+            loading.classList.remove("searching");
           }
-          // })
         }, this.searchTimeoutDuration);
       }
     });
   }
 }
+
+/***/ }),
+
+/***/ "./src/js/modules/keys.js":
+/*!********************************!*\
+  !*** ./src/js/modules/keys.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   openWeatherKey: () => (/* binding */ openWeatherKey),
+/* harmony export */   yandexKey: () => (/* binding */ yandexKey)
+/* harmony export */ });
+const openWeatherKey = 'CHANGE_ME';
+const yandexKey = 'CHANGE_ME';
 
 /***/ }),
 
@@ -245,36 +259,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 class Popup {
   constructor() {
-    this.popupEl = document.querySelector('.popup-alert');
-    this.close = document.querySelector('.close');
-    this.btn = document.querySelector('.more-btn');
+    this.popupEl = document.querySelector(".popup-alert");
+    this.close = document.querySelector(".close");
+    this.btn = document.querySelector(".more-btn");
   }
   popup(trigger, closeEl) {
-    trigger.classList.add('fadeDown');
-    trigger.classList.add('popup-active');
-    closeEl.addEventListener('click', e => {
+    trigger.classList.add("fadeDown");
+    trigger.classList.add("popup-active");
+    closeEl.addEventListener("click", e => {
       if (e.target) {
-        trigger.classList.remove('fadeDown');
-        trigger.classList.remove('popup-active');
+        trigger.classList.remove("fadeDown");
+        trigger.classList.remove("popup-active");
       }
     });
     setTimeout(() => {
-      trigger.classList.remove('fadeDown');
-      trigger.classList.remove('popup-active');
+      trigger.classList.remove("fadeDown");
+      trigger.classList.remove("popup-active");
     }, 60000);
   }
   more() {
-    const popupContent = document.querySelector('.popup-alert-hide');
-    popupContent.classList.remove('hide');
-    if (!popupContent.classList.contains('hide')) {
-      this.btn.classList.add('hidden');
+    const popupContent = document.querySelector(".popup-alert-hide");
+    popupContent.classList.remove("hide");
+    if (!popupContent.classList.contains("hide")) {
+      this.btn.classList.add("hidden");
     } else {
-      this.btn.classList.remove('hidden');
+      this.btn.classList.remove("hidden");
     }
   }
   init() {
     this.popup(this.popupEl, this.close);
-    this.btn.addEventListener('click', () => this.more());
+    this.btn.addEventListener("click", () => this.more());
   }
 }
 
@@ -303,13 +317,13 @@ __webpack_require__.r(__webpack_exports__);
 let weather;
 function initialize() {
   if (!weather) {
-    weather = new _updateWeather_js__WEBPACK_IMPORTED_MODULE_0__["default"](".left_info", '.right_info-grid', '.right_info-today', '.right_info_list', '[data-error]', '[data-current-location-btn]', ".header_list_item-btn");
+    weather = new _updateWeather_js__WEBPACK_IMPORTED_MODULE_0__["default"](".left_info", ".right_info-grid", ".right_info-today", ".right_info_list", "[data-error]", "[data-current-location-btn]", ".header_list_item-btn");
   }
   return weather;
 }
 function currentLocation() {
-  const defaultLocation = '#/weather?lat=55.7522&lon=37.6156';
-  new _input_js__WEBPACK_IMPORTED_MODULE_2__["default"]('[data-search-field]', '.input_container', '.left_info-search-result').clearInput();
+  const defaultLocation = "#/weather?lat=55.7522&lon=37.6156";
+  new _input_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[data-search-field]", ".input_container", ".left_info-search-result").clearInput();
   window.navigator.geolocation.getCurrentPosition(res => {
     const {
       latitude,
@@ -322,19 +336,19 @@ function currentLocation() {
   });
 }
 const searchedLocation = query => {
-  initialize().checkWeather(...query.split('&'));
+  initialize().checkWeather(...query.split("&"));
 };
-const routes = new Map([['/current-location', currentLocation], ['/weather', searchedLocation]]);
+const routes = new Map([["/current-location", currentLocation], ["/weather", searchedLocation]]);
 function checkHash() {
   const requestURL = window.location.hash.slice(1);
-  const [route, query] = requestURL.includes ? requestURL.split('?') : [requestURL];
+  const [route, query] = requestURL.includes ? requestURL.split("?") : [requestURL];
   routes.get(route) ? routes.get(route)(query) : initialize().error404();
 }
 function init() {
-  window.addEventListener('hashchange', checkHash);
-  window.addEventListener('load', () => {
+  window.addEventListener("hashchange", checkHash);
+  window.addEventListener("load", () => {
     if (!window.location.hash) {
-      window.location.hash = '#/current-location';
+      window.location.hash = "#/current-location";
     } else {
       checkHash();
     }
@@ -356,7 +370,7 @@ __webpack_require__.r(__webpack_exports__);
 class SwitchPadding {
   constructor() {
     this.media = window.matchMedia("(max-width: 1023px)");
-    this.block = document.querySelector('.left_info');
+    this.block = document.querySelector(".left_info");
   }
   handleScreenChange(media) {
     if (media.matches) {
@@ -374,7 +388,7 @@ class SwitchPadding {
   }
   init() {
     this.handleScreenChange(this.media);
-    this.media.addEventListener('change', () => this.handleScreenChange(this.media));
+    this.media.addEventListener("change", () => this.handleScreenChange(this.media));
   }
 }
 
@@ -440,8 +454,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _urls_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./urls.js */ "./src/js/modules/urls.js");
 /* harmony import */ var _api_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./api.js */ "./src/js/modules/api.js");
 /* harmony import */ var _geo_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./geo.js */ "./src/js/modules/geo.js");
-/* harmony import */ var _router_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./router.js */ "./src/js/modules/router.js");
-
 
 
 
@@ -459,7 +471,6 @@ class UpdateWeather {
     this.currentWeatherUlGrid = null;
     this.currentDigitTemp = null;
     this.currentDigitTempDeg = null;
-    this.self = this;
     this.isConverted = false;
     this.isCelsius = false;
     this.requestInProgress = false;
@@ -473,12 +484,12 @@ class UpdateWeather {
   }
   convertTemperature(temp) {
     if (!temp) return;
-    this.leftDigitTempDeg.innerHTML = '°C';
-    this.currentDigitTempDeg.innerHTML = '°C';
-    this.daysDeg.forEach(deg => deg.textContent = '°C');
+    this.leftDigitTempDeg.innerHTML = "°C";
+    this.currentDigitTempDeg.innerHTML = "°C";
+    this.daysDeg.forEach(deg => deg.textContent = "°C");
     this.isConverted = true;
     let temperature;
-    if (typeof temp === 'number') {
+    if (typeof temp === "number") {
       temperature = this.originalTemps[temp];
     } else {
       temperature = parseInt(temp.textContent);
@@ -486,20 +497,20 @@ class UpdateWeather {
     let converted;
     if (this.isCelsius) {
       converted = Math.round(temperature * 9 / 5 + 32);
-      this.leftDigitTempDeg.innerHTML = '°F';
-      this.currentDigitTempDeg.innerHTML = '°F';
-      this.daysDeg.forEach(deg => deg.textContent = '°F');
-      if (typeof temp === 'number') {
+      this.leftDigitTempDeg.innerHTML = "°F";
+      this.currentDigitTempDeg.innerHTML = "°F";
+      this.daysDeg.forEach(deg => deg.textContent = "°F");
+      if (typeof temp === "number") {
         this.originalTemps[temp] = converted;
       } else {
         temp.innerHTML = converted;
       }
     } else {
       converted = Math.round((temperature - 32) * 5 / 9);
-      this.leftDigitTempDeg.innerHTML = '°C';
-      this.currentDigitTempDeg.innerHTML = '°C';
-      this.daysDeg.forEach(deg => deg.textContent = '°C');
-      if (typeof temp === 'number') {
+      this.leftDigitTempDeg.innerHTML = "°C";
+      this.currentDigitTempDeg.innerHTML = "°C";
+      this.daysDeg.forEach(deg => deg.textContent = "°C");
+      if (typeof temp === "number") {
         this.originalTemps[temp] = converted;
       } else {
         temp.innerHTML = converted;
@@ -512,11 +523,9 @@ class UpdateWeather {
     if (this.leftDigitTemp) {
       this.convertTemperature(this.leftDigitTemp);
     }
-    ;
     if (this.currentDigitTemp) {
       this.convertTemperature(this.currentDigitTemp);
     }
-    ;
     this.days.forEach((day, i) => {
       this.originalTemps[i] = parseInt(day.textContent);
     });
@@ -537,18 +546,18 @@ class UpdateWeather {
   resetConversion() {
     if (this.isConverted) {
       this.isCelsius = false;
-      this.currentDigitTempDeg.textContent = '°C';
-      this.leftDigitTempDeg.textContent = '°C';
-      this.daysDeg.forEach(deg => deg.textContent = '°C');
+      this.currentDigitTempDeg.textContent = "°C";
+      this.leftDigitTempDeg.textContent = "°C";
+      this.daysDeg.forEach(deg => deg.textContent = "°C");
       this.btns.forEach(btn => {
-        btn.textContent === '°F' ? btn.classList.remove("active-btn") : btn.classList.add("active-btn");
+        btn.textContent === "°F" ? btn.classList.remove("active-btn") : btn.classList.add("active-btn");
       });
       this.isConverted = false;
     }
   }
   getWeatherIcons() {
     const weatherIcons = {
-      '200_family': `
+      "200_family": `
                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href="#grayCloud" fill="url(#gradGray)" x="-7" y="20"></use>
@@ -556,20 +565,20 @@ class UpdateWeather {
                 <use xlink:href="#thunderBolt" fill="url(#gradYellow)" x="25" y="55"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-      '300_family': `
+      "300_family": `
                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-      '500_family_1': `
+      "500_family_1": `
                 <use xlink:href="#rainDrizzle" x="20" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="30" y="65""></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
                 <use xlink:href=" #sun" x="-8" y="-15"></use>
                 <use xlink:href="#whiteCloud" x="11"></use>
             `,
-      '500_family_2': `
+      "500_family_2": `
                 <use xlink:href="#rainDrizzle" x="20" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="30" y="65"></use>
                 <use xlink:href="#rainDrizzle" x="40" y="65""></use>
@@ -577,7 +586,7 @@ class UpdateWeather {
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `,
-      '600_family': `
+      "600_family": `
                 <use xlink:href="#snowFlake" id="snow-b" class="snow" x="25"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="25" y="150"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="85" y="190"></use>
@@ -585,7 +594,7 @@ class UpdateWeather {
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="238" y="150"></use>
                 <use xlink:href="#snowFlake" id="snow-s" class="snow-s" x="190" y="190"></use>
             `,
-      '700_family': `
+      "700_family": `
                 <use xlink:href="#grayCloud" class="mist_cloud" opacity="0.5" fill="url(#gradGray)" x="10"></use>
                 <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="20" y="78"></use>
                 <use xlink:href="#grayCloud" class="mist_cloud-s" opacity="0.5" fill="url(#gradGray)" x="30" y="110"></use>
@@ -603,7 +612,7 @@ class UpdateWeather {
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#whiteCloud" transform="scale(0.7)"></use>
             `,
-      '803_family': `
+      "803_family": `
                 <use xlink:href="#whiteCloud" x="11"></use>
                 <use xlink:href="#grayCloud" class="gray-cloud" fill="url(#gradGray)" x="27" y="8"></use>
             `
@@ -614,19 +623,19 @@ class UpdateWeather {
     const icons = this.getWeatherIcons();
     function iconId(weatherId) {
       if (/^300/.test(weatherId)) {
-        return icons['300_family'];
+        return icons["300_family"];
       }
       if (/^50[0-4]/.test(weatherId)) {
-        return icons['500_family_1'];
+        return icons["500_family_1"];
       }
       if (/^[520-531]/.test(weatherId)) {
-        return icons['500_family_2'];
+        return icons["500_family_2"];
       }
       if (/^600/.test(weatherId)) {
-        return icons['600_family'];
+        return icons["600_family"];
       }
       if (/^700/.test(weatherId)) {
-        return icons['700_family'];
+        return icons["700_family"];
       }
       if (/^800/.test(weatherId)) {
         return icons[800];
@@ -638,7 +647,7 @@ class UpdateWeather {
         return icons[802];
       }
       if (/^80[3-4]/.test(weatherId)) {
-        return icons['803_family'];
+        return icons["803_family"];
       }
     }
     return iconId(weatherId);
@@ -658,15 +667,15 @@ class UpdateWeather {
     let number = deg;
     Object.entries(directions).forEach(_ref => {
       let [range, dir] = _ref;
-      const [start, end] = range.split('-');
+      const [start, end] = range.split("-");
       if (number >= start && number <= end) {
         trigger.innerHTML = dir;
       }
     });
   }
   error404 = () => {
-    const errorContent = document.querySelector('[data-error]');
-    const forecastSection = document.querySelector('.right_info_list');
+    const errorContent = document.querySelector("[data-error]");
+    const forecastSection = document.querySelector(".right_info_list");
     errorContent.innerHTML = `
             <p>Ooops, 404</p>
             <h1>Страница не найдена</h1>
@@ -674,15 +683,15 @@ class UpdateWeather {
             <span>Назад</span>
             </a>
         `;
-    errorContent.style.display = 'flex';
-    forecastSection.innerHTML = '';
-    this.hourlySection.innerHTML = '';
+    errorContent.style.display = "flex";
+    forecastSection.innerHTML = "";
+    this.hourlySection.innerHTML = "";
     try {
-      this.currentWeatherDiv.style.display = 'none';
+      this.currentWeatherDiv.style.display = "none";
     } catch (error) {}
   };
   capitalize(str) {
-    if (typeof str !== 'string') {
+    if (typeof str !== "string") {
       return str;
     }
     str = str.replace(/^./, c => c.toUpperCase());
@@ -698,21 +707,21 @@ class UpdateWeather {
     this.originalTemps = [];
     this.leftDigitTemp = null;
     this.currentDigitTemp = null;
-    this.forecastSection.innerHTML = '';
-    this.hourlySection.innerHTML = '';
-    this.errorContent.style.display = 'none';
-    const loading = document.querySelector('[data-loading]');
-    loading.style.display = 'grid';
+    this.forecastSection.innerHTML = "";
+    this.hourlySection.innerHTML = "";
+    this.errorContent.style.display = "none";
+    const loading = document.querySelector("[data-loading]");
+    loading.style.display = "grid";
     if (this.currentWeatherDiv && this.leftInfo.contains(this.currentWeatherDiv)) {
       this.leftInfo.removeChild(this.currentWeatherDiv);
     }
     if (this.currentWeatherUlGrid && this.todayWeather.contains(this.currentWeatherUlGrid)) {
       this.todayWeather.removeChild(this.currentWeatherUlGrid);
     }
-    if (window.location.hash === '#/current-location') {
-      this.currentLocationBtn.setAttribute('disabled', '');
+    if (window.location.hash === "#/current-location") {
+      this.currentLocationBtn.setAttribute("disabled", "");
     } else {
-      this.currentLocationBtn.removeAttribute('disabled');
+      this.currentLocationBtn.removeAttribute("disabled");
     }
     const currentWeather = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.currentWeather(lat, lon));
     const {
@@ -740,8 +749,8 @@ class UpdateWeather {
     const description = current.description;
     const weatherId = current.id;
     const icon = this.getWeatherIconId([weatherId]);
-    const div = document.createElement('div');
-    div.classList.add('left-info-content', 'px-5', 'py-5');
+    const div = document.createElement("div");
+    div.classList.add("left-info-content", "px-5", "py-5");
     div.innerHTML = `
             <div class="left_info_weather">
                 <figure>
@@ -777,9 +786,9 @@ class UpdateWeather {
             </div>
         `;
     this.currentWeatherDiv = this.leftInfo.appendChild(div);
-    document.querySelector('.left_info_weather-icon').innerHTML = icon;
-    this.leftDigitTemp = document.querySelector('.left_info_weather--text h2');
-    this.leftDigitTempDeg = document.querySelector('.left_info_weather--degrees');
+    document.querySelector(".left_info_weather-icon").innerHTML = icon;
+    this.leftDigitTemp = document.querySelector(".left_info_weather--text h2");
+    this.leftDigitTempDeg = document.querySelector(".left_info_weather--degrees");
     let sunrise = new Date(sunriseUnixUTC * 1000);
     const localSunrise = new Date(sunrise.getTime() + timezone * 1000);
     const sunriseHour = localSunrise.getUTCHours();
@@ -788,8 +797,8 @@ class UpdateWeather {
     const localSunset = new Date(sunset.getTime() + timezone * 1000);
     const sunsetHour = localSunset.getUTCHours();
     const sunsetMinutes = localSunset.getUTCMinutes();
-    const ul = document.createElement('ul');
-    ul.classList.add('weather-info');
+    const ul = document.createElement("ul");
+    ul.classList.add("weather-info");
     ul.innerHTML = `
             <li class="weather-info-item dark-cards px-5 py-5">
                 <h2 class="weather-info-header">По ощущению</h2>
@@ -834,8 +843,8 @@ class UpdateWeather {
                             <use xlink:href="#sun" y="-15"></use>
                         </svg>
                     </figure>
-                    <p>${sunriseHour < 10 ? '0' : ''}${sunriseHour}
-                        :${sunriseMinutes < 10 ? '0' : ''}${sunriseMinutes}</p>
+                    <p>${sunriseHour < 10 ? "0" : ""}${sunriseHour}
+                        :${sunriseMinutes < 10 ? "0" : ""}${sunriseMinutes}</p>
                 </div>
                 <div class="weather-info__sunset d-flex ff-rob-thin">
                     <figure>
@@ -846,8 +855,8 @@ class UpdateWeather {
                             <use xlink:href="#moon" x="-8" y="-15"></use>
                         </svg>
                     </figure>
-                    <p>${sunsetHour < 10 ? '0' : ''}${sunsetHour}
-                        :${sunsetMinutes < 10 ? '0' : ''}${sunsetMinutes}</p>
+                    <p>${sunsetHour < 10 ? "0" : ""}${sunsetHour}
+                        :${sunsetMinutes < 10 ? "0" : ""}${sunsetMinutes}</p>
                 </div>
             </li>
             <li class="weather-info-item dark-cards px-5 py-5">
@@ -869,44 +878,39 @@ class UpdateWeather {
             </li>
         `;
     this.currentWeatherUlGrid = this.todayWeather.appendChild(ul);
-    this.currentDigitTemp = document.querySelector('.weather-info__feelLike p');
-    this.currentDigitTempDeg = document.querySelector('.weather-info__feelLike p').nextElementSibling;
-    document.querySelector('.weather-info__deg svg').style.transform = `rotate(${deg}deg)`;
-    const direction = document.querySelector('.weather-info__deg p');
+    this.currentDigitTemp = document.querySelector(".weather-info__feelLike p");
+    this.currentDigitTempDeg = document.querySelector(".weather-info__feelLike p").nextElementSibling;
+    document.querySelector(".weather-info__deg svg").style.transform = `rotate(${deg}deg)`;
+    const direction = document.querySelector(".weather-info__deg p");
     this.windDirection(direction, deg);
-
-    // fetchData(url.reverseGeo(lat, lon), function([{name, country}]) {
     async function reverseGeo() {
       const reverseGeo = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.reverseGeo(lat, lon));
       const [reverse] = reverseGeo;
       const cityName = await (0,_geo_js__WEBPACK_IMPORTED_MODULE_3__.getCityName)(reverse.lat, reverse.lon);
-      const hasLocalNames = reverse.local_names && typeof reverse.local_names === 'object' && reverse.local_names.hasOwnProperty('ru');
+      const hasLocalNames = reverse.local_names && typeof reverse.local_names === "object" && reverse.local_names.hasOwnProperty("ru");
       let ruName;
       if (hasLocalNames) {
         ruName = reverse.local_names.ru;
       } else {
         ruName = reverse.name;
       }
-      document.querySelector('.left_info_place--text').innerHTML = `${cityName === true ? ruName : cityName.cityName}`;
-      document.querySelector('.left_info_place--subtext').innerHTML = `${cityName === true ? country : cityName.countryName}`;
+      document.querySelector(".left_info_place--text").innerHTML = `${cityName === true ? ruName : cityName.cityName}`;
+      document.querySelector(".left_info_place--subtext").innerHTML = `${cityName === true ? country : cityName.countryName}`;
     }
     reverseGeo();
-    // })
-
     const forecast = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.forecast(lat, lon));
-    // fetchData(url.forecast(lat, lon), (forecast) => {
     const {
       list: forecastList,
       city: {
         timezones
       }
     } = forecast;
-    const h2 = document.createElement('h2');
-    h2.classList.add('right_info_header');
+    const h2 = document.createElement("h2");
+    h2.classList.add("right_info_header");
     h2.textContent = `На сегодня`;
-    const list = document.createElement('ul');
-    list.classList.add('right_info-today-list', 'd-flex');
-    list.style.overflowX = 'scroll';
+    const list = document.createElement("ul");
+    list.classList.add("right_info-today-list", "d-flex");
+    list.style.overflowX = "scroll";
     this.hourlySection.appendChild(h2);
     this.hourlySection.appendChild(list);
     // 24h forecast
@@ -929,12 +933,18 @@ class UpdateWeather {
       this.hourlyIcons.push(icon);
       const hours = newDate.getHours();
       const minutes = newDate.getMinutes();
-      const item = document.createElement('li');
+      const item = document.createElement("li");
       item.classList.add("right_info-today-list--item", "px-5", "py-5");
       item.innerHTML = `
                         <div class="card-today">
-                            <p class="today-date ff-rob-thin">${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.weekDayNames[newDate.getUTCDay()]}, ${newDate.getDate()}</p>
-                            <p class="today-time ff-rob-thin">${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}</p>
+                            <p class="today-date ff-rob-thin">
+                            ${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.weekDayNames[newDate.getUTCDay()]},
+                            ${newDate.getDate()}
+                            </p>
+                            <p class="today-time ff-rob-thin">
+                            ${hours < 10 ? "0" : ""}${hours}:
+                            ${minutes < 10 ? "0" : ""}${minutes}
+                            </p>
                             <svg class="today_weather-icon" viewBox="0 0 100 100">
                                 <use xlink:href="#sun"></use>
                             </svg>
@@ -958,19 +968,19 @@ class UpdateWeather {
                         </div>
                     `;
       list.appendChild(item);
-      const todayIcons = document.querySelectorAll('.today_weather-icon');
+      const todayIcons = document.querySelectorAll(".today_weather-icon");
       todayIcons.forEach((svg, i) => {
         svg.innerHTML = this.hourlyIcons[i];
       });
-      const directions = document.querySelectorAll('.today_weather__wind-deg p');
-      const svgs = document.querySelectorAll('.today_weather__wind-deg svg');
+      const directions = document.querySelectorAll(".today_weather__wind-deg p");
+      const svgs = document.querySelectorAll(".today_weather__wind-deg svg");
       svgs.forEach((svg, i) => {
-        const transform = svg.getAttribute('transform');
+        const transform = svg.getAttribute("transform");
         const degrees = +transform.match(/\d+/)[0];
         this.windDirection(directions[i], degrees);
       });
-      const daysTemp = document.querySelectorAll('.today-temp');
-      const daysDegrees = document.querySelectorAll('.today-degrees');
+      const daysTemp = document.querySelectorAll(".today-temp");
+      const daysDegrees = document.querySelectorAll(".today-degrees");
       daysTemp.forEach(day => this.days.push(day));
       daysDegrees.forEach(deg => this.daysDeg.push(deg));
     }
@@ -994,11 +1004,14 @@ class UpdateWeather {
       const weatherId = forecast.id;
       const icon = this.getWeatherIconId([weatherId]);
       this.icons.push(icon);
-      const li = document.createElement('li');
-      li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5", 'd-flex-column', 'justify-between');
+      const li = document.createElement("li");
+      li.classList.add("right_info_list_item", "dark-cards", "px-5", "py-5", "d-flex-column", "justify-between");
       li.innerHTML = `
                         <div>
-                        <h2 class="right_info_list_item-day ff-rob-thin">${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.weekDayNames[date.getUTCDay()]}, ${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.monthNames[date.getUTCMonth()]} ${date.getDate()}</h2>
+                        <h2 class="right_info_list_item-day ff-rob-thin">
+                        ${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.weekDayNames[date.getUTCDay()]}, 
+                        ${_dateTime_js__WEBPACK_IMPORTED_MODULE_0__.monthNames[date.getUTCMonth()]} ${date.getDate()}
+                        </h2>
                         <figure>
                             <svg class="weather_anim-icon" viewBox="0 0 100 100">
                                 <use xlink:href="#rainDrizzle" x="25" y="65"></use>
@@ -1050,25 +1063,25 @@ class UpdateWeather {
                             </div>
                         </div>
                     `;
-      const rightInfo = document.querySelector('.right_info');
-      rightInfo.querySelector('.right_info_list').appendChild(li);
-      const iconsEl = document.querySelectorAll('.weather_anim-icon');
+      const rightInfo = document.querySelector(".right_info");
+      rightInfo.querySelector(".right_info_list").appendChild(li);
+      const iconsEl = document.querySelectorAll(".weather_anim-icon");
       iconsEl.forEach((svg, i) => {
         svg.innerHTML = this.icons[i];
       });
-      const directions = document.querySelectorAll('.weather-wind__deg p');
-      const svgs = document.querySelectorAll('.weather-wind__deg svg');
+      const directions = document.querySelectorAll(".weather-wind__deg p");
+      const svgs = document.querySelectorAll(".weather-wind__deg svg");
       svgs.forEach((svg, i) => {
-        const transform = svg.getAttribute('transform');
+        const transform = svg.getAttribute("transform");
         const degrees = +transform.match(/\d+/)[0];
         this.windDirection(directions[i], degrees);
       });
-      const daysTemp = document.querySelectorAll('.day-temp');
-      const daysDegrees = document.querySelectorAll('.day-degrees');
+      const daysTemp = document.querySelectorAll(".day-temp");
+      const daysDegrees = document.querySelectorAll(".day-degrees");
       daysTemp.forEach(day => this.days.push(day));
       daysDegrees.forEach(deg => this.daysDeg.push(deg));
     }
-    loading.style.display = 'none';
+    loading.style.display = "none";
     this.resetConversion();
     this.requestInProgress = false;
     this.btns.forEach(btn => btn.addEventListener("click", () => {
@@ -1087,9 +1100,7 @@ class UpdateWeather {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   monthNames: () => (/* binding */ monthNames),
-/* harmony export */   url: () => (/* binding */ url),
-/* harmony export */   weekDayNames: () => (/* binding */ weekDayNames)
+/* harmony export */   url: () => (/* binding */ url)
 /* harmony export */ });
 const url = {
   currentWeather(lat, lon) {
@@ -1108,8 +1119,6 @@ const url = {
     return `http://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=5&lang=ru`;
   }
 };
-const weekDayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-const monthNames = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
 
 /***/ })
 
