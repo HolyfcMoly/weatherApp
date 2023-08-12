@@ -271,6 +271,33 @@ export default class UpdateWeather {
         return str;
     }
 
+    grabbingScroll(list) {
+        let done = false;
+        let startX;
+        let scrollLeft;
+
+        list.addEventListener("mousedown", (e) => {
+            done = true;
+            list.classList.add("active-item");
+            startX = e.pageX - list.offsetLeft;
+            scrollLeft = list.scrollLeft;
+        });
+        list.addEventListener("mouseleave", () => {
+            done = false;
+            list.classList.remove("active-item");
+        });
+        list.addEventListener("mouseup", () => {
+            done = false;
+            list.classList.remove("active-item");
+        });
+        list.addEventListener("mousemove", (e) => {
+            if (!done) return;
+            const x = e.pageX - list.offsetLeft;
+            const walk = (x - startX) * 2;
+            list.scrollLeft = scrollLeft - walk;
+        });
+    }
+
     async checkWeather(lat, lon) {
         if (this.requestInProgress) return;
         this.requestInProgress = true;
@@ -338,7 +365,10 @@ export default class UpdateWeather {
                 <h1 class="left_info_place--text">${name}</h1>
                 <p class="left_info_place--subtext">${country}</p>
                 <div class="left_info_place-date d-flex ff-rob-thin">
-                    <h1 class="left_info_place-date--day">${getDate(dateUnix,timezone)}</h1>
+                    <h1 class="left_info_place-date--day">${getDate(
+                        dateUnix,
+                        timezone
+                    )}</h1>
                 </div>
             </div>
             <div class="left_info_weather-now d-flex align-center">
@@ -347,7 +377,9 @@ export default class UpdateWeather {
                     <path stroke-linecap="round" stroke-linejoin="round"
                     d="M2.25 15a4.5 4.5 0 004.5 4.5H18a3.75 3.75 0 001.332-7.257 3 3 0 00-3.758-3.848 5.25 5.25 0 00-10.233 2.33A4.502 4.502 0 002.25 15z" />
                 </svg>
-                <p class="left_info_weather-now-text">${this.capitalize(description)}</p>
+                <p class="left_info_weather-now-text">${this.capitalize(
+                    description
+                )}</p>
             </div>
             <div class="left_info_time d-flex align-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -355,7 +387,9 @@ export default class UpdateWeather {
                     <path stroke-linecap="round" stroke-linejoin="round"
                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p class="left_info_time-text ff-rob-thin">${getTime(timezone)}</p>
+                <p class="left_info_time-text ff-rob-thin">${getTime(
+                    timezone
+                )}</p>
             </div>
         `;
         this.currentWeatherDiv = this.leftInfo.appendChild(div);
@@ -554,6 +588,7 @@ export default class UpdateWeather {
                         </div>
                     `;
             list.appendChild(item);
+            this.grabbingScroll(list);
             const todayIcons = document.querySelectorAll(".today_weather-icon");
             todayIcons.forEach((svg, i) => {
                 svg.innerHTML = this.hourlyIcons[i];
@@ -613,7 +648,9 @@ export default class UpdateWeather {
                             <p class="day-degrees">°C</p>
                             
                         </div>
-                        <p class="right_info_list_item-description d-flex justify-center">${this.capitalize(description)}</p>
+                        <p class="right_info_list_item-description d-flex justify-center">${this.capitalize(
+                            description
+                        )}</p>
                         </div>
                         <div class="right_info_list_item--weather d-flex">
                             <div class="d-flex justify-between">
@@ -649,8 +686,9 @@ export default class UpdateWeather {
                             </div>
                         </div>
                     `;
-            const rightInfo = document.querySelector(".right_info");
-            rightInfo.querySelector(".right_info_list").appendChild(li);
+            const rightInfoList = document.querySelector(".right_info_list");
+            rightInfoList.appendChild(li);
+            this.grabbingScroll(rightInfoList);
 
             const iconsEl = document.querySelectorAll(".weather_anim-icon");
             iconsEl.forEach((svg, i) => {

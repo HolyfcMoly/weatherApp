@@ -12,10 +12,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fetchData: () => (/* binding */ fetchData)
 /* harmony export */ });
-/* harmony import */ var _keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys */ "./src/js/modules/keys.js");
+/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
 
 async function fetchData(url) {
-  const fullUrl = `${url}&appid=${_keys__WEBPACK_IMPORTED_MODULE_0__.openWeatherKey}`;
+  const fullUrl = `${url}&appid=${_keys_js__WEBPACK_IMPORTED_MODULE_0__.openWeatherKey}`;
   const response = await fetch(fullUrl);
   return response.json();
 }
@@ -65,10 +65,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getCityName: () => (/* binding */ getCityName)
 /* harmony export */ });
-/* harmony import */ var _keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys */ "./src/js/modules/keys.js");
+/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
 
 async function getCityName(lat, lon) {
-  const response = await fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${_keys__WEBPACK_IMPORTED_MODULE_0__.yandexKey}&geocode=${lat},${lon}&sco=latlong&kind=locality&results=5&format=json`);
+  const response = await fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${_keys_js__WEBPACK_IMPORTED_MODULE_0__.yandexKey}&geocode=${lat},${lon}&sco=latlong&kind=locality&results=5&format=json`);
   const data = await response.json();
   const result = {};
   if (data.response.GeoObjectCollection.featureMember.length === 0) {
@@ -242,8 +242,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   openWeatherKey: () => (/* binding */ openWeatherKey),
 /* harmony export */   yandexKey: () => (/* binding */ yandexKey)
 /* harmony export */ });
-const openWeatherKey = 'CHANGE_ME';
-const yandexKey = 'CHANGE_ME';
+const openWeatherKey = '90f4871993ecaefcc8769dd2bf1b6855';
+const yandexKey = '3793a725-9c23-4567-b080-8d805e549f97';
+// export const openWeatherKey = 'CHANGE_ME';
+// export const yandexKey = 'CHANGE_ME';
 
 /***/ }),
 
@@ -697,6 +699,31 @@ class UpdateWeather {
     str = str.replace(/^./, c => c.toUpperCase());
     return str;
   }
+  grabbingScroll(list) {
+    let done = false;
+    let startX;
+    let scrollLeft;
+    list.addEventListener("mousedown", e => {
+      done = true;
+      list.classList.add("active-item");
+      startX = e.pageX - list.offsetLeft;
+      scrollLeft = list.scrollLeft;
+    });
+    list.addEventListener("mouseleave", () => {
+      done = false;
+      list.classList.remove("active-item");
+    });
+    list.addEventListener("mouseup", () => {
+      done = false;
+      list.classList.remove("active-item");
+    });
+    list.addEventListener("mousemove", e => {
+      if (!done) return;
+      const x = e.pageX - list.offsetLeft;
+      const walk = (x - startX) * 2;
+      list.scrollLeft = scrollLeft - walk;
+    });
+  }
   async checkWeather(lat, lon) {
     if (this.requestInProgress) return;
     this.requestInProgress = true;
@@ -968,6 +995,7 @@ class UpdateWeather {
                         </div>
                     `;
       list.appendChild(item);
+      this.grabbingScroll(list);
       const todayIcons = document.querySelectorAll(".today_weather-icon");
       todayIcons.forEach((svg, i) => {
         svg.innerHTML = this.hourlyIcons[i];
@@ -1063,8 +1091,9 @@ class UpdateWeather {
                             </div>
                         </div>
                     `;
-      const rightInfo = document.querySelector(".right_info");
-      rightInfo.querySelector(".right_info_list").appendChild(li);
+      const rightInfoList = document.querySelector(".right_info_list");
+      rightInfoList.appendChild(li);
+      this.grabbingScroll(rightInfoList);
       const iconsEl = document.querySelectorAll(".weather_anim-icon");
       iconsEl.forEach((svg, i) => {
         svg.innerHTML = this.icons[i];
@@ -1188,19 +1217,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _js_modules_theme_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../js/modules/theme.js */ "./src/js/modules/theme.js");
 /* harmony import */ var _js_modules_switchPadding_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../js/modules/switchPadding.js */ "./src/js/modules/switchPadding.js");
 /* harmony import */ var _js_modules_input_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../js/modules/input.js */ "./src/js/modules/input.js");
-/* harmony import */ var _js_modules_updateWeather_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../js/modules/updateWeather.js */ "./src/js/modules/updateWeather.js");
-/* harmony import */ var _js_modules_router_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../js/modules/router.js */ "./src/js/modules/router.js");
+/* harmony import */ var _js_modules_router_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../js/modules/router.js */ "./src/js/modules/router.js");
 
 
 
 
-
-window.addEventListener('DOMContentLoaded', () => {
-  const weather = new _js_modules_updateWeather_js__WEBPACK_IMPORTED_MODULE_3__["default"](".left_info", '.right_info-grid', '.right_info-today', '.right_info_list', '[data-error]', '[data-current-location-btn]', ".header_list_item-btn");
-  const currentLocationBtn = document.querySelector('[data-current-location-btn]');
-  currentLocationBtn.addEventListener('click', _js_modules_router_js__WEBPACK_IMPORTED_MODULE_4__.currentLocation);
-  _js_modules_router_js__WEBPACK_IMPORTED_MODULE_4__.init();
-  new _js_modules_input_js__WEBPACK_IMPORTED_MODULE_2__["default"]('[data-search-field]', '.input_container', '.left_info-search-result').init();
+window.addEventListener("DOMContentLoaded", () => {
+  const currentLocationBtn = document.querySelector("[data-current-location-btn]");
+  currentLocationBtn.addEventListener("click", _js_modules_router_js__WEBPACK_IMPORTED_MODULE_3__.currentLocation);
+  _js_modules_router_js__WEBPACK_IMPORTED_MODULE_3__.init();
+  new _js_modules_input_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[data-search-field]", ".input_container", ".left_info-search-result").init();
   new _js_modules_theme_js__WEBPACK_IMPORTED_MODULE_0__["default"](".header_list_item-btn--theme").changeTheme();
   new _js_modules_switchPadding_js__WEBPACK_IMPORTED_MODULE_1__["default"]().init();
 });

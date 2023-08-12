@@ -1,4 +1,4 @@
-import { yandexKey } from "./keys";
+import { yandexKey } from "./keys.js";
 
 export async function getCityName(lat, lon) {
     const response = await fetch(
