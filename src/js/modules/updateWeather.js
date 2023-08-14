@@ -2,7 +2,7 @@ import { getTime, getDate, weekDayNames, monthNames } from "./dateTime.js";
 import { url } from "./urls.js";
 import { fetchData } from "./api.js";
 import { getCityName } from "./geo.js";
-
+// экзепляр класса для обновления погоды
 export default class UpdateWeather {
     constructor(
         leftInfo,
@@ -40,7 +40,7 @@ export default class UpdateWeather {
         this.errorContent = document.querySelector(errorContent);
         this.currentLocationBtn = document.querySelector(currentLocationBtn);
     }
-
+    // конвертация температуры из цельсия в фаренгейты и обратно
     convertTemperature(temp) {
         if (!temp) return;
         this.leftDigitTempDeg.innerHTML = "°C";
@@ -79,7 +79,7 @@ export default class UpdateWeather {
         }
         return converted;
     }
-
+    // переключение единиц измерения температуры
     toggleTemperature() {
         this.isCelsius = !this.isCelsius;
 
@@ -99,7 +99,7 @@ export default class UpdateWeather {
             this.days[i].textContent = temp;
         });
     }
-
+    // изменение активного классы у кнопок
     toggleBtnClass(btn) {
         if (!btn.classList.contains("active-btn")) {
             this.btns.forEach((btn) => btn.classList.remove("active-btn"));
@@ -107,7 +107,7 @@ export default class UpdateWeather {
             this.toggleTemperature();
         }
     }
-
+    // сброс конвертации температур
     resetConversion() {
         if (this.isConverted) {
             this.isCelsius = false;
@@ -122,7 +122,7 @@ export default class UpdateWeather {
             this.isConverted = false;
         }
     }
-
+    // Возвращает SVG иконки погоды
     getWeatherIcons() {
         const weatherIcons = {
             "200_family": `
@@ -187,7 +187,7 @@ export default class UpdateWeather {
         };
         return weatherIcons;
     }
-
+    // получение иконки погоды по ID
     getWeatherIconId(weatherId) {
         const icons = this.getWeatherIcons();
 
@@ -222,7 +222,7 @@ export default class UpdateWeather {
         }
         return iconId(weatherId);
     }
-
+    // направление ветра
     windDirection(trigger, deg) {
         const directions = {
             "0-15": "С",
@@ -244,7 +244,7 @@ export default class UpdateWeather {
             }
         });
     }
-
+    // показ сообщения об ошибке 
     error404 = () => {
         const errorContent = document.querySelector("[data-error]");
         const forecastSection = document.querySelector(".right_info_list");
@@ -262,7 +262,7 @@ export default class UpdateWeather {
             this.currentWeatherDiv.style.display = "none";
         } catch (error) {}
     };
-
+    // функция делает первую букву у строки заглавной
     capitalize(str) {
         if (typeof str !== "string") {
             return str;
@@ -270,7 +270,7 @@ export default class UpdateWeather {
         str = str.replace(/^./, (c) => c.toUpperCase());
         return str;
     }
-
+    // горизонтальный скролл для блока
     grabbingScroll(list) {
         let done = false;
         let startX;
@@ -297,7 +297,7 @@ export default class UpdateWeather {
             list.scrollLeft = scrollLeft - walk;
         });
     }
-
+    // основной метод для получения и отображения погоды
     async checkWeather(lat, lon) {
         if (this.requestInProgress) return;
         this.requestInProgress = true;
@@ -332,7 +332,7 @@ export default class UpdateWeather {
         } else {
             this.currentLocationBtn.removeAttribute("disabled");
         }
-
+        // запрос к API для получения текущей погоды
         const currentWeather = await fetchData(url.currentWeather(lat, lon));
         const {
             weather: [current],
@@ -344,7 +344,7 @@ export default class UpdateWeather {
             visibility,
             timezone,
         } = currentWeather;
-
+        console.log(currentWeather)
         const description = current.description;
         const weatherId = current.id;
         const icon = this.getWeatherIconId([weatherId]);
@@ -393,6 +393,7 @@ export default class UpdateWeather {
             </div>
         `;
         this.currentWeatherDiv = this.leftInfo.appendChild(div);
+
         document.querySelector(".left_info_weather-icon").innerHTML = icon;
         this.leftDigitTemp = document.querySelector(".left_info_weather--text h2");
         this.leftDigitTempDeg = document.querySelector(".left_info_weather--degrees");
@@ -488,13 +489,13 @@ export default class UpdateWeather {
             </li>
         `;
         this.currentWeatherUlGrid = this.todayWeather.appendChild(ul);
+
         this.currentDigitTemp = document.querySelector(".weather-info__feelLike p");
         this.currentDigitTempDeg = document.querySelector(".weather-info__feelLike p").nextElementSibling;
-
         document.querySelector(".weather-info__deg svg").style.transform = `rotate(${deg}deg)`;
         const direction = document.querySelector(".weather-info__deg p");
         this.windDirection(direction, deg);
-
+        // запрос к API для получения и отображения названий (город, страна) на русском
         async function reverseGeo() {
             const reverseGeo = await fetchData(url.reverseGeo(lat, lon));
             const [reverse] = reverseGeo;
@@ -518,7 +519,7 @@ export default class UpdateWeather {
             }`;
         }
         reverseGeo();
-
+        // запрос к API для получения списка прогноза погоды на 5 дней
         const forecast = await fetchData(url.forecast(lat, lon));
         const {
             list: forecastList,

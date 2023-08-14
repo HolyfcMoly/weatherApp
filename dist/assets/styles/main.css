@@ -47,6 +47,9 @@
     margin: 0;
     outline: none;
 }
+html {
+    scroll-behavior: smooth;
+}
 
 body {
     background-color: var(--bg-light);
@@ -310,6 +313,11 @@ h4 {
 
 .view-item > div {
     display: flex;
+}
+
+.view-item-state {
+    margin-top: 5px;
+    font-size: 0.45rem;
 }
 
 .view-item-subtitle {

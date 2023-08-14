@@ -1,3 +1,4 @@
+// Объект url для запросов к API погоды
 export const url = {
     currentWeather(lat, lon) {
         return `https://api.openweathermap.org/data/2.5/weather?${lat}&${lon}&units=metric&lang=ru`;
@@ -8,7 +9,7 @@ export const url = {
     reverseGeo(lat, lon) {
         return `http://api.openweathermap.org/geo/1.0/reverse?${lat}&${lon}&limit=5`;
     },
-    /*
+    /** 
     * @param {string} query поиск, например 'London', 'New York'
     */
     geo(query) {

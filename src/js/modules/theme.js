@@ -1,8 +1,12 @@
+// экземпляр класса для смены темы
 export default class ChangeTheme {
     constructor(themeBtn) {
+        /** 
+        * @param {selector} themeBtn - кнопка для смены темы
+        */
         this.themeBtn = document.querySelector(themeBtn);
     }
-
+    // функция для смены темы
     changeTheme = () => {
         this.themeBtn.addEventListener("click", () => {
             const icon = this.themeBtn.querySelector("svg");

@@ -1,3 +1,4 @@
+// массив дней недели
 export const weekDayNames = [
     "Воскресенье",
     "Понедельник",
@@ -7,7 +8,7 @@ export const weekDayNames = [
     "Пятница",
     "Суббота",
 ];
-
+// массив месяцов
 export const monthNames = [
     "Янв",
     "Фев",
@@ -22,7 +23,7 @@ export const monthNames = [
     "Ноя",
     "Дек",
 ];
-
+// функция для получения даты (день недели, месяц) так же date для получения даты по UTC
 export const getDate = function (dateUnix, timezone) {
     const date = new Date((dateUnix + timezone) * 1000);
     const weekDayName = weekDayNames[date.getUTCDay()];
@@ -30,7 +31,7 @@ export const getDate = function (dateUnix, timezone) {
 
     return `${weekDayName}, ${monthName} ${date.getUTCDate()}`;
 };
-
+// функция для получения времени принимающая параметр timezone
 export const getTime = (timezone) => {
     const offset = -new Date().getTimezoneOffset();
     const timestamp = Date.now() - offset * 60 * 1000;

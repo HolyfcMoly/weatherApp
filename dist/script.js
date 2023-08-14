@@ -14,6 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
 
+// асинхронная функция принимающая параметр url
 async function fetchData(url) {
   const fullUrl = `${url}&appid=${_keys_js__WEBPACK_IMPORTED_MODULE_0__.openWeatherKey}`;
   const response = await fetch(fullUrl);
@@ -35,14 +36,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   monthNames: () => (/* binding */ monthNames),
 /* harmony export */   weekDayNames: () => (/* binding */ weekDayNames)
 /* harmony export */ });
+// массив дней недели
 const weekDayNames = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+// массив месяцов
 const monthNames = ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"];
+// функция для получения даты (день недели, месяц) так же date для получения даты по UTC
 const getDate = function (dateUnix, timezone) {
   const date = new Date((dateUnix + timezone) * 1000);
   const weekDayName = weekDayNames[date.getUTCDay()];
   const monthName = monthNames[date.getUTCMonth()];
   return `${weekDayName}, ${monthName} ${date.getUTCDate()}`;
 };
+// функция для получения времени принимающая параметр timezone
 const getTime = timezone => {
   const offset = -new Date().getTimezoneOffset();
   const timestamp = Date.now() - offset * 60 * 1000;
@@ -67,15 +72,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
 
+// асинхронная функция для получения названия города принимающая 2 параметра (lat,lon)
 async function getCityName(lat, lon) {
   const response = await fetch(`https://geocode-maps.yandex.ru/1.x/?apikey=${_keys_js__WEBPACK_IMPORTED_MODULE_0__.yandexKey}&geocode=${lat},${lon}&sco=latlong&kind=locality&results=5&format=json`);
   const data = await response.json();
+  // в объект result в зависимости от условий будет записаны следующие данные :
+  // {error: true/false, cityName: 'London', countryName: 'England', stateName: 'Англия'}
   const result = {};
   if (data.response.GeoObjectCollection.featureMember.length === 0) {
     return result.error = true;
   } else {
     result.cityName = await data.response.GeoObjectCollection.featureMember[0].GeoObject.name;
     result.countryName = await data.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.CountryName;
+    result.stateName = await data.response.GeoObjectCollection.featureMember[0].GeoObject.metaDataProperty.GeocoderMetaData.AddressDetails.Country.AdministrativeArea.AdministrativeAreaName;
   }
   return result;
 }
@@ -100,6 +109,11 @@ __webpack_require__.r(__webpack_exports__);
 
 class Input {
   constructor(input, inputContainer, searchList) {
+    /**
+    * @param {string} input - селектор для поля input
+    * @param {string} inputContainer - селектор input контейнера
+    * @param {string} searchList - селектор для списка результатов
+    */
     this.input = document.querySelector(input);
     this.inputContainer = document.querySelector(inputContainer);
     this.searchList = document.querySelector(searchList);
@@ -107,6 +121,7 @@ class Input {
     this.searchTimeout = null;
     this.searchTimeoutDuration = 500;
   }
+  // функция сброса
   clearInput() {
     this.input.value = "";
     this.searchList.innerHTML = "";
@@ -114,6 +129,7 @@ class Input {
     this.error.innerHTML = "";
     this.searchList.classList.remove("active");
   }
+  // функция инициализирует поле ввода и функцию поиска
   init() {
     window.addEventListener("click", e => {
       const parent = this.input.parentNode;
@@ -159,6 +175,7 @@ class Input {
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
                         `;
             const items = [];
+            console.log(locations);
             for (const location of locations) {
               const {
                 name,
@@ -199,7 +216,8 @@ class Input {
                                 <div class="justify-between">
                                     <div>
                                         <p class="view-item-title">${item.cityName === true ? ruName : item.cityName.cityName}</p>
-                                        <p class="view-item-subtitle">${item.cityName === true ? item.state || "" : item.cityName.countryName || ""}</p>
+                                        <p class="view-item-state">${item.cityName === true ? '' : item.cityName.stateName || ''}</p>
+                                        <p class="view-item-subtitle">${item.cityName === true ? item.state || '' : item.cityName.countryName || ''}</p>
                                     </div>
                                     <p class="view-item-country">${item.country}</p>
                                 </div>
@@ -259,12 +277,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Popup)
 /* harmony export */ });
+// класс Popup представляет всплывающее окно
 class Popup {
   constructor() {
     this.popupEl = document.querySelector(".popup-alert");
     this.close = document.querySelector(".close");
     this.btn = document.querySelector(".more-btn");
   }
+  // функция принимающая 2 параметра, сам trigger и закрывающий элемент
   popup(trigger, closeEl) {
     trigger.classList.add("fadeDown");
     trigger.classList.add("popup-active");
@@ -279,6 +299,7 @@ class Popup {
       trigger.classList.remove("popup-active");
     }, 60000);
   }
+  // функция для показа скрытого контента
   more() {
     const popupContent = document.querySelector(".popup-alert-hide");
     popupContent.classList.remove("hide");
@@ -288,6 +309,7 @@ class Popup {
       this.btn.classList.remove("hidden");
     }
   }
+  // функция запуска
   init() {
     this.popup(this.popupEl, this.close);
     this.btn.addEventListener("click", () => this.more());
@@ -316,13 +338,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// глобальная переменная для хранения экземпляра погоды
 let weather;
+// инициализирует экземпляр погоды если он еще не создан
 function initialize() {
   if (!weather) {
     weather = new _updateWeather_js__WEBPACK_IMPORTED_MODULE_0__["default"](".left_info", ".right_info-grid", ".right_info-today", ".right_info_list", "[data-error]", "[data-current-location-btn]", ".header_list_item-btn");
   }
   return weather;
 }
+// получение текущего местоположения и передача его в экземпляр погоды
 function currentLocation() {
   const defaultLocation = "#/weather?lat=55.7522&lon=37.6156";
   new _input_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[data-search-field]", ".input_container", ".left_info-search-result").clearInput();
@@ -337,15 +362,19 @@ function currentLocation() {
     new _popup_js__WEBPACK_IMPORTED_MODULE_1__["default"]().init();
   });
 }
+// поисковый запрос с передачей в экземпляр погоды
 const searchedLocation = query => {
   initialize().checkWeather(...query.split("&"));
 };
+// создание карты маршрутов 
 const routes = new Map([["/current-location", currentLocation], ["/weather", searchedLocation]]);
+// проверка маршрута и вызов обработчика
 function checkHash() {
   const requestURL = window.location.hash.slice(1);
   const [route, query] = requestURL.includes ? requestURL.split("?") : [requestURL];
   routes.get(route) ? routes.get(route)(query) : initialize().error404();
 }
+// функция инициализации обработчиков
 function init() {
   window.addEventListener("hashchange", checkHash);
   window.addEventListener("load", () => {
@@ -369,16 +398,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SwitchPadding)
 /* harmony export */ });
+// экземпляр класса для padding
 class SwitchPadding {
   constructor() {
     this.media = window.matchMedia("(max-width: 1023px)");
     this.block = document.querySelector(".left_info");
   }
+  // функция принимающая параметр media
   handleScreenChange(media) {
     if (media.matches) {
       this.switchPadding();
     }
   }
+  // функция для смены padding
   switchPadding() {
     if (this.block.classList.contains("px-10")) {
       this.block.classList.remove("px-10");
@@ -388,6 +420,7 @@ class SwitchPadding {
       this.block.classList.add("px-10");
     }
   }
+  // функция инициализации
   init() {
     this.handleScreenChange(this.media);
     this.media.addEventListener("change", () => this.handleScreenChange(this.media));
@@ -406,10 +439,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ChangeTheme)
 /* harmony export */ });
+// экземпляр класса для смены темы
 class ChangeTheme {
   constructor(themeBtn) {
+    /** 
+    * @param {selector} themeBtn - кнопка для смены темы
+    */
     this.themeBtn = document.querySelector(themeBtn);
   }
+  // функция для смены темы
   changeTheme = () => {
     this.themeBtn.addEventListener("click", () => {
       const icon = this.themeBtn.querySelector("svg");
@@ -460,6 +498,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// экзепляр класса для обновления погоды
 class UpdateWeather {
   constructor(leftInfo, todayWeather, hourlySection, forecastSection, errorContent, currentLocationBtn, btns) {
     this.days = [];
@@ -484,6 +523,7 @@ class UpdateWeather {
     this.errorContent = document.querySelector(errorContent);
     this.currentLocationBtn = document.querySelector(currentLocationBtn);
   }
+  // конвертация температуры из цельсия в фаренгейты и обратно
   convertTemperature(temp) {
     if (!temp) return;
     this.leftDigitTempDeg.innerHTML = "°C";
@@ -520,6 +560,7 @@ class UpdateWeather {
     }
     return converted;
   }
+  // переключение единиц измерения температуры
   toggleTemperature() {
     this.isCelsius = !this.isCelsius;
     if (this.leftDigitTemp) {
@@ -538,6 +579,7 @@ class UpdateWeather {
       this.days[i].textContent = temp;
     });
   }
+  // изменение активного классы у кнопок
   toggleBtnClass(btn) {
     if (!btn.classList.contains("active-btn")) {
       this.btns.forEach(btn => btn.classList.remove("active-btn"));
@@ -545,6 +587,7 @@ class UpdateWeather {
       this.toggleTemperature();
     }
   }
+  // сброс конвертации температур
   resetConversion() {
     if (this.isConverted) {
       this.isCelsius = false;
@@ -557,6 +600,7 @@ class UpdateWeather {
       this.isConverted = false;
     }
   }
+  // Возвращает SVG иконки погоды
   getWeatherIcons() {
     const weatherIcons = {
       "200_family": `
@@ -621,6 +665,7 @@ class UpdateWeather {
     };
     return weatherIcons;
   }
+  // получение иконки погоды по ID
   getWeatherIconId(weatherId) {
     const icons = this.getWeatherIcons();
     function iconId(weatherId) {
@@ -654,6 +699,7 @@ class UpdateWeather {
     }
     return iconId(weatherId);
   }
+  // направление ветра
   windDirection(trigger, deg) {
     const directions = {
       "0-15": "С",
@@ -675,6 +721,7 @@ class UpdateWeather {
       }
     });
   }
+  // показ сообщения об ошибке 
   error404 = () => {
     const errorContent = document.querySelector("[data-error]");
     const forecastSection = document.querySelector(".right_info_list");
@@ -692,6 +739,7 @@ class UpdateWeather {
       this.currentWeatherDiv.style.display = "none";
     } catch (error) {}
   };
+  // функция делает первую букву у строки заглавной
   capitalize(str) {
     if (typeof str !== "string") {
       return str;
@@ -699,6 +747,7 @@ class UpdateWeather {
     str = str.replace(/^./, c => c.toUpperCase());
     return str;
   }
+  // горизонтальный скролл для блока
   grabbingScroll(list) {
     let done = false;
     let startX;
@@ -724,6 +773,7 @@ class UpdateWeather {
       list.scrollLeft = scrollLeft - walk;
     });
   }
+  // основной метод для получения и отображения погоды
   async checkWeather(lat, lon) {
     if (this.requestInProgress) return;
     this.requestInProgress = true;
@@ -750,6 +800,7 @@ class UpdateWeather {
     } else {
       this.currentLocationBtn.removeAttribute("disabled");
     }
+    // запрос к API для получения текущей погоды
     const currentWeather = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.currentWeather(lat, lon));
     const {
       weather: [current],
@@ -773,6 +824,7 @@ class UpdateWeather {
       visibility,
       timezone
     } = currentWeather;
+    console.log(currentWeather);
     const description = current.description;
     const weatherId = current.id;
     const icon = this.getWeatherIconId([weatherId]);
@@ -910,6 +962,7 @@ class UpdateWeather {
     document.querySelector(".weather-info__deg svg").style.transform = `rotate(${deg}deg)`;
     const direction = document.querySelector(".weather-info__deg p");
     this.windDirection(direction, deg);
+    // запрос к API для получения и отображения названий (город, страна) на русском
     async function reverseGeo() {
       const reverseGeo = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.reverseGeo(lat, lon));
       const [reverse] = reverseGeo;
@@ -925,6 +978,7 @@ class UpdateWeather {
       document.querySelector(".left_info_place--subtext").innerHTML = `${cityName === true ? country : cityName.countryName}`;
     }
     reverseGeo();
+    // запрос к API для получения списка прогноза погоды на 5 дней
     const forecast = await (0,_api_js__WEBPACK_IMPORTED_MODULE_2__.fetchData)(_urls_js__WEBPACK_IMPORTED_MODULE_1__.url.forecast(lat, lon));
     const {
       list: forecastList,
@@ -1131,6 +1185,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   url: () => (/* binding */ url)
 /* harmony export */ });
+// Объект url для запросов к API погоды
 const url = {
   currentWeather(lat, lon) {
     return `https://api.openweathermap.org/data/2.5/weather?${lat}&${lon}&units=metric&lang=ru`;
@@ -1141,7 +1196,7 @@ const url = {
   reverseGeo(lat, lon) {
     return `http://api.openweathermap.org/geo/1.0/reverse?${lat}&${lon}&limit=5`;
   },
-  /*
+  /** 
   * @param {string} query поиск, например 'London', 'New York'
   */
   geo(query) {

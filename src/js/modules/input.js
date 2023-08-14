@@ -3,6 +3,11 @@ import { fetchData } from "./api.js";
 import { getCityName } from "./geo.js";
 export default class Input {
     constructor(input, inputContainer, searchList) {
+        /**
+        * @param {string} input - селектор для поля input
+        * @param {string} inputContainer - селектор input контейнера
+        * @param {string} searchList - селектор для списка результатов
+        */
         this.input = document.querySelector(input);
         this.inputContainer = document.querySelector(inputContainer);
         this.searchList = document.querySelector(searchList);
@@ -10,7 +15,7 @@ export default class Input {
         this.searchTimeout = null;
         this.searchTimeoutDuration = 500;
     }
-
+    // функция сброса
     clearInput() {
         this.input.value = "";
         this.searchList.innerHTML = "";
@@ -18,7 +23,7 @@ export default class Input {
         this.error.innerHTML = "";
         this.searchList.classList.remove("active");
     }
-
+    // функция инициализирует поле ввода и функцию поиска
     init() {
         window.addEventListener("click", (e) => {
             const parent = this.input.parentNode;
@@ -67,6 +72,7 @@ export default class Input {
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
                         `;
                         const items = [];
+                        console.log(locations)
                         for (const location of locations) {
                             const {
                                 name,
@@ -113,15 +119,18 @@ export default class Input {
                                                 ? ruName
                                                 : item.cityName.cityName
                                         }</p>
+                                        <p class="view-item-state">${
+                                            item.cityName === true
+                                                ? ''
+                                                : item.cityName.stateName || ''
+                                        }</p>
                                         <p class="view-item-subtitle">${
                                             item.cityName === true
-                                                ? item.state || ""
-                                                : item.cityName.countryName || ""
+                                            ? item.state || ''
+                                            : item.cityName.countryName || ''
                                         }</p>
                                     </div>
-                                    <p class="view-item-country">${
-                                        item.country
-                                    }</p>
+                                    <p class="view-item-country">${item.country}</p>
                                 </div>
                                 <a href="#/weather?lat=${item.lat}&lon=${item.lon}" 
                                 aria-label='${item.name} weather' data-search-toggler></a>
