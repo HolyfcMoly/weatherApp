@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/js/modules/api.js":
@@ -8,11 +7,13 @@
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   fetchData: () => (/* binding */ fetchData)
 /* harmony export */ });
 /* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
+/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_keys_js__WEBPACK_IMPORTED_MODULE_0__);
 
 // асинхронная функция принимающая параметр url
 async function fetchData(url) {
@@ -29,6 +30,7 @@ async function fetchData(url) {
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getDate: () => (/* binding */ getDate),
@@ -66,11 +68,13 @@ const getTime = timezone => {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getCityName: () => (/* binding */ getCityName)
 /* harmony export */ });
 /* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./keys.js */ "./src/js/modules/keys.js");
+/* harmony import */ var _keys_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_keys_js__WEBPACK_IMPORTED_MODULE_0__);
 
 // асинхронная функция для получения названия города принимающая 2 параметра (lat,lon)
 async function getCityName(lat, lon) {
@@ -97,6 +101,7 @@ async function getCityName(lat, lon) {
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Input)
@@ -175,7 +180,6 @@ class Input {
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
                         `;
             const items = [];
-            console.log(locations);
             for (const location of locations) {
               const {
                 name,
@@ -253,17 +257,9 @@ class Input {
 /*!********************************!*\
   !*** ./src/js/modules/keys.js ***!
   \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   openWeatherKey: () => (/* binding */ openWeatherKey),
-/* harmony export */   yandexKey: () => (/* binding */ yandexKey)
-/* harmony export */ });
-const openWeatherKey = '90f4871993ecaefcc8769dd2bf1b6855';
-const yandexKey = '3793a725-9c23-4567-b080-8d805e549f97';
-// export const openWeatherKey = 'CHANGE_ME';
-// export const yandexKey = 'CHANGE_ME';
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\src\\js\\modules\\keys.js: Identifier 'openWeatherKey' has already been declared. (3:13)\n\n\u001b[0m \u001b[90m 1 |\u001b[39m \u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m openWeatherKey \u001b[33m=\u001b[39m \u001b[32m'90f4871993ecaefcc8769dd2bf1b6855'\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 2 |\u001b[39m \u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m yandexKey \u001b[33m=\u001b[39m \u001b[32m'3793a725-9c23-4567-b080-8d805e549f97'\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 3 |\u001b[39m \u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m openWeatherKey \u001b[33m=\u001b[39m \u001b[32m'CHANGE_ME'\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 4 |\u001b[39m \u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m yandexKey \u001b[33m=\u001b[39m \u001b[32m'CHANGE_ME'\u001b[39m\u001b[33m;\u001b[39m      \u001b[0m\n    at instantiate (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:63:32)\n    at constructor (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:358:12)\n    at Parser.raise (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:3207:19)\n    at ScopeHandler.checkRedeclarationInScope (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:1480:19)\n    at ScopeHandler.declareName (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:1451:12)\n    at Parser.declareNameFromIdentifier (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:7460:16)\n    at Parser.checkIdentifier (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:7456:12)\n    at Parser.checkLVal (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:7395:12)\n    at Parser.parseVarId (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13230:10)\n    at Parser.parseVar (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13208:12)\n    at Parser.parseVarStatement (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13050:10)\n    at Parser.parseStatementContent (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12633:23)\n    at Parser.parseStatementLike (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12538:17)\n    at Parser.parseStatementListItem (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12518:17)\n    at Parser.parseExportDeclaration (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13785:17)\n    at Parser.maybeParseExportDeclaration (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13740:31)\n    at Parser.parseExport (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13663:29)\n    at Parser.parseStatementContent (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12665:27)\n    at Parser.parseStatementLike (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12538:17)\n    at Parser.parseModuleItem (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12515:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13139:36)\n    at Parser.parseBlockBody (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:13132:10)\n    at Parser.parseProgram (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12414:10)\n    at Parser.parseTopLevel (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:12404:25)\n    at Parser.parse (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:14300:10)\n    at parse (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\parser\\lib\\index.js:14341:38)\n    at parser (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\core\\lib\\parser\\index.js:41:34)\n    at parser.next (<anonymous>)\n    at normalizeFile (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\core\\lib\\transformation\\normalize-file.js:64:38)\n    at normalizeFile.next (<anonymous>)\n    at run (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\core\\lib\\transformation\\index.js:21:50)\n    at run.next (<anonymous>)\n    at transform (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\@babel\\core\\lib\\transform.js:22:41)\n    at transform.next (<anonymous>)\n    at step (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\gensync\\index.js:261:32)\n    at C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\gensync\\index.js:273:13\n    at async.call.result.err.err (C:\\Users\\Vlad\\Desktop\\work\\weatherApp\\node_modules\\gensync\\index.js:223:11)");
 
 /***/ }),
 
@@ -273,6 +269,7 @@ const yandexKey = '3793a725-9c23-4567-b080-8d805e549f97';
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ Popup)
@@ -324,6 +321,7 @@ class Popup {
   \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   checkHash: () => (/* binding */ checkHash),
@@ -394,6 +392,7 @@ function init() {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ SwitchPadding)
@@ -435,6 +434,7 @@ class SwitchPadding {
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ChangeTheme)
@@ -486,6 +486,7 @@ class ChangeTheme {
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ UpdateWeather)
@@ -824,7 +825,6 @@ class UpdateWeather {
       visibility,
       timezone
     } = currentWeather;
-    console.log(currentWeather);
     const description = current.description;
     const weatherId = current.id;
     const icon = this.getWeatherIconId([weatherId]);
@@ -1181,6 +1181,7 @@ class UpdateWeather {
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   url: () => (/* binding */ url)
@@ -1233,6 +1234,18 @@ const url = {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -1263,8 +1276,9 @@ const url = {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!************************!*\
   !*** ./src/js/main.js ***!
   \************************/

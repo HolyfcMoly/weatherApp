@@ -481,7 +481,7 @@ h4 {
 
 .right_info-today-list--item {
     margin: 10px;
-    min-width: 175px;
+    min-width: 205px;
     cursor: pointer;
     text-align: center;
     background-color: var(--bg-regular);

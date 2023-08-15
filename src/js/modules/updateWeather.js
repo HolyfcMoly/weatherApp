@@ -344,7 +344,6 @@ export default class UpdateWeather {
             visibility,
             timezone,
         } = currentWeather;
-        console.log(currentWeather)
         const description = current.description;
         const weatherId = current.id;
         const icon = this.getWeatherIconId([weatherId]);

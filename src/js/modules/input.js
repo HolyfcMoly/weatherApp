@@ -72,7 +72,6 @@ export default class Input {
                         <ul class="view-list dropdown dark-list" data-search-list></ul>
                         `;
                         const items = [];
-                        console.log(locations)
                         for (const location of locations) {
                             const {
                                 name,

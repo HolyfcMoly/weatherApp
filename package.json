@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "HolyfcMoly <vladislav280296@gmail.com>",
+  "license": "MIT",
   "browserslist": [
     "> 1%",
     "not dead"
