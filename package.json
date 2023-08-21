@@ -2,7 +2,11 @@
   "name": "weather",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "script.js",
+=======
+  "main": "index.js",
+>>>>>>> 34638d976a3f66ec8a7e1904d0ba6b1a954f521f
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,4 +31,8 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 34638d976a3f66ec8a7e1904d0ba6b1a954f521f

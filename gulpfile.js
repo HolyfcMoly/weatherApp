@@ -117,4 +117,8 @@ gulp.task("build-prod-js", () => {
         .pipe(gulp.dest(dist));
 });
 
+<<<<<<< HEAD
 gulp.task("default", gulp.parallel("watch", "build"));
+=======
+gulp.task("default", gulp.parallel("watch", "build"));
+>>>>>>> 34638d976a3f66ec8a7e1904d0ba6b1a954f521f
